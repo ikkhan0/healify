@@ -18,16 +18,17 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve frontend panels as static files
-app.use('/patient', express.static(path.join(__dirname, '../frontend/patient')));
-app.use('/doctor', express.static(path.join(__dirname, '../frontend/doctor')));
-app.use('/admin', express.static(path.join(__dirname, '../frontend/admin')));
-// Shared assets (doctor/patient profile photos) accessible from any panel
-app.use('/assets', express.static(path.join(__dirname, '../frontend/patient/assets')));
+// Using process.cwd() for reliable path resolution on Vercel
+const root = process.cwd();
+app.use('/uploads', express.static(path.join(root, 'uploads')));
+app.use('/patient', express.static(path.join(root, 'frontend/patient')));
+app.use('/doctor', express.static(path.join(root, 'frontend/doctor')));
+app.use('/admin', express.static(path.join(root, 'frontend/admin')));
+app.use('/assets', express.static(path.join(root, 'frontend/patient/assets')));
 
-// Root redirect to patient panel
+// Root redirect
 app.get('/', (req, res) => res.redirect('/patient'));
 
 // API Routes
@@ -51,23 +52,12 @@ io.on('connection', (socket) => {
     socket.userId = userId;
     if (!rooms[roomId]) rooms[roomId] = [];
     rooms[roomId].push({ socketId: socket.id, userId, userName });
-
-    // Notify others in room
     socket.to(roomId).emit('user-joined', { socketId: socket.id, userId, userName });
-    console.log(`👤 ${userName} joined room ${roomId}`);
   });
 
-  socket.on('offer', ({ to, offer }) => {
-    io.to(to).emit('offer', { from: socket.id, offer });
-  });
-
-  socket.on('answer', ({ to, answer }) => {
-    io.to(to).emit('answer', { from: socket.id, answer });
-  });
-
-  socket.on('ice-candidate', ({ to, candidate }) => {
-    io.to(to).emit('ice-candidate', { from: socket.id, candidate });
-  });
+  socket.on('offer', ({ to, offer }) => io.to(to).emit('offer', { from: socket.id, offer }));
+  socket.on('answer', ({ to, answer }) => io.to(to).emit('answer', { from: socket.id, answer }));
+  socket.on('ice-candidate', ({ to, candidate }) => io.to(to).emit('ice-candidate', { from: socket.id, candidate }));
 
   socket.on('leave-room', ({ roomId }) => {
     socket.to(roomId).emit('user-left', { socketId: socket.id });
@@ -78,13 +68,16 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (socket.roomId) {
       socket.to(socket.roomId).emit('user-left', { socketId: socket.id });
-      if (rooms[socket.roomId]) {
-        rooms[socket.roomId] = rooms[socket.roomId].filter(u => u.socketId !== socket.id);
-      }
+      if (rooms[socket.roomId]) rooms[socket.roomId] = rooms[socket.roomId].filter(u => u.socketId !== socket.id);
     }
-    console.log(`❌ Socket disconnected: ${socket.id}`);
   });
 });
 
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`\n🏥 Healify Server running on http://localhost:${PORT}\n`));
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => console.log(`\n🏥 Healify Server running on http://localhost:${PORT}\n`));
+}
+
+// Export for Vercel
+module.exports = server;
