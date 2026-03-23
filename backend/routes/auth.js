@@ -8,7 +8,11 @@ const Patient = require('../models/Patient');
 const OTP = require('../models/OTP');
 const sendOTP = require('../utils/sendOTP');
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
+const generateToken = (id) => {
+  const secret = process.env.JWT_SECRET || 'healify_secret_key_123';
+  const expire = process.env.JWT_EXPIRE || '7d';
+  return jwt.sign({ id }, secret, { expiresIn: expire });
+};
 
 // @POST /api/auth/register
 router.post('/register', async (req, res) => {
