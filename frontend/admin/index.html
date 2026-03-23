@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Healify – Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ─── LOGIN PAGE ────────────────────────────────────────────────────────── -->
+<div id="page-login" class="page active">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="login-brand"><i class="fas fa-stethoscope"></i><h1>Healify</h1></div>
+      <h2>Admin Dashboard</h2>
+      <p>Manage your healthcare platform from one central place</p>
+      <div class="login-features">
+        <div class="feat"><i class="fas fa-users"></i><span>Patient Management</span></div>
+        <div class="feat"><i class="fas fa-user-md"></i><span>Doctor Management</span></div>
+        <div class="feat"><i class="fas fa-chart-line"></i><span>Revenue Analytics</span></div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-card">
+        <h3>Admin Sign In</h3>
+        <p class="login-sub">Enter your credentials to access the dashboard</p>
+        <form id="form-login">
+          <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="admin-email" placeholder="Admin Email" required /></div>
+          <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="admin-password" placeholder="Password" required /><button type="button" class="eye-btn" onclick="togglePwd()"><i class="fas fa-eye"></i></button></div>
+          <p id="login-err" class="err-msg"></p>
+          <button type="submit" class="btn-primary full">Sign In</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── DASHBOARD APP ─────────────────────────────────────────────────────── -->
+<div id="page-app" class="page">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
+      <div><h2>Healify</h2><span>Admin Panel</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-link active" onclick="showSection('dashboard',this)"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a class="nav-link" onclick="showSection('patients',this)"><i class="fas fa-users"></i><span>Patients</span></a>
+      <a class="nav-link" onclick="showSection('doctors',this)"><i class="fas fa-user-md"></i><span>Doctors</span></a>
+      <a class="nav-link" onclick="showSection('appointments',this)"><i class="fas fa-calendar-alt"></i><span>Appointments</span></a>
+      <a class="nav-link" onclick="showSection('reports',this)"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="admin-info">
+        <div class="admin-avatar"><i class="fas fa-user-shield"></i></div>
+        <div><strong id="admin-name">Admin</strong><span>Administrator</span></div>
+      </div>
+      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-right">
+        <div class="topbar-time" id="topbar-time"></div>
+        <div class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</div>
+      </div>
+    </div>
+
+    <!-- ─── DASHBOARD SECTION ─────────────────────────────────────────────── -->
+    <section id="section-dashboard" class="section active">
+      <div class="section-header">
+        <div><h2>Dashboard Overview</h2><p>Welcome back! Here's what's happening today.</p></div>
+        <button class="btn-refresh" onclick="loadDashboard()"><i class="fas fa-sync-alt"></i> Refresh</button>
+      </div>
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-data"><strong id="kpi-patients">--</strong><span>Total Patients</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 12%</div></div>
+        <div class="kpi-card green"><div class="kpi-icon"><i class="fas fa-user-md"></i></div><div class="kpi-data"><strong id="kpi-doctors">--</strong><span>Total Doctors</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 5%</div></div>
+        <div class="kpi-card purple"><div class="kpi-icon"><i class="fas fa-calendar-check"></i></div><div class="kpi-data"><strong id="kpi-appts">--</strong><span>Appointments</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 18%</div></div>
+        <div class="kpi-card orange"><div class="kpi-icon"><i class="fas fa-rupee-sign"></i></div><div class="kpi-data"><strong id="kpi-earnings">--</strong><span>Total Revenue</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 22%</div></div>
+      </div>
+      <!-- Revenue Split -->
+      <div class="cards-row">
+        <div class="card earnings-split">
+          <h3><i class="fas fa-chart-pie"></i> Revenue Split</h3>
+          <div class="split-items">
+            <div class="split-item"><span>Total Revenue</span><strong id="rev-total">RS 0</strong></div>
+            <div class="split-item"><span>Clinic Share (20%)</span><strong id="rev-clinic">RS 0</strong></div>
+            <div class="split-item"><span>Doctor Share (80%)</span><strong id="rev-doctor">RS 0</strong></div>
+          </div>
+        </div>
+        <div class="card top-doctors-card">
+          <h3><i class="fas fa-trophy"></i> Top Doctors</h3>
+          <div id="top-doctors-list"><div class="loading-sm">Loading...</div></div>
+        </div>
+      </div>
+      <!-- Monthly Chart -->
+      <div class="card monthly-chart">
+        <h3><i class="fas fa-chart-bar"></i> Monthly Revenue</h3>
+        <div class="chart-container" id="monthly-chart"></div>
+      </div>
+    </section>
+
+    <!-- ─── PATIENTS SECTION ───────────────────────────────────────────────── -->
+    <section id="section-patients" class="section">
+      <div class="section-header">
+        <div><h2>Patient Management</h2><p>View and manage all registered patients</p></div>
+        <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="patient-search" placeholder="Search patients..." oninput="filterTable('patient',this.value)" /></div>
+      </div>
+      <div class="card table-card">
+        <table class="data-table" id="patients-table">
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Blood Group</th><th>Joined</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="patients-tbody"><tr><td colspan="9" class="loading-row">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── DOCTORS SECTION ────────────────────────────────────────────────── -->
+    <section id="section-doctors" class="section">
+      <div class="section-header">
+        <div><h2>Doctor Management</h2><p>View and manage all registered doctors</p></div>
+        <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="doctor-search" placeholder="Search doctors..." oninput="filterTable('doctor',this.value)" /></div>
+      </div>
+      <div class="card table-card">
+        <table class="data-table" id="doctors-table">
+          <thead><tr><th>#</th><th>Name</th><th>Specialty</th><th>Email</th><th>Country</th><th>Fee</th><th>Rating</th><th>Earnings</th><th>Action</th></tr></thead>
+          <tbody id="doctors-tbody"><tr><td colspan="9" class="loading-row">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── APPOINTMENTS SECTION ───────────────────────────────────────────── -->
+    <section id="section-appointments" class="section">
+      <div class="section-header">
+        <div><h2>All Appointments</h2><p>View and manage all platform appointments</p></div>
+        <div class="filter-row">
+          <select id="appt-status-filter" onchange="filterAppointments()" class="filter-select">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="card table-card">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Type</th><th>Fee</th><th>Status</th></tr></thead>
+          <tbody id="appts-tbody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── REPORTS SECTION ────────────────────────────────────────────────── -->
+    <section id="section-reports" class="section">
+      <div class="section-header">
+        <div><h2>Generate Report</h2><p>Financial and performance reports</p></div>
+        <button class="btn-export" onclick="exportReport()"><i class="fas fa-download"></i> Export CSV</button>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card blue"><div class="kpi-icon"><i class="fas fa-rupee-sign"></i></div><div class="kpi-data"><strong id="rpt-total-rev">RS 0</strong><span>Total Revenue</span></div></div>
+        <div class="kpi-card green"><div class="kpi-icon"><i class="fas fa-hospital"></i></div><div class="kpi-data"><strong id="rpt-clinic-share">RS 0</strong><span>Clinic Share</span></div></div>
+        <div class="kpi-card purple"><div class="kpi-icon"><i class="fas fa-user-md"></i></div><div class="kpi-data"><strong id="rpt-doc-share">RS 0</strong><span>Doctor Share</span></div></div>
+        <div class="kpi-card orange"><div class="kpi-icon"><i class="fas fa-check-circle"></i></div><div class="kpi-data"><strong id="rpt-completed">0</strong><span>Completed</span></div></div>
+      </div>
+      <div class="cards-row">
+        <div class="card" style="flex:1">
+          <h3><i class="fas fa-trophy"></i> Top Performing Doctors</h3>
+          <table class="data-table" style="margin-top:16px">
+            <thead><tr><th>#</th><th>Doctor</th><th>Specialty</th><th>Earnings</th><th>Patients</th></tr></thead>
+            <tbody id="rpt-top-doctors"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

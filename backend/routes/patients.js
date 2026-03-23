@@ -1,0 +1,101 @@
+const express = require('express');
+const router = express.Router();
+const { protect, authorize } = require('../middleware/auth');
+const User = require('../models/User');
+const Doctor = require('../models/Doctor');
+const Patient = require('../models/Patient');
+const Appointment = require('../models/Appointment');
+const Report = require('../models/Report');
+const upload = require('../middleware/upload');
+
+// @GET /api/patients/profile
+router.get('/profile', protect, authorize('patient'), async (req, res) => {
+  try {
+    const profile = await Patient.findOne({ userId: req.user._id });
+    res.json({ success: true, user: req.user, profile });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/patients/profile
+router.put('/profile', protect, authorize('patient'), upload.single('profileImage'), async (req, res) => {
+  try {
+    const { name, phone, age, gender, bloodGroup, weight, height, allergies, medicalHistory, emergencyContact } = req.body;
+    const updateUser = { name, phone };
+    if (req.file) updateUser.profileImage = `/uploads/${req.file.filename}`;
+    await User.findByIdAndUpdate(req.user._id, updateUser);
+
+    const updatePatient = { age, gender, bloodGroup, weight, height };
+    if (allergies) updatePatient.allergies = JSON.parse(allergies);
+    if (medicalHistory) updatePatient.medicalHistory = JSON.parse(medicalHistory);
+    if (emergencyContact) updatePatient.emergencyContact = JSON.parse(emergencyContact);
+    await Patient.findOneAndUpdate({ userId: req.user._id }, updatePatient, { new: true, upsert: true });
+
+    res.json({ success: true, message: 'Profile updated' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/patients/doctors  - list all doctors
+router.get('/doctors', protect, async (req, res) => {
+  try {
+    const { specialty, search } = req.query;
+    let match = { role: 'doctor', isActive: true };
+    if (search) match.name = { $regex: search, $options: 'i' };
+
+    const users = await User.find(match).select('-password');
+    const results = await Promise.all(users.map(async (u) => {
+      const doc = await Doctor.findOne({ userId: u._id });
+      if (specialty && doc && doc.specialty.toLowerCase() !== specialty.toLowerCase()) return null;
+      return { ...u.toObject(), doctorProfile: doc };
+    }));
+    res.json({ success: true, doctors: results.filter(Boolean) });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/patients/doctors/:id
+router.get('/doctors/:id', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    const doc = await Doctor.findOne({ userId: req.params.id });
+    if (!user || user.role !== 'doctor') return res.status(404).json({ success: false, message: 'Doctor not found' });
+    res.json({ success: true, doctor: { ...user.toObject(), doctorProfile: doc } });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @POST /api/patients/appointments  - book appointment
+router.post('/appointments', protect, authorize('patient'), async (req, res) => {
+  try {
+    const { doctorId, date, timeSlot, type, symptoms } = req.body;
+    const doctor = await User.findById(doctorId);
+    if (!doctor || doctor.role !== 'doctor') return res.status(404).json({ success: false, message: 'Doctor not found' });
+
+    const docProfile = await Doctor.findOne({ userId: doctorId });
+    const roomId = `healify_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
+    const appointment = await Appointment.create({
+      patientId: req.user._id, doctorId, date, timeSlot, type: type || 'video',
+      symptoms, fee: docProfile ? docProfile.consultationFee : 0, roomId
+    });
+    res.status(201).json({ success: true, appointment });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/patients/appointments
+router.get('/appointments', protect, authorize('patient'), async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ patientId: req.user._id })
+      .populate('doctorId', 'name profileImage email')
+      .sort({ date: -1 });
+    res.json({ success: true, appointments });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/patients/reports
+router.get('/reports', protect, authorize('patient'), async (req, res) => {
+  try {
+    const reports = await Report.find({ patientId: req.user._id })
+      .populate('doctorId', 'name profileImage')
+      .sort({ createdAt: -1 });
+    res.json({ success: true, reports });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+module.exports = router;
