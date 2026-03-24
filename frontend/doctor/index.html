@@ -26,129 +26,435 @@
 
 <!-- SIGN IN -->
 <div id="screen-login" class="screen">
-  <div class="auth-wrap">
-    <div class="auth-hero">
-      <div class="auth-hero-icon"><i class="fas fa-user-md"></i></div>
-      <h2>Doctor Sign In</h2>
-      <p>Welcome back, Doctor</p>
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-btn"><button onclick="navigate('screen-signup')">Sign Up</button></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
     </div>
-    <div class="auth-card">
-      <form id="form-login">
-        <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="login-email" placeholder="Email Address" required /></div>
-        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="login-password" placeholder="Password" required /><button type="button" class="eye-btn" onclick="togglePwd('login-password',this)"><i class="fas fa-eye"></i></button></div>
-        <p id="login-err" class="err-msg"></p>
-        <button type="submit" class="btn-primary full">Sign In</button>
-      </form>
-      <p class="auth-link">Don't have an account? <a href="#" onclick="navigate('screen-signup')">Sign Up</a></p>
-      <p class="auth-link" style="margin-top:8px"><a href="/patient">Switch to Patient Portal</a></p>
+    <div class="auth-form-col">
+      <div class="auth-wrap">
+        <div class="auth-hero mobile-only">
+          <div class="auth-hero-icon"><i class="fas fa-user-md"></i></div>
+          <h2>Doctor Sign In</h2><p>Welcome back, Doctor</p>
+        </div>
+        <div class="auth-card figma-card">
+          <h2 class="figma-title">Welcome Back</h2>
+          <form id="form-login">
+            <div class="figma-input-group">
+              <label>Email</label>
+              <input type="email" id="login-email" required />
+            </div>
+            <div class="figma-input-group">
+              <label>Password</label>
+              <input type="password" id="login-password" required />
+            </div>
+            <div class="figma-remember-row">
+              <label><input type="checkbox" id="remember-me" /> Remember Me</label>
+              <a href="#" onclick="navigate('screen-reset-password')">Forgot Password</a>
+            </div>
+            <p id="login-err" class="err-msg"></p>
+            <button type="submit" class="btn-figma">Sign In</button>
+          </form>
+          <p class="figma-link">Dont have an account ? <a href="#" onclick="navigate('screen-signup')"><strong>Sign Up</strong></a></p>
+          <p class="auth-link mobile-only" style="margin-top:8px"><a href="/patient">Switch to Patient Portal</a></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- SIGN UP -->
 <div id="screen-signup" class="screen">
-  <div class="auth-wrap">
-    <div class="auth-hero">
-      <div class="auth-hero-icon secondary"><i class="fas fa-user-plus"></i></div>
-      <h2>Create Account</h2>
-      <p>Join the Healify Doctor Network</p>
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
     </div>
-    <div class="auth-card">
-      <form id="form-signup">
-        <div class="input-group"><i class="fas fa-user"></i><input type="text" id="su-name" placeholder="Full Name" required /></div>
-        <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="su-email" placeholder="Email Address" required /></div>
-        <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="su-password" placeholder="Password" required /></div>
-        <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="su-phone" placeholder="Phone Number" /></div>
-        <div class="input-group"><i class="fas fa-stethoscope"></i><input type="text" id="su-specialty" placeholder="Specialty (e.g. Psychiatrist)" /></div>
-        <div class="input-group"><i class="fas fa-globe"></i><input type="text" id="su-country" placeholder="Country" /></div>
-        <p id="signup-err" class="err-msg"></p>
-        <button type="submit" class="btn-primary full">Sign Up</button>
-      </form>
-      <p class="auth-link">Already have an account? <a href="#" onclick="navigate('screen-login')">Sign In</a></p>
+    <div class="auth-form-col">
+      <div class="auth-wrap">
+        <div class="auth-hero mobile-only">
+          <div class="auth-hero-icon secondary"><i class="fas fa-user-plus"></i></div>
+          <h2>Create Account</h2><p>Join the Healify Doctor Network</p>
+        </div>
+        <div class="auth-card figma-card">
+          <h2 class="figma-title">Sign Up</h2>
+          <form id="form-signup">
+            <div class="figma-input-group">
+               <label>Full Name</label>
+               <input type="text" id="su-name" required />
+            </div>
+            <div class="figma-input-group">
+               <label>Email Address</label>
+               <input type="email" id="su-email" required />
+            </div>
+            <div class="figma-input-group">
+               <label>Password</label>
+               <input type="password" id="su-password" required />
+            </div>
+            <p id="signup-err" class="err-msg"></p>
+            <button type="submit" class="btn-figma">Sign Up</button>
+          </form>
+          <p class="figma-link">Already have an account? <a href="#" onclick="navigate('screen-login')"><strong>Sign In</strong></a></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- OTP -->
 <div id="screen-otp" class="screen">
-  <div class="otp-wrap">
-    <div class="otp-icon"><i class="fas fa-envelope-open-text"></i></div>
-    <h2>Email Verification</h2>
-    <p>Enter the 6-digit code sent to<br><strong id="otp-email-display"></strong></p>
-    <div class="otp-inputs">
-      <input type="text" maxlength="1" class="otp-box" /><input type="text" maxlength="1" class="otp-box" />
-      <input type="text" maxlength="1" class="otp-box" /><input type="text" maxlength="1" class="otp-box" />
-      <input type="text" maxlength="1" class="otp-box" /><input type="text" maxlength="1" class="otp-box" />
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-signup')"></i><i class="fas fa-chevron-right"></i></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
     </div>
-    <p id="otp-err" class="err-msg"></p>
-    <button class="btn-primary full" onclick="verifyOTP()">Verify</button>
-    <p class="resend-txt">Didn't receive? <a href="#" onclick="resendOTP()">Resend Code</a></p>
+    <div class="auth-form-col">
+      <div class="otp-wrap figma-card">
+        <h2 class="figma-title">Email Verification</h2>
+        <p class="figma-sub">Enter the verification code we just sent<br>on your Email.</p>
+        <div class="otp-inputs figma-otp">
+          <input type="text" maxlength="1" class="otp-box figma-box" /><input type="text" maxlength="1" class="otp-box figma-box" />
+          <input type="text" maxlength="1" class="otp-box figma-box" /><input type="text" maxlength="1" class="otp-box figma-box" />
+          <input type="text" maxlength="1" class="otp-box figma-box" /><input type="text" maxlength="1" class="otp-box figma-box" />
+        </div>
+        <p id="otp-err" class="err-msg"></p>
+        <button class="btn-figma" onclick="verifyOTP()">Verify</button>
+        <p class="figma-link">Could not receive a code yet ? <a href="#" onclick="resendOTP()">Resend</a></p>
+      </div>
+    </div>
   </div>
   <div id="otp-success-modal" class="modal-overlay" style="display:none">
-    <div class="modal-card success-modal">
-      <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-      <h3>Verified!</h3><p>Your account has been verified</p>
-      <button class="btn-primary full" onclick="navigate('screen-dashboard')">Go to Dashboard</button>
+    <div class="modal-card success-modal figma-modal">
+       <button class="modal-close" onclick="navigate('screen-dashboard')"><i class="fas fa-times"></i></button>
+       <h3 class="figma-title">You are verified</h3>
+       <div class="success-icon figma-icon"><i class="fas fa-check-square"></i></div>
+       <p class="figma-sub">Your credentials has been<br>successfully verified</p>
+       <button class="btn-figma" onclick="navigate('screen-dashboard')">Continue</button>
+       <button class="btn-figma" onclick="navigate('screen-dashboard')" style="margin-top:10px;">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD -->
+<div id="screen-reset-password" class="screen">
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-login')"></i><i class="fas fa-chevron-right"></i></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
+    </div>
+    <div class="auth-form-col">
+      <div class="auth-wrap">
+        <div class="auth-card figma-card">
+          <h2 class="figma-title">set new password</h2>
+          <form id="form-reset">
+            <div class="figma-input-group">
+              <label>Previous password</label>
+              <input type="password" required />
+            </div>
+            <div class="figma-input-group">
+              <label>New password</label>
+              <input type="password" required />
+            </div>
+            <div class="figma-input-group">
+              <label>Confirm new password</label>
+              <input type="password" required />
+            </div>
+            <button type="submit" class="btn-figma" onclick="event.preventDefault();navigate('screen-login')">Update</button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="screen-dashboard" class="screen app-screen">
-  <div class="app-header">
+  <!-- Top search header matches Figma -->
+  <div class="dash-desktop-header">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search Healify" />
+    </div>
+    <div class="auth-nav-arrows">
+      <i class="fas fa-chevron-left"></i>
+      <i class="fas fa-chevron-right"></i>
+    </div>
+  </div>
+
+  <div class="app-header mobile-only">
     <div><p>Good Morning,</p><strong id="doc-name">Doctor</strong></div>
     <div class="app-avatar" onclick="navigate('screen-profile')"><img id="doc-avatar" src="https://ui-avatars.com/api/?name=Dr&background=00509D&color=fff" alt="Avatar" /></div>
   </div>
-  <!-- Stats Row -->
-  <div class="stats-row">
-    <div class="stat-card primary"><div class="stat-icon"><i class="fas fa-users"></i></div><strong id="doc-total-patients">0</strong><span>Total Patients</span></div>
-    <div class="stat-card success"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><strong id="doc-total-appts">0</strong><span>Appointments</span></div>
-  </div>
-  <div class="stats-row" style="margin-top:0">
-    <div class="stat-card warn"><div class="stat-icon"><i class="fas fa-clock"></i></div><strong id="doc-pending">0</strong><span>Pending</span></div>
-    <div class="stat-card accent"><div class="stat-icon"><i class="fas fa-wallet"></i></div><strong id="doc-earnings">RS 0</strong><span>Earnings</span></div>
-  </div>
-  <!-- Earnings Chart -->
-  <div class="chart-card">
-    <div class="chart-header"><h3>Today's Earnings</h3><span id="today-earn-label">RS 0</span></div>
-    <div class="chart-bars" id="earnings-bars">
-      <div class="chart-bar-group"><div class="chart-bar" style="height:40%"></div><span>Mon</span></div>
-      <div class="chart-bar-group"><div class="chart-bar" style="height:65%"></div><span>Tue</span></div>
-      <div class="chart-bar-group"><div class="chart-bar" style="height:50%"></div><span>Wed</span></div>
-      <div class="chart-bar-group"><div class="chart-bar" style="height:80%"></div><span>Thu</span></div>
-      <div class="chart-bar-group"><div class="chart-bar active" style="height:90%"></div><span>Fri</span></div>
-      <div class="chart-bar-group"><div class="chart-bar" style="height:30%"></div><span>Sat</span></div>
+
+  <div class="dash-content-wrap">
+    <!-- Banner 1 -->
+    <div class="figma-banner-main">
+      <div class="banner-text">
+         <h2>How are you feeling today?</h2>
+         <p>Take a moment to reflect on how you're feeling.<br>Our secure telehealth platform connects you with<br>licensed professionals who provide confidential,<br>personalized care to support your mental and<br>emotional well-being.</p>
+         <button class="btn-figma-small" style="background:#112A61;width:120px;height:36px;border-radius:6px;margin-top:10px;"></button>
+      </div>
+      <div class="banner-img"><img src="/assets/doctor-hero.png" alt="Hand" style="object-fit:cover;opacity:0;"/></div>
     </div>
+    <!-- Banner 2 -->
+    <div class="figma-banner-sub">
+       <h3>Your health, just a click away.</h3>
+    </div>
+    <div class="figma-banner-text">
+       <h4>Care for Your Mental Health, Online</h4>
+       <p>Connect with licensed psychiatrists<br>from the comfort of your home.</p>
+    </div>
+
+    <!-- Upcoming Appointments row -->
+    <div class="dash-section">
+      <div class="section-top">
+         <h3>Upcoming Appointments</h3>
+         <div class="auth-nav-arrows"><i class="fas fa-chevron-left" style="font-size:16px;"></i><i class="fas fa-chevron-right" style="font-size:16px;"></i></div>
+      </div>
+      <!-- In Figma, this is a list of 4 blue bars. We will render them statically for UI matching, but also keep the dynamic list rendering container if JS injects here -->
+      <div id="dash-appointments" class="figma-appt-list">
+         <!-- static mockups matching Figma exactly -->
+         <div class="figma-appt-item">
+            <div class="doc-icon"><img src="https://ui-avatars.com/api/?name=MR" alt="d"/></div>
+            <div class="info"><strong>Mr Abdul Rehman</strong><span>28 Years old</span></div>
+            <div class="time"><i class="far fa-clock"></i> 9:00 am-10:00 pm<br><i class="far fa-calendar"></i> Friday, 20 Feb 2026</div>
+            <button class="btn-upcoming">Upcoming Appointment</button>
+         </div>
+         <div class="figma-appt-item">
+            <div class="doc-icon"><img src="https://ui-avatars.com/api/?name=MR" alt="d"/></div>
+            <div class="info"><strong>Mr Abdul Rehman</strong><span>28 Years old</span></div>
+            <div class="time"><i class="far fa-clock"></i> 9:00 am-10:00 pm<br><i class="far fa-calendar"></i> Friday, 20 Feb 2026</div>
+            <button class="btn-upcoming">Upcoming Appointment</button>
+         </div>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="figma-stats-row">
+       <div class="fig-stat-card bg-blue">
+         <h4>Accepted Appointment</h4>
+         <div class="stat-main"><strong id="doc-total-appts">8</strong> <span>/17 today</span> <span class="pct">48%</span></div>
+         <div class="progress-bar"><div class="fill" style="width:48%"></div></div>
+       </div>
+       <div class="fig-stat-card bg-blue2">
+         <h4>Cancel Appointment</h4>
+         <div class="stat-main"><strong>8</strong> <span>/17 today</span> <span class="pct">48%</span></div>
+         <div class="progress-bar"><div class="fill" style="width:48%"></div></div>
+       </div>
+       <div class="fig-stat-card bg-navy">
+         <h4>Consulted</h4>
+         <div class="stat-main"><strong id="doc-total-patients">8</strong> <span>/17 today</span> <span class="pct">48%</span></div>
+         <div class="progress-bar"><div class="fill" style="width:48%"></div></div>
+       </div>
+       <div style="display:none"><span id="doc-pending">0</span><span id="doc-earnings">0</span></div>
+    </div>
+
+    <!-- Weekly Charts Row -->
+    <h3 style="margin:20px 0 10px; color:#112A61; font-size:18px;">Weekly consultation activity</h3>
+    <div class="figma-charts-row">
+       <div class="chart-bars-wrap" id="earnings-bars">
+          <!-- matching figma UI -->
+          <ul class="y-axis"><li>70</li><li>60</li><li>50</li><li>40</li><li>30</li><li>20</li><li>10</li></ul>
+          <div class="bars-container">
+             <div class="bar-col"><div class="bar-fill" style="height:80%"></div><span>16 Jan</span></div>
+             <div class="bar-col"><div class="bar-fill" style="height:50%"></div><span>20 Jan</span></div>
+             <div class="bar-col"><div class="bar-fill" style="height:70%"></div><span>25 Jan</span></div>
+             <div class="bar-col"><div class="bar-fill" style="height:90%"></div><span>28 Jan</span></div>
+             <div class="bar-col"><div class="bar-fill" style="height:40%"></div><span>29 Jan</span></div>
+             <div class="bar-col"><div class="bar-fill" style="height:60%"></div><span>30 Jan</span></div>
+          </div>
+       </div>
+       <div class="cal-widget">
+          <h4>Unavailable Slots</h4>
+          <div class="cal-inner">
+             <div class="cal-title">March 2026 <span>&lt; &gt;</span></div>
+             <div class="cal-grid">
+               <!-- mock grid -->
+               <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+               <div>28</div><div>30</div><div>01</div><div>02</div><div>03</div><div>04</div><div>05</div>
+               <div>06</div><div>07</div><div>08</div><div>09</div><div>10</div><div>11</div><div>12</div>
+               <div>13</div><div>14</div><div class="active">15</div><div class="active">16</div><div>17</div><div>18</div><div>19</div>
+               <div>20</div><div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div>26</div>
+               <div>27</div><div>28</div><div>29</div><div>30</div><div>31</div><div>01</div><div>02</div>
+             </div>
+          </div>
+       </div>
+    </div>
+
+    <!-- Monthly History Pie -->
+    <h3 style="margin:20px 0 10px; color:#112A61; font-size:18px;">Monthly Appointment History</h3>
+    <div class="figma-pie-row">
+       <div class="pie-card">
+         <div class="pie-chart pie1"><span>Consulted</span></div>
+       </div>
+       <div class="pie-card">
+         <div class="pie-chart pie2"><span>Cancelled</span></div>
+       </div>
+       <div class="pie-card">
+         <div class="pie-chart pie3"><span>Upcoming</span></div>
+       </div>
+       <div class="pie-legend">
+         <span>&bull; Complete</span><br>
+         <span style="color:#1f85d1">&bull; Incomplete</span>
+       </div>
+    </div>
+
   </div>
-  <!-- Upcoming Appointments -->
-  <div class="section-header"><h3>Today's Appointments</h3><a href="#" onclick="navigate('screen-appointments')">See all</a></div>
-  <div id="dash-appointments" class="dash-appt-list"></div>
+  
   <div style="height:80px"></div>
   <nav class="bottom-nav">
+    <div class="nav-logo" style="display:none;"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;margin:10px auto;">logo</div></div>
     <a class="nav-item active" onclick="navigate('screen-dashboard')"><i class="fas fa-home"></i><span>Home</span></a>
-    <a class="nav-item" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-alt"></i><span>Appointments</span></a>
-    <a class="nav-item" onclick="navigate('screen-patients')"><i class="fas fa-users"></i><span>Patients</span></a>
-    <a class="nav-item" onclick="navigate('screen-profile')"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a class="nav-item" onclick="navigate('screen-appointments')"><i class="fas fa-plus-square"></i><span>Appointment</span></a>
+    <a class="nav-item" onclick="navigate('screen-patients')"><i class="far fa-file-alt"></i><span>Reports</span></a>
+    <a class="nav-item" onclick="navigate('screen-profile')"><i class="far fa-user-circle"></i><span>Profile</span></a>
   </nav>
 </div>
 
 <!-- APPOINTMENTS -->
 <div id="screen-appointments" class="screen app-screen">
-  <div class="app-header"><h2>Appointments</h2></div>
-  <div class="appt-tabs">
-    <button class="tab-btn active" onclick="filterAppts('all',this)">All</button>
-    <button class="tab-btn" onclick="filterAppts('pending',this)">Pending</button>
-    <button class="tab-btn" onclick="filterAppts('confirmed',this)">Confirmed</button>
-    <button class="tab-btn" onclick="filterAppts('completed',this)">Completed</button>
+  <!-- Top search header matches Figma -->
+  <div class="dash-desktop-header">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search Healify" />
+    </div>
+    <div class="auth-nav-arrows">
+      <i class="fas fa-chevron-left"></i>
+      <i class="fas fa-chevron-right"></i>
+    </div>
   </div>
-  <div id="appt-list" class="appt-list"><div class="loading-pulse">Loading...</div></div>
+
+  <div class="dash-content-wrap">
+    <h2 style="color:#112A61;font-size:24px;font-weight:800;margin-bottom:20px;">Upcoming Appointments</h2>
+    
+    <div id="appt-list" class="figma-upcoming-list">
+      <!-- Mocks based on Figma screen -->
+      <div class="upcoming-list-item">
+         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
+         <div class="pat-info">
+            <strong>Mr Raza</strong>
+            <span>28 years old</span>
+         </div>
+         <div class="session-label">Upcoming session</div>
+         <div class="action-btns">
+            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
+            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
+         </div>
+      </div>
+      <div class="upcoming-list-item">
+         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
+         <div class="pat-info">
+            <strong>Mr Raza</strong>
+            <span>28 years old</span>
+         </div>
+         <div class="session-label">Upcoming session</div>
+         <div class="action-btns">
+            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
+            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
+         </div>
+      </div>
+      <div class="upcoming-list-item">
+         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
+         <div class="pat-info">
+            <strong>Mr Raza</strong>
+            <span>28 years old</span>
+         </div>
+         <div class="session-label">Upcoming session</div>
+         <div class="action-btns">
+            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
+            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
+         </div>
+      </div>
+      <div class="upcoming-list-item">
+         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
+         <div class="pat-info">
+            <strong>Mr Raza</strong>
+            <span>28 years old</span>
+         </div>
+         <div class="session-label">Upcoming session</div>
+         <div class="action-btns">
+            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
+            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
+         </div>
+      </div>
+    </div>
+  </div>
+
   <div style="height:80px"></div>
   <nav class="bottom-nav">
+    <div class="nav-logo" style="display:none;"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;margin:10px auto;">logo</div></div>
     <a class="nav-item" onclick="navigate('screen-dashboard')"><i class="fas fa-home"></i><span>Home</span></a>
-    <a class="nav-item active" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-alt"></i><span>Appointments</span></a>
-    <a class="nav-item" onclick="navigate('screen-patients')"><i class="fas fa-users"></i><span>Patients</span></a>
-    <a class="nav-item" onclick="navigate('screen-profile')"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a class="nav-item active" onclick="navigate('screen-appointments')"><i class="fas fa-plus-square"></i><span>Appointment</span></a>
+    <a class="nav-item" onclick="navigate('screen-patients')"><i class="far fa-file-alt"></i><span>Reports</span></a>
+    <a class="nav-item" onclick="navigate('screen-profile')"><i class="far fa-user-circle"></i><span>Profile</span></a>
   </nav>
+
+  <!-- Patient Details Modal that is triggered from View Profile -->
+  <div id="patient-details-modal" class="modal-overlay" style="display:none; z-index:200;">
+    <div class="figma-patient-modal">
+       <!-- Left Side Panel -->
+       <div class="pm-left">
+          <div class="pm-photo">
+             <img src="/assets/doctor-hero.png" alt="Patient" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+          <div class="pm-details bg-blue">
+             <p><strong>Patient Name:</strong> Danial</p>
+             <p><strong>Age:</strong> 22 Years old</p>
+             <p><strong>Gender:</strong> Male</p>
+             <div class="pm-icons">
+               <i class="fas fa-globe"></i>
+               <i class="fas fa-phone"></i>
+               <i class="fas fa-share"></i>
+               <i class="fas fa-video"></i>
+             </div>
+          </div>
+       </div>
+       <!-- Right Side Panel -->
+       <div class="pm-right">
+          <div class="pm-card">
+             <h3>Appointment Details</h3>
+             <div class="pm-info-row">
+               <span class="label">Date:</span> <span class="val">Jan 17, 2025</span>
+             </div>
+             <div class="pm-info-row">
+               <span class="label">Time:</span> <span class="val">10:30am</span>
+             </div>
+             <h4 class="pm-problem">Problem</h4>
+             <p class="pm-desc">Struggling with stress, lack of motivation, and emotional instability. Facing mood swings and constant overthinking that interfere with routine activities.</p>
+             <a href="#" class="pm-history-link">View Past History</a>
+          </div>
+          <div class="pm-actions">
+             <button class="btn-figma-small" style="background:#112A61;color:#fff;width:140px;height:44px;border-radius:8px;font-size:16px;font-weight:700;border:none;cursor:pointer;" onclick="navigate('screen-video-call'); document.getElementById('patient-details-modal').style.display='none';">Consult</button>
+             <button class="btn-figma-small" style="background:#c02626;color:#fff;width:140px;height:44px;border-radius:8px;font-size:16px;font-weight:700;border:none;cursor:pointer;" onclick="document.getElementById('patient-details-modal').style.display='none'">Cancel</button>
+          </div>
+       </div>
+    </div>
+  </div>
 </div>
 
 <!-- PATIENTS -->
@@ -166,20 +472,77 @@
 </div>
 
 <!-- VIDEO CALL -->
-<div id="screen-video-call" class="screen video-screen">
-  <video id="remote-video" autoplay playsinline class="remote-vid"></video>
-  <video id="local-video" autoplay playsinline muted class="local-vid"></video>
-  <div class="call-header">
-    <h3 id="call-patient-name">Patient</h3>
-    <p id="call-timer">00:00</p>
-    <div class="call-status"><span class="status-dot"></span> Connected</div>
+<div id="screen-video-call" class="screen video-screen" style="background: linear-gradient(135deg, #dceef9 0%, #a4daf5 100%);">
+  <div class="figma-video-header">
+     <div class="live-status"><span class="dot"></span> Live call <span class="divider">|</span> <span id="call-timer">00:12:45</span></div>
   </div>
-  <div class="call-controls">
-    <button class="ctrl-btn" id="mic-btn" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
-    <button class="ctrl-btn end-call" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
-    <button class="ctrl-btn" id="cam-btn" onclick="toggleCam()"><i class="fas fa-video"></i></button>
+  
+  <div class="figma-video-grid">
+     <!-- Left: Video Feeds -->
+     <div class="video-main-col">
+       <div class="video-container">
+         <video id="remote-video" autoplay playsinline class="remote-vid" poster="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop"></video>
+         <div class="doctor-badge">DR.Nazia Khan</div>
+         
+         <div class="local-vid-wrap">
+           <video id="local-video" autoplay playsinline muted class="local-vid" poster="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=300&auto=format&fit=crop"></video>
+           <div class="patient-badge">Ali Raza</div>
+         </div>
+       </div>
+       
+       <!-- Call Controls -->
+       <div class="figma-call-controls">
+         <button class="c-btn"><i class="fas fa-microphone"></i></button>
+         <button class="c-btn"><i class="fas fa-video"></i></button>
+         <button class="c-btn end-btn" onclick="showSessionCompletedModal()"><i class="fas fa-phone-slash"></i></button>
+         <button class="c-btn"><i class="fas fa-camera"></i></button>
+         <button class="c-btn"><i class="fas fa-volume-up"></i></button>
+       </div>
+     </div>
+
+     <!-- Right: Info Panels -->
+     <div class="video-side-col">
+       <div class="side-panel">
+         <h4>Patient Details</h4>
+         <p>Ali Raza<br>Age: 28 Years<br>Gender: Male</p>
+       </div>
+       <div class="side-panel">
+         <h4>Appointment Info</h4>
+         <p><i class="far fa-clock"></i> 9:00 am-10:00 pm<br><i class="far fa-calendar"></i> Friday, 20 Feb 2026</p>
+         <div class="status-ongoing"><span class="dot"></span> Ongoing</div>
+       </div>
+       <div class="side-panel">
+         <h4>Doctor Notes</h4>
+         <textarea placeholder="Write any notes here...."></textarea>
+         <button class="btn-save-notes">Save Notes</button>
+       </div>
+     </div>
+  </div>
+
+  <!-- Agreement Popup Modal (Shows on start) -->
+  <div id="video-agreement-modal" class="modal-overlay" style="z-index:300;">
+     <div class="figma-agreement-card">
+        <button class="modal-close" onclick="document.getElementById('video-agreement-modal').style.display='none'"><i class="fas fa-times"></i></button>
+        <p>By proceeding, you agree to participate in an online session with <strong style="color:#1c78c0">Dr. Ahmed</strong>. You understand that the session is confidential, your information will be handled securely, and you may end the session at any time. You also consent to receive guidance and recommendations from the doctor during this session.</p>
+        <button class="btn-figma" style="width:100%; margin-top:24px;" onclick="document.getElementById('video-agreement-modal').style.display='none'">Continue</button>
+     </div>
+  </div>
+
+  <!-- Session Completed Modal -->
+  <div id="video-completed-modal" class="modal-overlay" style="display:none; z-index:300;">
+     <div class="figma-agreement-card figma-completed-card" style="text-align:center; padding:40px;">
+        <h2 style="color:#112A61; margin-bottom:16px;">Session Completed</h2>
+        <p style="color:#112A61; font-size:16px; margin-bottom:30px;">You've Finished Your Session With<br>Dr. Nazia. Thank You!</p>
+        <button class="btn-figma" style="width:100%;" onclick="navigate('screen-dashboard')">See Details</button>
+     </div>
   </div>
 </div>
+
+<script>
+  function showSessionCompletedModal() {
+     document.getElementById('video-completed-modal').style.display = 'flex';
+  }
+</script>
 
 <!-- PROFILE -->
 <div id="screen-profile" class="screen app-screen">

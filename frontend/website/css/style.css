@@ -143,6 +143,36 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* ─── NEW LANDING PAGE & ROLE DEFINITION (Image 4) ─── */
+.landing-body { margin:0; padding:0; background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); display:flex; flex-direction:column; min-height:100vh; }
+.top-nav { display:flex; justify-content:space-between; align-items:center; padding:1.5rem 4rem; width:100%; box-sizing:border-box; color:#0A2753; }
+.logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.2rem; }
+.logo-circle-small { width:50px; height:50px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.logo-text { color:#0A2753; }
+.nav-links { display:flex; gap:2.5rem; font-weight:700; font-size:1.1rem; }
+.nav-links a { text-decoration:none; color:#1C448E; transition:color 0.3s; }
+.nav-links a.active, .nav-links a:hover { color:#0A2753; }
+.nav-icons { display:flex; gap:10px; font-size:1.5rem; color:#0A2753; cursor:pointer; }
+.landing-container { max-width: 1200px; display:flex; align-items:center; justify-content:space-between; padding:2rem 4rem; color:#fff; flex:1; margin:0 auto; width:100%; box-sizing:border-box; }
+.logo-circle { width:150px; height:150px; background:#fff; border-radius:50%; margin-bottom:2rem; }
+.brand-text h1 { font-size:4rem; color:#0A2753; font-weight:800; margin-bottom:1rem; display:flex; align-items:center; gap:10px; }
+.brand-text p { font-size:1.5rem; color:#1C448E; font-weight:600; line-height:1.4; margin-bottom:2rem; max-width:500px; }
+.stethoscope-icon { color:#0984e3; font-size:3.5rem; }
+.btn-get-started { background:#0A2753; color:#fff; padding:1.2rem 3rem; font-size:1.2rem; font-weight:600; border:none; border-radius:8px; cursor:pointer; }
+.landing-right img { width:600px; max-width:100%; border-radius:12px; }
+
+/* Role Selection Body */
+.role-body { margin:0; padding:0; background: linear-gradient(135deg, #a4ebf3 0%, #74b9ff 100%); overflow:hidden; position:relative; min-height:100vh; display:flex; align-items:center; padding-left:10%; }
+.role-container { position:relative; z-index:10; }
+.role-title { font-size:2.5rem; color:#0A2753; margin-top:1.5rem; margin-bottom:2rem; font-weight:800; max-width:350px; line-height:1.2; }
+.btn-role { display:block; width:100%; max-width:300px; background:#1C448E; color:#fff; padding:1.2rem; margin-bottom:1rem; text-align:center; font-size:1.2rem; font-weight:600; border:none; border-radius:8px; cursor:pointer; transition:background 0.3s; }
+.btn-role:hover { background:#0A2753; }
+.decorative-circles { position:absolute; right:-10%; top:-10%; width:120vh; height:120vh; z-index:1; }
+.circle { position:absolute; border-radius:50%; border:60px solid; }
+.c1 { width:100%; height:100%; right:0; border-color:#0984e3; }
+.c2 { width:70%; height:70%; right:15%; top:15%; border-color:#0A2753; }
+.c3 { width:40%; height:40%; right:30%; top:30%; border-color:#74b9ff; }
+
 .stat-item span {
   font-size: 1.1rem;
   color: #B5C6DE;

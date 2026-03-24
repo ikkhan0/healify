@@ -110,4 +110,32 @@ router.put('/user/:id/toggle', protect, authorize('admin'), async (req, res) => 
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// @PUT /api/admin/doctor/:id
+router.put('/doctor/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { name, email, profileImage, profileData } = req.body;
+    await User.findByIdAndUpdate(req.params.id, { name, email, profileImage });
+    if(profileData) await Doctor.findOneAndUpdate({ userId: req.params.id }, profileData);
+    res.json({ success: true, message: 'Doctor updated' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/admin/patient/:id
+router.put('/patient/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { name, email, phone, profileData } = req.body;
+    await User.findByIdAndUpdate(req.params.id, { name, email, phone });
+    if(profileData) await Patient.findOneAndUpdate({ userId: req.params.id }, profileData);
+    res.json({ success: true, message: 'Patient updated' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/admin/appointment/:id
+router.put('/appointment/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    await Appointment.findByIdAndUpdate(req.params.id, { status: req.body.status });
+    res.json({ success: true, message: 'Appointment updated' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
 module.exports = router;

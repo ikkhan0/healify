@@ -155,6 +155,7 @@ function renderPatients(patients) {
       <td>${joined}</td>
       <td><span class="badge ${p.isActive?'badge-active':'badge-inactive'}">${p.isActive?'Active':'Inactive'}</span></td>
       <td>
+        <button class="action-btn" style="background:#1C448E; color:#fff" onclick="openEditPat('${p._id}', '${p.name}', '${p.email}', '${p.phone || ''}', '${pp.age || ''}')">Edit</button>
         <button class="action-btn btn-toggle" onclick="toggleUser('${p._id}',this)">${p.isActive?'Disable':'Enable'}</button>
         <button class="action-btn btn-delete" onclick="deleteUser('${p._id}','patient')">Delete</button>
       </td>
@@ -187,6 +188,8 @@ function renderDoctors(doctors) {
       <td>⭐ ${dp.rating || '4.0'}</td>
       <td>RS ${dp.totalEarnings || 0}</td>
       <td>
+        <button class="action-btn" style="background:#5DADE2; color:#fff" onclick="openViewDoctor('${d._id}')">View</button>
+        <button class="action-btn" style="background:#1C448E; color:#fff" onclick="openEditDoc('${d._id}', '${d.name}', '${d.email}', '${dp.specialty || ''}', '${dp.consultationFee || 0}', '${dp.experience || ''}', '${dp.education || ''}', '${dp.bio || ''}', '${d.profileImage || ''}')">Edit</button>
         <button class="action-btn btn-toggle" onclick="toggleUser('${d._id}',this)">${d.isActive?'Disable':'Enable'}</button>
         <button class="action-btn btn-delete" onclick="deleteUser('${d._id}','doctor')">Delete</button>
       </td>
@@ -225,6 +228,9 @@ function renderAppointments(appts) {
       <td><i class="fas fa-${a.type==='video'?'video':'hospital'}" style="color:var(--primary)"></i> ${a.type}</td>
       <td>RS ${a.fee || 0}</td>
       <td><span class="badge badge-${a.status}">${a.status}</span></td>
+      <td>
+        <button class="action-btn" style="background:#1C448E; color:#fff" onclick="openEditAppt('${a._id}', '${a.status}')">Update</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -292,4 +298,116 @@ function exportReport() {
   a.download = `healify-report-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   showToast('Report exported ✅');
+}
+
+// ─── Modal Actions ─────────────────────────────────────────────────────────
+function openEditDoc(id, name, email, spec, fee, exp, edu, bio, img) {
+  document.getElementById('edit-doc-id').value = id;
+  document.getElementById('edit-doc-name').value = name;
+  document.getElementById('edit-doc-email').value = email;
+  document.getElementById('edit-doc-spec').value = spec || '';
+  document.getElementById('edit-doc-fee').value = fee || '';
+  document.getElementById('edit-doc-exp').value = exp || '';
+  document.getElementById('edit-doc-edu').value = edu || '';
+  document.getElementById('edit-doc-bio').value = bio || '';
+  document.getElementById('edit-doc-img').value = img || '';
+  document.getElementById('edit-doctor-modal').style.display = 'flex';
+}
+async function submitEditDoctor(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-doc-id').value;
+  const updates = { 
+    name: document.getElementById('edit-doc-name').value, 
+    email: document.getElementById('edit-doc-email').value, 
+    profileImage: document.getElementById('edit-doc-img').value,
+    profileData: { 
+      specialty: document.getElementById('edit-doc-spec').value, 
+      consultationFee: document.getElementById('edit-doc-fee').value,
+      experience: document.getElementById('edit-doc-exp').value,
+      education: document.getElementById('edit-doc-edu').value,
+      bio: document.getElementById('edit-doc-bio').value
+    } 
+  };
+  try { await api.put(`/admin/doctor/${id}`, updates); document.getElementById('edit-doctor-modal').style.display = 'none'; showToast('Doctor updated'); loadDoctors(); } catch(e) { showToast(e.message, true); }
+}
+
+async function openViewDoctor(doctorId) {
+  const modal = document.getElementById('doctor-detail-modal');
+  const container = document.getElementById('doctor-modal-content');
+  modal.style.display = 'flex';
+  container.innerHTML = '<div class="loading-pulse" style="padding:60px; text-align:center;">Loading...</div>';
+  
+  try {
+    const res = await api.get(`/patients/doctors/${doctorId}`);
+    const d = res.doctor;
+    const dp = d.doctorProfile || {};
+    const initials = d.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+    
+    const rating = dp.rating || 4.5;
+    let stars = '';
+    for(let i=1; i<=5; i++) {
+       stars += `<i class="fa${i<=rating?'s':'-regular'} fa-star" style="color:#FFD700;"></i>`;
+    }
+    
+    container.innerHTML = `
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <div style="width:200px; height:200px; border-radius:50%; overflow:hidden; margin:0 auto 1rem auto; background:#EAF4FC; display:flex; align-items:center; justify-content:center; font-size:4rem; color:#0A2753; border:4px solid #fff; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+          ${d.profileImage ? `<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover">` : initials}
+        </div>
+        <h3 style="color:#0A2753; font-size:1.8rem; font-weight:800; margin-bottom:0.3rem;">Dr. ${d.name}</h3>
+        <div style="margin-bottom:0.8rem; font-size:1.2rem;">${stars}</div>
+        <div style="display:flex; justify-content:center; gap:20px; color:#1C448E; font-weight:600; font-size:1.1rem; margin-bottom:1.5rem;">
+           <div><i class="fas fa-stethoscope"></i> ${dp.specialty || 'Psychiatrist'}</div>
+           <div><i class="fas fa-money-bill-wave"></i> Fee: RS ${dp.consultationFee || 300}</div>
+        </div>
+      </div>
+      
+      <div style="border-top:1px solid #EAF4FC; padding-top:1.5rem; text-align:left;">
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">Experience</h4>
+        <p style="color:#1C448E; line-height:1.6; margin-bottom:1.5rem;">${dp.experience ? dp.experience + ' Years Experience' : 'Extensive experience in mental health care.'}</p>
+        
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">Education</h4>
+        <p style="color:#1C448E; line-height:1.6; margin-bottom:1.5rem;">${dp.education || 'Certified Professional'}</p>
+        
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">About</h4>
+        <p style="color:#1C448E; line-height:1.6; margin-bottom:2rem;">${dp.bio || 'A compassionate professional who makes complex issues feel manageable.'}</p>
+        
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">Patient Reviews</h4>
+        <div style="display:flex; gap:10px; overflow-x:auto; margin-bottom:1rem; padding-bottom:10px;">
+          ${dp.reviews && dp.reviews.length ? dp.reviews.map(r => `
+          <div style="background:#5DADE2; min-width:280px; border-radius:12px; padding:1.2rem; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+             <div style="margin-bottom:0.5rem; font-size:1rem; color:#FFD700;"><i class="fas fa-star"></i> ${r.rating}</div>
+             <p style="font-size:0.95rem; line-height:1.4;">"${r.comment}"</p>
+             <div style="font-size:0.8rem; margin-top:10px; opacity:0.9; font-weight:600;">- ${r.patientName}</div>
+          </div>`).join('') : '<div style="color:#1C448E; font-weight:600; padding:1rem;">No reviews yet.</div>'}
+        </div>
+      </div>`;
+  } catch(e) { container.innerHTML = '<div style="text-align:center; color:red;">Failed to load profile preview</div>'; }
+}
+
+function openEditPat(id, name, email, phone, age) {
+  document.getElementById('edit-pat-id').value = id;
+  document.getElementById('edit-pat-name').value = name;
+  document.getElementById('edit-pat-email').value = email;
+  document.getElementById('edit-pat-phone').value = phone || '';
+  document.getElementById('edit-pat-age').value = age || '';
+  document.getElementById('edit-patient-modal').style.display = 'flex';
+}
+async function submitEditPatient(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-pat-id').value;
+  const updates = { name: document.getElementById('edit-pat-name').value, email: document.getElementById('edit-pat-email').value, phone: document.getElementById('edit-pat-phone').value, profileData: { age: document.getElementById('edit-pat-age').value } };
+  try { await api.put(`/admin/patient/${id}`, updates); document.getElementById('edit-patient-modal').style.display = 'none'; showToast('Patient updated'); loadPatients(); } catch(e) { showToast(e.message, true); }
+}
+
+function openEditAppt(id, status) {
+  document.getElementById('edit-appt-id').value = id;
+  document.getElementById('edit-appt-status').value = status;
+  document.getElementById('edit-appt-modal').style.display = 'flex';
+}
+async function submitEditAppt(e) {
+  e.preventDefault();
+  const id = document.getElementById('edit-appt-id').value;
+  const status = document.getElementById('edit-appt-status').value;
+  try { await api.put(`/admin/appointment/${id}`, {status}); document.getElementById('edit-appt-modal').style.display = 'none'; showToast('Appointment status updated'); loadAppointments(); } catch(e) { showToast(e.message, true); }
 }

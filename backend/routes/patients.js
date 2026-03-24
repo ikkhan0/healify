@@ -35,7 +35,7 @@ router.put('/profile', protect, authorize('patient'), upload.single('profileImag
 });
 
 // @GET /api/patients/doctors  - list all doctors
-router.get('/doctors', protect, async (req, res) => {
+router.get('/doctors', async (req, res) => {
   try {
     const { specialty, search } = req.query;
     let match = { role: 'doctor', isActive: true };
@@ -52,7 +52,7 @@ router.get('/doctors', protect, async (req, res) => {
 });
 
 // @GET /api/patients/doctors/:id
-router.get('/doctors/:id', protect, async (req, res) => {
+router.get('/doctors/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     const doc = await Doctor.findOne({ userId: req.params.id });
@@ -95,6 +95,31 @@ router.get('/reports', protect, authorize('patient'), async (req, res) => {
       .populate('doctorId', 'name profileImage')
       .sort({ createdAt: -1 });
     res.json({ success: true, reports });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @POST /api/patients/doctors/:id/reviews
+router.post('/doctors/:id/reviews', protect, authorize('patient'), async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    if (!rating || !comment) return res.status(400).json({ success: false, message: 'Rating and comment required' });
+    
+    // Check if appointment exists and is completed (optional strictness, for now we just allow patients)
+    const doctor = await Doctor.findOne({ userId: req.params.id });
+    if (!doctor) return res.status(404).json({ success: false, message: 'Doctor not found' });
+    
+    const review = {
+      patientName: req.user.name,
+      rating: Number(rating),
+      comment
+    };
+    
+    doctor.reviews.push(review);
+    doctor.reviewCount = doctor.reviews.length;
+    doctor.rating = (doctor.reviews.reduce((acc, r) => acc + r.rating, 0) / doctor.reviewCount).toFixed(1);
+    
+    await doctor.save();
+    res.status(201).json({ success: true, message: 'Review added', doctor });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 

@@ -27,9 +27,10 @@ app.use('/patient', express.static(path.join(root, 'frontend/patient')));
 app.use('/doctor', express.static(path.join(root, 'frontend/doctor')));
 app.use('/admin', express.static(path.join(root, 'frontend/admin')));
 app.use('/assets', express.static(path.join(root, 'frontend/patient/assets')));
+app.use('/', express.static(path.join(root, 'frontend/website')));
 
-// Root redirect
-app.get('/', (req, res) => res.redirect('/patient'));
+// Root route
+app.get('/', (req, res) => res.sendFile(path.join(root, 'frontend/website/index.html')));
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));

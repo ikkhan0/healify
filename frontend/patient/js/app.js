@@ -258,42 +258,74 @@ async function updateStats() {
   } catch(e) {}
 }
 
-// ─── Doctor Detail ────────────────────────────────────────────────────────────
+// ─── Doctor Detail Modal (Image 6) ────────────────────────────────────────────
 async function openDoctorDetail(doctorId) {
-  navigate('screen-doctor-detail');
-  const container = document.getElementById('doctor-detail-content');
-  container.innerHTML = '<div class="loading-pulse" style="padding:60px">Loading...</div>';
+  const modal = document.getElementById('doctor-detail-modal');
+  const container = document.getElementById('doctor-modal-content');
+  modal.style.display = 'flex';
+  container.innerHTML = '<div class="loading-pulse" style="padding:60px; text-align:center;">Loading...</div>';
+  
   try {
     const res = await api.get(`/patients/doctors/${doctorId}`);
     const d = res.doctor;
     const dp = d.doctorProfile || {};
     selectedDoctor = d;
     const initials = d.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+    
+    // Generate Stars
+    const rating = dp.rating || 4.5;
+    let stars = '';
+    for(let i=1; i<=5; i++) {
+       stars += `<i class="fa${i<=rating?'s':'-regular'} fa-star" style="color:#FFD700;"></i>`;
+    }
+    
     container.innerHTML = `
-      <div class="doc-hero">
-        <div class="doc-hero-avatar">${d.profileImage ? `<img src="${d.profileImage}" alt="${d.name}" style="width:100%;height:100%;border-radius:24px;object-fit:cover">` : initials}</div>
-        <h3>${d.name}</h3>
-        <p>${dp.specialty || 'Specialist'} ${dp.country ? '• '+dp.country : ''}</p>
-        <div class="doc-stats">
-          <div class="doc-stat"><strong>${dp.experience || '5'}+</strong><span>Years Exp</span></div>
-          <div class="doc-stat"><strong>${dp.rating || '4.0'}</strong><span>Rating</span></div>
-          <div class="doc-stat"><strong>RS ${dp.consultationFee || 300}</strong><span>Consult Fee</span></div>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <div style="width:200px; height:200px; border-radius:50%; overflow:hidden; margin:0 auto 1rem auto; background:#EAF4FC; display:flex; align-items:center; justify-content:center; font-size:4rem; color:#0A2753; border:4px solid #fff; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+          ${d.profileImage ? `<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover">` : initials}
+        </div>
+        <h3 style="color:#0A2753; font-size:1.8rem; font-weight:800; margin-bottom:0.3rem;">Dr. ${d.name}</h3>
+        <div style="margin-bottom:0.8rem; font-size:1.2rem;">${stars}</div>
+        <div style="display:flex; justify-content:center; gap:20px; color:#1C448E; font-weight:600; font-size:1.1rem; margin-bottom:1.5rem;">
+           <div><i class="fas fa-stethoscope"></i> ${dp.specialty || 'senior Psychiatrist'}</div>
+           <div><i class="fas fa-money-bill-wave"></i> Fee: RS ${dp.consultationFee || 300}</div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:15px; margin-bottom:2rem;">
+           <button style="width:45px; height:45px; border-radius:50%; background:#00509D; color:#fff; border:none; font-size:1.2rem; cursor:pointer;"><i class="fas fa-globe"></i></button>
+           <button style="width:45px; height:45px; border-radius:50%; background:#00509D; color:#fff; border:none; font-size:1.2rem; cursor:pointer;"><i class="fas fa-comment-dots"></i></button>
+           <button style="width:45px; height:45px; border-radius:50%; background:#00509D; color:#fff; border:none; font-size:1.2rem; cursor:pointer;"><i class="fas fa-phone"></i></button>
+           <button style="width:45px; height:45px; border-radius:50%; background:#A3C6D9; color:#00509D; border:none; font-size:1.2rem; cursor:pointer;"><i class="fas fa-share"></i></button>
         </div>
       </div>
-      <div class="doc-detail-body">
-        <div class="doc-detail-section">
-          <h4>About</h4>
-          <p>${dp.bio || 'Experienced specialist dedicated to patient well-being and quality mental health care.'}</p>
+      
+      <div style="border-top:1px solid #EAF4FC; padding-top:1.5rem; text-align:left;">
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">Experience</h4>
+        <p style="color:#1C448E; line-height:1.6; margin-bottom:1.5rem;">Senior psychiatrist with extensive experience in mental health care, committed to improving lives through evidence-based treatment.</p>
+        
+        <h4 style="color:#0A2753; font-size:1.3rem; margin-bottom:0.8rem; font-weight:700;">Specialities</h4>
+        <ul style="color:#1C448E; line-height:1.6; margin-bottom:2rem; padding-left:1.5rem;">
+          <li>Depression & Anxiety</li>
+          <li>Stress & Trauma</li>
+          <li>Personalized Psychiatric Care</li>
+        </ul>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h4 style="color:#0A2753; font-size:1.3rem; font-weight:700;">Reviews</h4>
+          <div style="color:#0A2753; font-size:1.2rem;"><i class="fas fa-chevron-circle-left" style="cursor:pointer"></i> <i class="fas fa-chevron-circle-right" style="cursor:pointer"></i></div>
         </div>
-        ${dp.availability && dp.availability.length ? `<div class="doc-detail-section">
-          <h4>Availability</h4>
-          <p>${dp.availability.map(a => `${a.day}: ${a.startTime} – ${a.endTime}`).join('<br>')}</p>
-        </div>` : ''}
-        <div class="book-btn-sticky">
-          <button class="btn-primary full" onclick="openBooking()">Book Appointment</button>
+        
+        <div style="display:flex; gap:10px; overflow-x:auto; margin-bottom:2rem; padding-bottom:10px;">
+          ${dp.reviews && dp.reviews.length ? dp.reviews.map(r => `
+          <div style="background:#5DADE2; min-width:280px; border-radius:12px; padding:1.2rem; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+             <div style="margin-bottom:0.5rem; font-size:1rem; color:#FFD700;"><i class="fas fa-star"></i> ${r.rating}</div>
+             <p style="font-size:0.95rem; line-height:1.4;">"${r.comment}"</p>
+             <div style="font-size:0.8rem; margin-top:10px; opacity:0.9; font-weight:600;">- ${r.patientName}</div>
+          </div>`).join('') : '<div style="color:#1C448E; font-weight:600; padding:1rem;">No reviews yet.</div>'}
         </div>
+        
+        <button onclick="document.getElementById('doctor-detail-modal').style.display='none'; openBooking();" style="width:100%; background:#0a2753; color:#fff; padding:1rem; border-radius:8px; border:none; font-weight:700; font-size:1.1rem; cursor:pointer;">Book Your Appointment Now</button>
       </div>`;
-  } catch(e) { container.innerHTML = '<div class="empty-state"><p>Failed to load</p></div>'; }
+  } catch(e) { container.innerHTML = '<div style="text-align:center; color:red;">Failed to load profile</div>'; }
 }
 
 // ─── Booking ──────────────────────────────────────────────────────────────────
@@ -387,6 +419,12 @@ async function processPayment() {
   if (!currentUser) { navigate('screen-login'); return; }
   const selected = document.querySelector('.pay-opt.selected');
   if (!selected) { showToast('Please select a payment method'); return; }
+  
+  // Show loading state
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  
   try {
     const dp = selectedDoctor?.doctorProfile || {};
     const res = await api.post('/patients/appointments', {
@@ -397,14 +435,27 @@ async function processPayment() {
       symptoms: document.getElementById('booking-symptoms')?.value || '',
       fee: dp.consultationFee || 300
     });
+    
+    btn.innerHTML = originalText;
+    
     if (res.success) {
-      showToast('✅ Appointment booked successfully!');
-      navigate('screen-appointments');
+      // Instead of navigating immediately, show the Image 3 Success Modal
+      document.getElementById('booking-success-modal').style.display = 'flex';
+      // The OK button will navigate to screen-appointments
     } else {
       showToast(res.message || 'Booking failed');
     }
-  } catch(e) { showToast('Network error'); }
+  } catch(e) { 
+    btn.innerHTML = originalText;
+    showToast('Network error'); 
+  }
 }
+
+window.closeSuccessModal = () => {
+  document.getElementById('booking-success-modal').style.display = 'none';
+  navigate('screen-appointments');
+  loadAppointments();
+};
 
 // ─── Appointments ─────────────────────────────────────────────────────────────
 async function loadAppointments() {
@@ -435,7 +486,7 @@ function renderAppointments(appts) {
     const initials = (doc.name || 'D').split(' ').map(n=>n[0]).join('');
     const date = new Date(a.date).toLocaleDateString('en', { weekday:'short', month:'short', day:'numeric' });
     return `
-      <div class="appt-card">
+      <div class="appt-card" onclick="openApptDetail('${a._id}')" style="cursor:pointer; position:relative;">
         <div class="appt-card-top">
           <div class="appt-doc-img">${doc.profileImage ? `<img src="${doc.profileImage}" style="width:50px;height:50px;border-radius:14px;object-fit:cover">` : initials}</div>
           <div class="appt-info"><h4>${doc.name || 'Doctor'}</h4><p>Consultation</p></div>
@@ -446,10 +497,126 @@ function renderAppointments(appts) {
           <span><i class="fas fa-clock"></i>${a.timeSlot}</span>
           <span><i class="fas fa-${a.type === 'video' ? 'video' : 'hospital'}"></i>${a.type}</span>
         </div>
-        ${a.status === 'confirmed' ? `<div class="appt-actions"><button class="btn-primary" onclick="joinVideoCall('${a.roomId}','${(doc.name||'Doctor')}')"><i class="fas fa-video"></i> Join Call</button></div>` : ''}
+        </div>
+        ${a.status === 'confirmed' ? `<div class="appt-actions"><button class="btn-primary" onclick="event.stopPropagation(); joinVideoCall('${a.roomId}','${(doc.name||'Doctor')}')"><i class="fas fa-video"></i> Join Call</button></div>` : ''}
+        ${a.status === 'completed' ? `<div class="appt-actions"><button class="btn-primary" style="background:#0A2753;" onclick="event.stopPropagation(); openReviewModal('${doc._id}')"><i class="fas fa-star"></i> Write Review</button></div>` : ''}
       </div>`;
   }).join('');
 }
+
+window.openApptDetail = (apptId) => {
+  const appt = allAppointments.find(a => a._id === apptId);
+  if (!appt) return;
+  navigate('screen-appt-detail');
+  const doc = appt.doctorId || {};
+  const dp = doc.doctorProfile || {};
+  const initials = (doc.name || 'D').split(' ').map(n=>n[0]).join('').toUpperCase();
+  const date = new Date(appt.date).toLocaleDateString('en', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+  
+  document.getElementById('appt-detail-content').innerHTML = `
+    <div style="display:flex; align-items:center; gap:15px; margin-bottom:2rem;">
+      <div style="width:70px; height:70px; border-radius:12px; overflow:hidden; background:#EAF4FC; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#0A2753;">
+        ${doc.profileImage ? `<img src="${doc.profileImage}" style="width:100%;height:100%;object-fit:cover">` : initials}
+      </div>
+      <div>
+        <h3 style="color:#0A2753; font-size:1.3rem; margin:0 0 5px 0; font-weight:800;">Dr. ${doc.name || 'Doctor'}</h3>
+        <p style="color:#1C448E; margin:0; font-weight:600;"><i class="fas fa-stethoscope"></i> ${dp.specialty || 'senior Psychiatrist'}</p>
+      </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
+      
+      <!-- Service Provided -->
+      <div style="background:#1C448E; color:#fff; padding:1.5rem; border-radius:16px;">
+        <h4 style="margin:0 0 1rem 0; font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:10px;">Service Provided</h4>
+        <p style="margin:0 0 8px 0; font-size:0.9rem;"><i class="far fa-clock" style="margin-right:8px;"></i> ${appt.timeSlot}</p>
+        <p style="margin:0 0 15px 0; font-size:0.9rem;"><i class="far fa-calendar-alt" style="margin-right:8px;"></i> ${date}</p>
+        
+        <p style="margin:0; font-size:0.9rem; color:#A3C6D9;">• Service:</p>
+        <p style="margin:0 0 10px 0; font-weight:600;">Psychiatric Evaluation</p>
+        
+        <p style="margin:0; font-size:0.9rem; color:#A3C6D9;">• Focus Area:</p>
+        <p style="margin:0 0 10px 0; font-weight:600;">Stress, Anxiety, Mood</p>
+        
+        <p style="margin:0; font-size:0.9rem; color:#A3C6D9;">• Duration:</p>
+        <p style="margin:0; font-weight:600;">30–45 minutes</p>
+      </div>
+      
+      <!-- Doctor Notes -->
+      <div style="background:#1C448E; color:#fff; padding:1.5rem; border-radius:16px;">
+        <h4 style="margin:0 0 1rem 0; font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:10px;">Doctor Notes</h4>
+        <ul style="padding-left:1rem; margin:0 0 15px 0; font-size:0.9rem; line-height:1.5;">
+           <li style="margin-bottom:8px;">Patient consultation has been completed successfully.</li>
+           <li>Doctor advised medication and follow-up if required.</li>
+        </ul>
+        <p style="color:#A3C6D9; font-weight:600; margin-bottom:15px; font-size:0.95rem;">Psychiatric Evaluation Report</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">View Report</button>
+          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">Download</button>
+        </div>
+      </div>
+      
+      <!-- Payment Summary -->
+      <div style="background:#1C448E; color:#fff; padding:1.5rem; border-radius:16px;">
+        <h4 style="margin:0 0 1rem 0; font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:10px;">Payment Summary</h4>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem;">
+          <span style="color:#A3C6D9;">• Consultation Fees:</span>
+        </div>
+        <p style="margin:0 0 15px 0; font-weight:600;">RS ${appt.fee || 300}</p>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem;">
+          <span style="color:#A3C6D9;">• Payment Status:</span>
+        </div>
+        <p style="margin:0 0 15px 0; font-weight:600;">Paid</p>
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">View Receipt</button>
+          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">Download</button>
+        </div>
+      </div>
+      
+    </div>
+  `;
+};
+
+// ─── Reviews ──────────────────────────────────────────────────────────────────
+window.openReviewModal = (doctorId) => {
+  document.getElementById('review-doctor-id').value = doctorId;
+  document.getElementById('review-comment').value = '';
+  document.getElementById('review-modal').style.display = 'flex';
+  setRating(0); // reset
+};
+
+window.setRating = (stars) => {
+  document.getElementById('review-rating').value = stars;
+  const icons = document.getElementById('star-rating').querySelectorAll('i');
+  icons.forEach((i, idx) => {
+    if (idx < stars) { i.classList.replace('far', 'fas'); i.style.color = '#FFD700'; }
+    else { i.classList.replace('fas', 'far'); i.style.color = '#ccc'; }
+  });
+};
+
+window.submitReview = async (e) => {
+  e.preventDefault();
+  const doctorId = document.getElementById('review-doctor-id').value;
+  const rating = document.getElementById('review-rating').value;
+  const comment = document.getElementById('review-comment').value;
+  
+  if(rating == 0) return showToast('Please select a star rating');
+  
+  const btn = e.target.querySelector('button');
+  const orgBtn = btn.innerHTML;
+  btn.innerHTML = 'Submitting...';
+  
+  try {
+    const res = await api.post(`/patients/doctors/${doctorId}/reviews`, { rating, comment });
+    btn.innerHTML = orgBtn;
+    if(res.success) {
+       document.getElementById('review-modal').style.display = 'none';
+       showToast('✅ Review submitted!');
+    } else { showToast(res.message); }
+  } catch(err) { btn.innerHTML = orgBtn; showToast('Network Error'); }
+};
 
 // ─── Reports ──────────────────────────────────────────────────────────────────
 async function loadReports() {
