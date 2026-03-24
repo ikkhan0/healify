@@ -30,24 +30,41 @@
 
 <!-- IDENTITY -->
 <div id="screen-identity" class="screen">
-  <div class="identity-bg">
-    <div class="identity-header">
-      <div class="logo-sm"><i class="fas fa-stethoscope"></i> Healify</div>
-      <h2>How would you like<br>to continue?</h2>
-      <p>Choose your role to get started</p>
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.svg" alt="Healthcare" onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
     </div>
-    <div class="identity-cards">
-      <div class="id-card" onclick="navigate('screen-onboarding')">
-        <div class="id-icon patient"><i class="fas fa-user"></i></div>
-        <h3>I am Patient</h3>
-        <p>Book appointments & track your health</p>
-        <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
-      </div>
-      <div class="id-card" onclick="window.location.href='/doctor'">
-        <div class="id-icon doctor"><i class="fas fa-user-md"></i></div>
-        <h3>I am Doctor</h3>
-        <p>Manage patients & consultations</p>
-        <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
+    <div class="auth-form-col">
+      <div class="identity-bg figma-card" style="background:transparent;box-shadow:none;padding:0;">
+        <div class="identity-header" style="text-align:left;padding:0;margin-bottom:30px;">
+          <h2 class="figma-title" style="text-align:left;font-size:32px;">Choose Your Role</h2>
+          <p class="figma-sub" style="text-align:left;">Choose your role to get started with Healify</p>
+        </div>
+        <div class="identity-cards" style="display:flex;flex-direction:column;gap:20px;">
+          <div class="id-card" onclick="navigate('screen-onboarding')" style="width:100%;max-width:400px;margin:0;">
+            <div class="id-icon patient"><i class="fas fa-user"></i></div>
+            <div style="flex:1">
+              <h3 style="margin:0;color:#112A61;">I am Patient</h3>
+              <p style="margin:0;font-size:13px;opacity:0.8;">Book appointments & track your health</p>
+            </div>
+            <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
+          </div>
+          <div class="id-card" onclick="window.location.href='/doctor'" style="width:100%;max-width:400px;margin:0;">
+            <div class="id-icon doctor"><i class="fas fa-user-md"></i></div>
+            <div style="flex:1">
+              <h3 style="margin:0;color:#112A61;">I am Doctor</h3>
+              <p style="margin:0;font-size:13px;opacity:0.8;">Manage patients & consultations</p>
+            </div>
+            <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -55,19 +72,27 @@
 
 <!-- ONBOARDING -->
 <div id="screen-onboarding" class="screen">
-  <div class="onboard-wrap">
-    <div class="onboard-image">
-      <div class="onboard-circle"></div>
-      <img src="assets/doctor-hero.svg" alt="Healthcare" class="hero-img" onerror="this.style.display='none'" />
-      <div class="hero-placeholder"><i class="fas fa-user-nurse"></i></div>
+  <header class="auth-desktop-nav">
+    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
+    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  </header>
+  <div class="auth-desktop-grid">
+    <div class="auth-image-col">
+       <div class="auth-image-inner">
+         <img src="/assets/doctor-hero.svg" alt="Healthcare" onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop'" />
+       </div>
     </div>
-    <div class="onboard-content">
-      <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
-      <h2>Welcome to <span class="brand">Healify</span></h2>
-      <p>Check your mental health and get professional support from certified specialists anytime, anywhere.</p>
-      <div class="onboard-btns">
-        <button class="btn-primary" onclick="navigate('screen-signup')">Sign Up</button>
-        <button class="btn-outline" onclick="navigate('screen-login')">Sign In</button>
+    <div class="auth-form-col">
+      <div class="auth-wrap">
+        <div class="onboard-content" style="text-align:left;padding:0;">
+          <h2 class="figma-title" style="text-align:left;font-size:36px;margin-bottom:15px;">Welcome to <span class="brand" style="color:#1c78c0">Healify</span></h2>
+          <p class="figma-sub" style="text-align:left;font-size:16px;line-height:1.6;margin-bottom:30px;">Check your mental health and get professional support from certified specialists anytime, anywhere.</p>
+          <div class="onboard-btns" style="display:flex;gap:15px;width:100%;max-width:400px;">
+            <button class="btn-figma" onclick="navigate('screen-signup')">Sign Up</button>
+            <button class="btn-figma" style="background:transparent;color:#112A61;border:2px solid #112A61;" onclick="navigate('screen-login')">Sign In</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
