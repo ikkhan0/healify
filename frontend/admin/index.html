@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Healify – Admin Panel</title>
+<base href="/admin/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -75,37 +76,61 @@
     </div>
 
     <!-- ─── DASHBOARD SECTION ─────────────────────────────────────────────── -->
-    <section id="section-dashboard" class="section active">
-      <div class="section-header">
-        <div><h2>Dashboard Overview</h2><p>Welcome back! Here's what's happening today.</p></div>
-        <button class="btn-refresh" onclick="loadDashboard()"><i class="fas fa-sync-alt"></i> Refresh</button>
-      </div>
-      <!-- KPI Cards -->
-      <div class="kpi-grid">
-        <div class="kpi-card blue"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-data"><strong id="kpi-patients">--</strong><span>Total Patients</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 12%</div></div>
-        <div class="kpi-card green"><div class="kpi-icon"><i class="fas fa-user-md"></i></div><div class="kpi-data"><strong id="kpi-doctors">--</strong><span>Total Doctors</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 5%</div></div>
-        <div class="kpi-card purple"><div class="kpi-icon"><i class="fas fa-calendar-check"></i></div><div class="kpi-data"><strong id="kpi-appts">--</strong><span>Appointments</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 18%</div></div>
-        <div class="kpi-card orange"><div class="kpi-icon"><i class="fas fa-rupee-sign"></i></div><div class="kpi-data"><strong id="kpi-earnings">--</strong><span>Total Revenue</span></div><div class="kpi-trend up"><i class="fas fa-arrow-up"></i> 22%</div></div>
-      </div>
-      <!-- Revenue Split -->
-      <div class="cards-row">
-        <div class="card earnings-split">
-          <h3><i class="fas fa-chart-pie"></i> Revenue Split</h3>
-          <div class="split-items">
-            <div class="split-item"><span>Total Revenue</span><strong id="rev-total">RS 0</strong></div>
-            <div class="split-item"><span>Clinic Share (20%)</span><strong id="rev-clinic">RS 0</strong></div>
-            <div class="split-item"><span>Doctor Share (80%)</span><strong id="rev-doctor">RS 0</strong></div>
+    <section id="section-dashboard" class="section active" style="padding:0;">
+      <!-- Hero Banner (home.png top section) -->
+      <div style="background: #EAF4FC; padding: 0;">
+        <div style="background: #64A3D9; padding: 4rem 3rem; color: #fff;">
+          <h1 style="font-size: 2.8rem; margin-bottom: 1rem;">How are you feeling today?</h1>
+          <p style="font-size: 1.1rem; max-width: 600px; line-height: 1.6;">Take a moment to reflect on how you're feeling. Our secure telehealth platform connects you with licensed professionals who provide confidential, personalized care to support your mental and emotional well-being.</p>
+        </div>
+        <!-- KPI Ribbon (home.png 4500+ stats mixed with real Data) -->
+        <div style="background: #0A2753; color: white; display: flex; justify-content: space-around; padding: 2rem 1rem;">
+          <div style="text-align: center;">
+            <h2 id="kpi-patients" style="font-size: 2.5rem; margin-bottom: 5px;">--</h2>
+            <span style="color: #A3C6D9;">Total Patients</span>
+          </div>
+          <div style="text-align: center;">
+            <h2 id="kpi-doctors" style="font-size: 2.5rem; margin-bottom: 5px;">--</h2>
+            <span style="color: #A3C6D9;">Total Doctors</span>
+          </div>
+          <div style="text-align: center;">
+            <h2 id="kpi-appts" style="font-size: 2.5rem; margin-bottom: 5px;">--</h2>
+            <span style="color: #A3C6D9;">Total Appointments</span>
+          </div>
+          <div style="text-align: center;">
+            <h2 id="kpi-earnings" style="font-size: 2.5rem; margin-bottom: 5px;">--</h2>
+            <span style="color: #A3C6D9;">Total Revenue</span>
           </div>
         </div>
-        <div class="card top-doctors-card">
-          <h3><i class="fas fa-trophy"></i> Top Doctors</h3>
-          <div id="top-doctors-list"><div class="loading-sm">Loading...</div></div>
-        </div>
       </div>
-      <!-- Monthly Chart -->
-      <div class="card monthly-chart">
-        <h3><i class="fas fa-chart-bar"></i> Monthly Revenue</h3>
-        <div class="chart-container" id="monthly-chart"></div>
+      
+      <!-- Care for your Mental Health section -->
+      <div style="padding: 3rem;">
+        <h2 style="color: #0A2753; font-size: 2rem; margin-bottom: 0.5rem;">Care for Your Mental Health, Online</h2>
+        <p style="color: #1C448E; font-size: 1.1rem; margin-bottom: 3rem;">Connect with licensed psychiatrists<br>from the comfort of your home.</p>
+        
+        <h3 style="color: #0A2753; font-size: 1.6rem; margin-bottom: 1.5rem;">Top Doctors & Analytics</h3>
+        
+        <div class="cards-row" style="margin-top: 1rem;">
+          <!-- Modified Top Doctors to fit the data -->
+          <div class="card top-doctors-card" style="box-shadow: none; border: 1px solid #C4E2F6; flex: 2;">
+            <div id="top-doctors-list"><div class="loading-sm">Loading...</div></div>
+          </div>
+          
+          <div class="card earnings-split" style="box-shadow: none; border: 1px solid #C4E2F6; flex: 1;">
+            <h3 style="color: #0A2753;"><i class="fas fa-chart-pie"></i> Revenue Split</h3>
+            <div class="split-items">
+              <div class="split-item" style="color: #0A2753;"><span>Total Revenue</span><strong id="rev-total">RS 0</strong></div>
+              <div class="split-item" style="color: #0A2753;"><span>Clinic Share (20%)</span><strong id="rev-clinic">RS 0</strong></div>
+              <div class="split-item" style="color: #0A2753;"><span>Doctor Share (80%)</span><strong id="rev-doctor">RS 0</strong></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card monthly-chart" style="margin-top: 2rem; box-shadow: none; border: 1px solid #C4E2F6;">
+          <h3 style="color: #0A2753;"><i class="fas fa-chart-bar"></i> Monthly Revenue Overview</h3>
+          <div class="chart-container" id="monthly-chart"></div>
+        </div>
       </div>
     </section>
 
