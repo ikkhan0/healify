@@ -8,13 +8,6 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/backend/server.js" },
-    { "source": "/uploads/(.*)", "destination": "/backend/server.js" },
-    { "source": "/doctor/(.*)", "destination": "/frontend/doctor/$1" },
-    { "source": "/patient/(.*)", "destination": "/frontend/patient/$1" },
-    { "source": "/admin/(.*)", "destination": "/frontend/admin/$1" },
-    { "source": "/assets/(.*)", "destination": "/frontend/website/assets/$1" },
-    { "source": "/css/(.*)", "destination": "/frontend/website/css/$1" },
-    { "source": "/(.*).html", "destination": "/frontend/website/$1.html" },
-    { "source": "/(index)?", "destination": "/frontend/website/index.html" }
+    { "source": "/uploads/(.*)", "destination": "/backend/server.js" }
   ]
 }
