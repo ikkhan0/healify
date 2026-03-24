@@ -22,14 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 // Serve frontend panels as static files
 const root = process.cwd();
 app.use('/uploads', express.static(path.join(root, 'uploads')));
-app.use('/patient', express.static(path.join(root, 'public/patient')));
-app.use('/doctor', express.static(path.join(root, 'public/doctor')));
-app.use('/admin', express.static(path.join(root, 'public/admin')));
-app.use('/assets', express.static(path.join(root, 'public/assets')));
-app.use('/', express.static(path.join(root, 'public')));
+app.use('/patient', express.static(path.join(root, 'frontend/patient')));
+app.use('/doctor', express.static(path.join(root, 'frontend/doctor')));
+app.use('/admin', express.static(path.join(root, 'frontend/admin')));
+app.use('/assets', express.static(path.join(root, 'frontend/website/assets')));
+app.use('/', express.static(path.join(root, 'frontend/website')));
 
 // Root route
-app.get('/', (req, res) => res.sendFile(path.join(root, 'public/index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(root, 'frontend/website/index.html')));
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));

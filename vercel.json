@@ -8,7 +8,15 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/backend/server.js" },
     { "src": "/uploads/(.*)", "dest": "/backend/server.js" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/doctor/(.*)", "dest": "/frontend/doctor/$1" },
+    { "src": "/doctor", "dest": "/frontend/doctor/index.html" },
+    { "src": "/patient/(.*)", "dest": "/frontend/patient/$1" },
+    { "src": "/patient", "dest": "/frontend/patient/index.html" },
+    { "src": "/admin/(.*)", "dest": "/frontend/admin/$1" },
+    { "src": "/admin", "dest": "/frontend/admin/index.html" },
+    { "src": "/assets/(.*)", "dest": "/frontend/website/assets/$1" },
+    { "src": "/css/(.*)", "dest": "/frontend/website/css/$1" },
+    { "src": "/(.*).html", "dest": "/frontend/website/$1.html" },
+    { "src": "/", "dest": "/frontend/website/index.html" }
   ]
 }
