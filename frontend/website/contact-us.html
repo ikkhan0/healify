@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Healify</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-container { max-width:1200px; margin:0 auto; padding:4rem; background:#fff; min-height:60vh; border-radius:16px; margin-top:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.05); display:flex; gap:40px; }
+    .page-title { color:#0A2753; font-size:3rem; margin-bottom:1rem; }
+    .page-subtitle { color:#1C448E; font-size:1.2rem; margin-bottom:3rem; }
+    
+    .contact-info { flex:1; }
+    .info-card { background:#F3FAFE; padding:2rem; border-radius:16px; margin-bottom:1.5rem; display:flex; align-items:center; gap:20px; }
+    .info-card i { font-size:2rem; color:#1C448E; }
+    .info-card div { color:#0A2753; font-weight:700; font-size:1.1rem;}
+    
+    .contact-form { flex:1; background:#EAF4FC; padding:3rem; border-radius:24px; }
+    .contact-form input, .contact-form textarea { width:100%; padding:15px; margin-bottom:15px; border-radius:8px; border:1px solid #c7ecee; font-family:inherit; font-size:1rem; }
+    .contact-form button { background:#0A2753; color:#fff; width:100%; padding:15px; border-radius:8px; border:none; font-size:1.1rem; font-weight:700; cursor:pointer; transition:transform 0.2s; }
+    .contact-form button:active { transform:scale(0.98); }
+  </style>
+</head>
+<body class="landing-body" style="background:#F3FAFE">
+  
+  <header class="top-nav" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color:#fff; padding:1.5rem 4rem;">
+    <div class="logo">
+      <div class="logo-circle-small"></div>
+      <span class="logo-text" style="color:#fff">Healify</span>
+    </div>
+    <nav class="nav-links">
+      <a href="/" style="color:#fff">Home</a>
+      <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
+      <a href="/how-it-works.html" style="color:#fff">How it works</a>
+      <a href="/about-us.html" style="color:#fff">About us</a>
+      <a href="/contact-us.html" class="active" style="color:#fff; border-bottom:2px solid #0A2753;">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="color:#fff">
+      <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <div class="contact-info">
+      <h1 class="page-title">Get in Touch</h1>
+      <p class="page-subtitle">Have a question or need support? Our team is always here to help you navigate your mental health professional journey.</p>
+      
+      <div class="info-card">
+         <i class="fas fa-envelope"></i>
+         <div>support@healify.pk</div>
+      </div>
+      <div class="info-card">
+         <i class="fas fa-phone-alt"></i>
+         <div>+92 300 1234567</div>
+      </div>
+      <div class="info-card">
+         <i class="fas fa-map-marker-alt"></i>
+         <div>Lahore, Pakistan</div>
+      </div>
+    </div>
+    
+    <div class="contact-form">
+       <h2 style="color:#0A2753; margin-bottom:1.5rem;">Send a Message</h2>
+       <input type="text" placeholder="Your Name" required>
+       <input type="email" placeholder="Your Email Address" required>
+       <textarea rows="5" placeholder="How can we help you?" required></textarea>
+       <button type="button" onclick="alert('Message sent successfully! We will get back to you shortly.');">Send Message</button>
+    </div>
+  </div>
+
+</body>
+</html>

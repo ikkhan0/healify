@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - Healify</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-container { max-width:1200px; margin:0 auto; padding:4rem; background:#fff; min-height:60vh; border-radius:16px; margin-top:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.05); }
+    .page-title { color:#0A2753; font-size:3rem; margin-bottom:1rem; text-align:center; }
+    .page-subtitle { color:#1C448E; font-size:1.2rem; text-align:center; margin-bottom:4rem; }
+    
+    .steps-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; }
+    .step-card { background:#F3FAFE; padding:3rem 2rem; border-radius:20px; text-align:center; position:relative; overflow:hidden; }
+    .step-num { width:50px; height:50px; background:#1C448E; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:800; position:absolute; top:20px; left:20px; }
+    .step-icon { font-size:4rem; color:#5DADE2; margin-bottom:1.5rem; }
+    .step-card h3 { color:#0A2753; font-size:1.5rem; margin-bottom:1rem; }
+    .step-card p { color:#1C448E; line-height:1.6; }
+  </style>
+</head>
+<body class="landing-body" style="background:#F3FAFE">
+  
+  <header class="top-nav" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color:#fff; padding:1.5rem 4rem;">
+    <div class="logo">
+      <div class="logo-circle-small"></div>
+      <span class="logo-text" style="color:#fff">Healify</span>
+    </div>
+    <nav class="nav-links">
+      <a href="/" style="color:#fff">Home</a>
+      <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
+      <a href="/how-it-works.html" class="active" style="color:#fff; border-bottom:2px solid #0A2753;">How it works</a>
+      <a href="/about-us.html" style="color:#fff">About us</a>
+      <a href="/contact-us.html" style="color:#fff">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="color:#fff">
+      <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <h1 class="page-title">How It Works</h1>
+    <p class="page-subtitle">Your journey to better mental health in 3 simple steps.</p>
+    
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <i class="fas fa-search step-icon"></i>
+        <h3>Find Your Specialist</h3>
+        <p>Browse our extensive directory of verified psychiatrists and psychologists. Filter by specialty, experience, and patient reviews to find your perfect match.</p>
+      </div>
+      
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <i class="fas fa-calendar-alt step-icon"></i>
+        <h3>Book an Appointment</h3>
+        <p>Select a convenient time slot from your chosen doctor's real-time calendar agenda. Securely pay the consultation fee to confirm your booking instantly.</p>
+      </div>
+      
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <i class="fas fa-video step-icon"></i>
+        <h3>Consult Securely</h3>
+        <p>Join your private, encrypted video consultation right from our platform. After the session, access your prescriptions and medical reports from your dashboard.</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
