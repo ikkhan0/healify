@@ -633,6 +633,6 @@ function logout() {
   navigate('screen-login');
   showToast('Logged out');
 }
-window.openReport = (id) => {
-  window.open(`/shared/report.html?id=${id}`, '_blank');
+window.openReport = (id, print = false) => {
+  window.open(`/shared/report.html?id=${id}${print ? '&print=true' : ''}`, '_blank');
 };

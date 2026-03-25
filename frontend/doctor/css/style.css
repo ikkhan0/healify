@@ -376,7 +376,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   /* App screens (Dashboard layout with sidebar) */
   body > .app-screen {  
     max-width: none;
-    margin-left: 260px;
+    left: 260px;
     width: calc(100% - 260px);
     box-shadow: none;
     padding: 0;
