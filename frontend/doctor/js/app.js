@@ -18,7 +18,7 @@ const iceServers = {
   ]
 };
 
-function navigate(screenId) {
+window.navigate = (screenId) => {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(screenId);
   if (el) { el.classList.add('active'); el.scrollTop = 0; }
@@ -51,6 +51,10 @@ function navigate(screenId) {
   if (screenId === 'screen-profile') {
     document.getElementById('nav-profile')?.classList.add('active');
     loadProfile();
+  }
+  if (screenId === 'screen-all-reports') {
+    document.getElementById('nav-reports')?.classList.add('active');
+    loadAllReports();
   }
 }
 
@@ -321,7 +325,7 @@ async function updateAppt(id, status) {
 
 let manualPatientId = null;
 
-async function generateManualReport(patientId, patientName) {
+window.generateManualReport = async (patientId, patientName) => {
    manualPatientId = patientId;
    pendingCompletionId = null; // resetting appt id
    document.getElementById('comp-remarks').value = '';
@@ -384,7 +388,7 @@ document.getElementById('btn-submit-completion')?.addEventListener('click', asyn
 });
 
 // ─── Patients ─────────────────────────────────────────────────────────────────
-async function loadPatients() {
+window.loadPatients = async () => {
   const container = document.getElementById('patients-list');
   container.innerHTML = '<div class="loading-pulse">Loading...</div>';
   try {
@@ -394,12 +398,12 @@ async function loadPatients() {
   } catch { container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi-slash"></i><h3>Server offline</h3></div>'; }
 }
 
-function searchPatients(q) {
+window.searchPatients = (q) => {
   const filtered = allPatients.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
   renderPatients(filtered);
 }
 
-function renderPatients(patients) {
+window.renderPatients = (patients) => {
   const container = document.getElementById('patients-list');
   if (!patients.length) {
     container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>No patients yet</h3><p>Patients who book with you will appear here</p></div>';
@@ -420,7 +424,7 @@ function renderPatients(patients) {
   }).join('')}</div>`;
 }
 
-async function loadPatientReports(patientId, patientName) {
+window.loadPatientReports = async (patientId, patientName) => {
    const modal = document.getElementById('patient-reports-modal');
    const title = document.getElementById('modal-patient-name');
    const list = document.getElementById('modal-reports-list');
@@ -635,4 +639,31 @@ function logout() {
 }
 window.openReport = (id, print = false) => {
   window.open(`/shared/report.html?id=${id}${print ? '&print=true' : ''}`, '_blank');
+};
+window.loadAllReports = async () => {
+  const container = document.getElementById('all-reports-list');
+  if(!container) return;
+  container.innerHTML = '<div class="loading-pulse">Loading all reports...</div>';
+  try {
+    const res = await api.get('/reports?all=true');
+    if (res.success && res.reports?.length) {
+      container.innerHTML = res.reports.map(r => `
+        <div class="report-item-card" style="background:#fff; padding:20px; border-radius:15px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.03); border:1px solid #EAF4FC;">
+          <div style="display:flex; align-items:center; gap:15px;">
+            <div style="background:#EAF4FC; color:#112A61; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;"><i class="fas fa-file-medical"></i></div>
+            <div>
+              <h4 style="margin:0; color:#112A61;">${r.title}</h4>
+              <p style="margin:4px 0 0; font-size:13px; color:#666;">Patient: <b>${r.patientId?.name || 'N/A'}</b> | ${new Date(r.createdAt).toLocaleDateString()}</p>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-figma-small" onclick="window.openReport('${r._id}')">View</button>
+            <button class="btn-figma-small" style="background:#1c78c0" onclick="window.openReport('${r._id}', true)">Print</button>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>No reports found</h3><p>Reports you generate will appear here</p></div>';
+    }
+  } catch(e) { container.innerHTML = '<div class="empty-state">Error loading reports</div>'; }
 };

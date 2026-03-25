@@ -12,9 +12,13 @@ router.get('/', protect, async (req, res) => {
     if (req.user.role === 'patient') {
       query.patientId = req.user._id;
     } else if (req.user.role === 'doctor') {
-      const { patientId } = req.query;
-      if (!patientId) return res.status(400).json({ success: false, message: 'patientId required' });
-      query.patientId = patientId;
+      const { patientId, all } = req.query;
+      if (all === 'true') {
+        query.doctorId = req.user._id;
+      } else {
+        if (!patientId) return res.status(400).json({ success: false, message: 'patientId required' });
+        query.patientId = patientId;
+      }
     }
     
     const reports = await Report.find(query)

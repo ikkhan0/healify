@@ -464,10 +464,24 @@
   </div>
 </div>
 
+  <div style="height:80px"></div>
+</div>
+
+<!-- ALL REPORTS -->
+<div id="screen-all-reports" class="screen app-screen">
+  <div class="app-header"><h2>Medical Reports</h2></div>
+  <div class="dash-content-wrap">
+    <div id="all-reports-list">
+      <div class="loading-pulse">Loading all reports...</div>
+    </div>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
 <!-- PATIENTS -->
 <div id="screen-patients" class="screen app-screen">
   <div class="app-header"><h2>My Patients</h2></div>
-  <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search patients..." oninput="searchPatients(this.value)" /></div>
+  <div class="search-bar" style="margin:20px 0;"><i class="fas fa-search" style="position:absolute; left:20px; top:50%; transform:translateY(-50%); color:#666;"></i><input type="text" placeholder="Search patients..." oninput="window.searchPatients(this.value)" style="width:100%; padding:15px 15px 15px 45px; border-radius:15px; border:1px solid #EAF4FC; font-family:inherit;" /></div>
   <div id="patients-list" class="appt-list"><div class="loading-pulse">Loading...</div></div>
   <div style="height:80px"></div>
 </div>
@@ -637,7 +651,7 @@
   <div class="nav-logo" style="display:none;"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;margin:10px auto;">logo</div></div>
   <a class="nav-item" id="nav-home" onclick="navigate('screen-dashboard')"><i class="fas fa-home"></i><span>Home</span></a>
   <a class="nav-item" id="nav-appointments" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i><span>Appointment</span></a>
-  <a class="nav-item" id="nav-reports" onclick="navigate('screen-patients')"><i class="far fa-file-alt"></i><span>Reports</span></a>
+  <a class="nav-item" id="nav-reports" onclick="navigate('screen-all-reports')"><i class="far fa-file-alt"></i><span>Reports</span></a>
   <a class="nav-item" id="nav-profile" onclick="navigate('screen-profile')"><i class="far fa-user-circle"></i><span>Profile</span></a>
 </nav>
 

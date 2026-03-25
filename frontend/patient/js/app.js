@@ -28,7 +28,7 @@ let currentQuestion = 0;
 let assessAnswers = [];
 
 // ─── Navigation ──────────────────────────────────────────────────────────────
-function navigate(screenId) {
+window.navigate = (screenId) => {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(screenId);
   if (target) {
@@ -679,7 +679,7 @@ window.submitReview = async (e) => {
 };
 
 // ─── Reports ──────────────────────────────────────────────────────────────────
-async function loadReports() {
+window.loadReports = async () => {
   const container = document.getElementById('reports-list');
   container.innerHTML = '<div class="loading-pulse">Loading...</div>';
   try {
@@ -689,14 +689,14 @@ async function loadReports() {
   } catch(e) { container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi-slash"></i><h3>Server offline</h3></div>'; }
 }
 
-function switchReportTab(type, btn) {
+window.switchReportTab = (type, btn) => {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const filtered = type === 'all' ? allReports : allReports.filter(r => r.type === type);
   renderReports(filtered);
 }
 
-function renderReports(reports) {
+window.renderReports = (reports) => {
   const container = document.getElementById('reports-list');
   if (!reports.length) {
     container.innerHTML = '<div class="empty-state"><i class="fas fa-file-medical"></i><h3>No records yet</h3><p>Your health records will appear here after consultations</p></div>';
@@ -914,11 +914,17 @@ function logout() {
 }
 
 // --- Patient Profile & Health Records ---
-window.showEditProfile = () => {
-  const user = JSON.parse(localStorage.getItem('healify_user') || '{}');
-  document.getElementById('edit-name').value = user.name || '';
-  document.getElementById('edit-phone').value = user.phone || '';
-  document.getElementById('edit-profile-modal').style.display = 'flex';
+window.showEditProfile = async () => {
+  try {
+    const res = await api.get('/patients/profile');
+    const u = res.user;
+    const p = res.profile || {};
+    document.getElementById('edit-name').value = u.name || '';
+    document.getElementById('edit-phone').value = u.phone || '';
+    document.getElementById('edit-age').value = p.age || '';
+    document.getElementById('edit-blood').value = p.bloodGroup || '';
+    document.getElementById('edit-profile-modal').style.display = 'flex';
+  } catch(e) { showToast('Error fetching profile data'); }
 };
 
 window.saveProfile = async () => {
@@ -930,7 +936,7 @@ window.saveProfile = async () => {
 
   btn.disabled = true; btn.textContent = 'Saving...';
   try {
-    const res = await api.put('/patients/profile', { name, phone, age, bloodGroup });
+    const res = await api.put('/patients/profile', { name, phone, age: Number(age), bloodGroup });
     if (res.success) {
       showToast('Profile updated');
       const user = JSON.parse(localStorage.getItem('healify_user') || '{}');
