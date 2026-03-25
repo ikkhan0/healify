@@ -61,14 +61,15 @@ router.get('/appointments', protect, authorize('doctor'), async (req, res) => {
 // @PUT /api/doctors/appointments/:id
 router.put('/appointments/:id', protect, authorize('doctor'), async (req, res) => {
   try {
-    const { status, notes, prescription } = req.body;
+    const { status, remarks, medicines, suggestedTests, notes, prescription } = req.body;
     const appt = await Appointment.findOne({ _id: req.params.id, doctorId: req.user._id });
     if (!appt) return res.status(404).json({ success: false, message: 'Appointment not found' });
+    
     if (status) appt.status = status;
     if (notes) appt.notes = notes;
     if (prescription) appt.prescription = prescription;
 
-    // On completion, update earnings
+    // On completion, update earnings and generate/update report
     if (status === 'completed') {
       const docProfile = await Doctor.findOne({ userId: req.user._id });
       if (docProfile) {
@@ -76,6 +77,25 @@ router.put('/appointments/:id', protect, authorize('doctor'), async (req, res) =
         docProfile.clinicShare = (docProfile.clinicShare || 0) + (appt.fee * 0.2 || 0);
         await docProfile.save();
       }
+
+      // Create or Update Report
+      const reportData = {
+        patientId: appt.patientId,
+        doctorId: req.user._id,
+        appointmentId: appt._id,
+        title: `Consultation Report - ${new Date().toLocaleDateString()}`,
+        description: remarks || appt.notes || 'Consultation completed.',
+        remarks: remarks || '',
+        medicines: medicines || '',
+        suggestedTests: suggestedTests || '',
+        type: 'prescription'
+      };
+
+      await Report.findOneAndUpdate(
+        { appointmentId: appt._id },
+        reportData,
+        { upsert: true, new: true }
+      );
     }
     await appt.save();
     res.json({ success: true, appointment: appt });
@@ -108,6 +128,28 @@ router.post('/reports', protect, authorize('doctor'), async (req, res) => {
     const report = await Report.create({ patientId, doctorId: req.user._id, appointmentId, title, description, type });
     res.status(201).json({ success: true, report });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// POST /reports - Manual report generation
+router.post('/reports', auth, async (req, res) => {
+  try {
+    const { patientId, title, description, remarks, medicines, suggestedTests, type } = req.body;
+    const report = new Report({
+      doctor: req.user.id,
+      patient: patientId,
+      title: title || 'Medical Report',
+      description,
+      remarks,
+      medicines,
+      suggestedTests,
+      type: type || 'prescription'
+    });
+    await report.save();
+    res.json({ success: true, report });
+  } catch (error) {
+    console.error('Error creating report:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 module.exports = router;

@@ -123,4 +123,20 @@ router.post('/doctors/:id/reviews', protect, authorize('patient'), async (req, r
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// @POST /api/patients/reports - patient upload
+router.post('/reports', protect, authorize('patient'), upload.single('file'), async (req, res) => {
+  try {
+    const { title, description, type } = req.body;
+    const report = new Report({
+      patientId: req.user._id,
+      title: title || 'Medical Record',
+      description,
+      type: type || 'general',
+      fileUrl: req.file ? `/uploads/${req.file.filename}` : null
+    });
+    await report.save();
+    res.json({ success: true, report });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
 module.exports = router;

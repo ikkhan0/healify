@@ -22,10 +22,36 @@ function navigate(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(screenId);
   if (el) { el.classList.add('active'); el.scrollTop = 0; }
-  if (screenId === 'screen-dashboard') loadDashboard();
-  if (screenId === 'screen-appointments') loadAppointments();
-  if (screenId === 'screen-patients') loadPatients();
-  if (screenId === 'screen-profile') loadProfile();
+  
+  // Navigation visibility
+  const nav = document.getElementById('main-nav');
+  const authScreens = ['screen-splash', 'screen-login', 'screen-signup', 'screen-reset-password', 'screen-otp'];
+  if (nav) {
+    if (authScreens.includes(screenId)) {
+      nav.style.display = 'none';
+    } else {
+      nav.style.display = 'flex';
+    }
+  }
+
+  // Highlight active nav item
+  document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+  if (screenId === 'screen-dashboard') {
+    document.getElementById('nav-home')?.classList.add('active');
+    loadDashboard();
+  }
+  if (screenId === 'screen-appointments') {
+    document.getElementById('nav-appointments')?.classList.add('active');
+    loadAppointments();
+  }
+  if (screenId === 'screen-patients') {
+    document.getElementById('nav-reports')?.classList.add('active');
+    loadPatients();
+  }
+  if (screenId === 'screen-profile') {
+    document.getElementById('nav-profile')?.classList.add('active');
+    loadProfile();
+  }
 }
 
 function showToast(msg, dur=2800) {
@@ -278,13 +304,84 @@ function renderApptCard(a, withActions = false) {
   </div>`;
 }
 
+let pendingCompletionId = null;
+
 async function updateAppt(id, status) {
+  if (status === 'completed') {
+    pendingCompletionId = id;
+    document.getElementById('video-complete-details-modal').style.display = 'flex';
+    return;
+  }
   try {
     const res = await api.put(`/doctors/appointments/${id}`, { status });
     if (res.success) { showToast(`Appointment ${status}`); loadAppointments(); loadDashboard(); }
     else showToast(res.message || 'Failed');
   } catch { showToast('Error'); }
 }
+
+let manualPatientId = null;
+
+async function generateManualReport(patientId, patientName) {
+   manualPatientId = patientId;
+   pendingCompletionId = null; // resetting appt id
+   document.getElementById('comp-remarks').value = '';
+   document.getElementById('comp-medicines').value = '';
+   document.getElementById('comp-tests').value = '';
+   document.getElementById('video-complete-details-modal').style.display = 'flex';
+   document.getElementById('video-complete-details-modal').querySelector('h2').textContent = `Generate Report: ${patientName}`;
+}
+
+// Update the submit listener to handle manual reports
+document.getElementById('btn-submit-completion')?.addEventListener('click', async () => {
+  const remarks = document.getElementById('comp-remarks').value;
+  const medicines = document.getElementById('comp-medicines').value;
+  const suggestedTests = document.getElementById('comp-tests').value;
+  
+  const btn = document.getElementById('btn-submit-completion');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  
+  try {
+    let res;
+    if (pendingCompletionId) {
+      // Linked to appointment
+      res = await api.put(`/doctors/appointments/${pendingCompletionId}`, { 
+        status: 'completed',
+        remarks,
+        medicines,
+        suggestedTests
+      });
+    } else if (manualPatientId) {
+      // Manual report (Directly to reports API)
+      res = await api.post('/doctors/reports', { 
+        patientId: manualPatientId,
+        title: `Medical Report - ${new Date().toLocaleDateString()}`,
+        description: remarks,
+        remarks,
+        medicines,
+        suggestedTests,
+        type: 'prescription'
+      });
+    }
+
+    if (res && res.success) {
+      document.getElementById('video-complete-details-modal').style.display = 'none';
+      document.getElementById('video-completed-modal').style.display = 'flex';
+      if (pendingCompletionId) {
+         loadAppointments();
+         loadDashboard();
+      }
+      // Clear
+      manualPatientId = null;
+      pendingCompletionId = null;
+    } else {
+      showToast(res?.message || 'Failed to save report');
+    }
+  } catch (ex) {
+    showToast('Connection error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save & Complete';
+  }
+});
 
 // ─── Patients ─────────────────────────────────────────────────────────────────
 async function loadPatients() {
@@ -310,11 +407,49 @@ function renderPatients(patients) {
   }
   container.innerHTML = `<div style="padding:0 0 8px;display:flex;flex-direction:column;gap:12px">${patients.map(p => {
     const initials = p.name.split(' ').map(n=>n[0]).join('');
-    return `<div class="patient-card">
-      <div class="patient-avatar">${p.profileImage ? `<img src="${p.profileImage}" style="width:50px;height:50px;border-radius:14px;object-fit:cover">` : initials}</div>
-      <div class="patient-info"><h4>${p.name}</h4><p>${p.email}</p></div>
+    return `<div class="patient-card" style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="patient-avatar">${p.profileImage ? `<img src="${p.profileImage}" style="width:50px;height:50px;border-radius:14px;object-fit:cover">` : initials}</div>
+        <div class="patient-info"><h4>${p.name}</h4><p>${p.email}</p></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-figma-small" style="background:#112A61; height:36px; padding:0 15px;" onclick="loadPatientReports('${p._id}', '${p.name}')">View Reports</button>
+        <button class="btn-figma-small" style="background:#1c78c0; height:36px; padding:0 15px;" onclick="generateManualReport('${p._id}', '${p.name}')"><i class="fas fa-plus"></i> Report</button>
+      </div>
     </div>`;
   }).join('')}</div>`;
+}
+
+async function loadPatientReports(patientId, patientName) {
+   const modal = document.getElementById('patient-reports-modal');
+   const title = document.getElementById('modal-patient-name');
+   const list = document.getElementById('modal-reports-list');
+   
+   title.textContent = `Reports: ${patientName}`;
+   list.innerHTML = '<div class="loading-pulse">Loading reports...</div>';
+   modal.style.display = 'flex';
+   
+   try {
+      const res = await api.get(`/reports?patientId=${patientId}`);
+      if (res.success && res.reports?.length) {
+         list.innerHTML = res.reports.map(r => `
+            <div style="background:#F8FCFF; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #EAF4FC;">
+               <div>
+                  <h4 style="margin:0 0 5px 0; color:#112A61;">${r.title}</h4>
+                  <p style="margin:0; font-size:12px; color:#666;">${new Date(r.createdAt).toLocaleDateString()}</p>
+               </div>
+               <div style="display:flex; gap:10px;">
+                  <button class="btn-figma-small" onclick="openReport('${r._id}')">View</button>
+                  <button class="btn-figma-small" style="background:#1c78c0" onclick="openReport('${r._id}', true)">Download</button>
+               </div>
+            </div>
+         `).join('');
+      } else {
+         list.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">No reports found for this patient.</p>';
+      }
+   } catch(e) {
+      document.getElementById('patient-reports-list').innerHTML = '<p style="color:red">Error loading reports.</p>';
+   }
 }
 
 // ─── Video Call ───────────────────────────────────────────────────────────────

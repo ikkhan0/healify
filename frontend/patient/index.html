@@ -512,9 +512,10 @@
     <button class="tab-btn" onclick="switchReportTab('assessment',this)">Assessments</button>
     <button class="tab-btn" onclick="switchReportTab('prescription',this)">Prescriptions</button>
   </div>
-  <div id="reports-list" class="reports-list">
+  <div id="reports-list" class="report-list">
     <div class="loading-pulse">Loading...</div>
   </div>
+  <button class="fab" onclick="document.getElementById('add-record-modal').style.display='flex'" style="position:fixed; bottom:100px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; border:none; font-size:24px; box-shadow:0 4px 15px rgba(0,80,157,0.3); cursor:pointer; z-index:90;"><i class="fas fa-plus"></i></button>
   <div style="height:80px"></div>
   <nav class="bottom-nav">
     <a class="nav-item" onclick="navigate('screen-home')"><i class="fas fa-home"></i><span>Home</span></a>
@@ -598,6 +599,7 @@
       <a class="menu-item" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i>My Appointments<i class="fas fa-chevron-right"></i></a>
       <a class="menu-item" onclick="navigate('screen-reports')"><i class="fas fa-file-medical"></i>Health Records<i class="fas fa-chevron-right"></i></a>
       <a class="menu-item" onclick="navigate('screen-assessment')"><i class="fas fa-brain"></i>Mental Assessment<i class="fas fa-chevron-right"></i></a>
+      <a class="menu-item" onclick="showEditProfile()"><i class="fas fa-edit"></i>Edit Profile<i class="fas fa-chevron-right"></i></a>
       <a class="menu-item danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout<i class="fas fa-chevron-right"></i></a>
     </div>
   </div>
@@ -611,6 +613,34 @@
 </div>
 
 <!-- TOAST -->
+  <!-- Edit Profile Modal -->
+  <div id="edit-profile-modal" class="modal-overlay" style="display:none; z-index:200;">
+    <div class="modal-card">
+      <h3>Edit Profile</h3>
+      <div class="input-group" style="margin-top:20px;"><i class="fas fa-user"></i><input type="text" id="edit-name" placeholder="Name" /></div>
+      <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="edit-phone" placeholder="Phone" /></div>
+      <div class="input-group"><i class="fas fa-calendar"></i><input type="number" id="edit-age" placeholder="Age" /></div>
+      <div class="input-group"><i class="fas fa-tint"></i><input type="text" id="edit-blood" placeholder="Blood Group" /></div>
+      <button class="btn-primary full" onclick="saveProfile()" id="btn-save-profile">Save Changes</button>
+      <button class="btn-outline full" style="margin-top:8px;" onclick="document.getElementById('edit-profile-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Add Record Modal -->
+  <div id="add-record-modal" class="modal-overlay" style="display:none; z-index:200;">
+    <div class="modal-card">
+      <h3>Add Health Record</h3>
+      <div class="input-group" style="margin-top:20px;"><i class="fas fa-file-alt"></i><input type="text" id="rec-title" placeholder="Record Title (e.g. Lab Report)" /></div>
+      <div class="input-group"><i class="fas fa-align-left"></i><input type="text" id="rec-desc" placeholder="Description" /></div>
+      <div class="input-group"><i class="fas fa-paperclip"></i>
+        <label for="rec-file" style="flex:1; cursor:pointer; font-size:14px; color:#666;">Choose File (PDF/Image)</label>
+        <input type="file" id="rec-file" style="display:none" onchange="this.previousElementSibling.textContent=this.files[0].name" />
+      </div>
+      <button class="btn-primary full" onclick="uploadHealthRecord()" id="btn-upload-rec">Upload Record</button>
+      <button class="btn-outline full" style="margin-top:8px;" onclick="document.getElementById('add-record-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+
 <div id="toast" class="toast"></div>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>

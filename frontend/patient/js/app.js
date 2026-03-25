@@ -600,8 +600,8 @@ window.openApptDetail = (apptId) => {
         <p style="margin:0 0 15px 0; font-weight:600;">Paid</p>
         
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">View Receipt</button>
-          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">Download</button>
+          <button id="view-receipt-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;" onclick="window.print()">Print Receipt</button>
+          <button id="download-appt-report-btn" class="loading-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer; opacity:0.5;" disabled>Download Report</button>
         </div>
       </div>
       
@@ -615,17 +615,29 @@ window.openApptDetail = (apptId) => {
       const reports = res.reports || [];
       const report = reports.find(r => r.appointmentId === apptId);
       const btn = document.getElementById('view-appt-report-btn');
+      const dlBtn = document.getElementById('download-appt-report-btn');
       if (btn && report) {
         btn.textContent = 'View Report';
         btn.style.opacity = '1';
         btn.disabled = false;
         btn.onclick = () => openReport(report._id);
+        
+        if (dlBtn) {
+          dlBtn.textContent = 'Download Report';
+          dlBtn.style.opacity = '1';
+          dlBtn.disabled = false;
+          dlBtn.onclick = () => openReport(report._id, true);
+        }
       } else if (btn) {
         btn.textContent = 'No Report Found';
+        if (dlBtn) dlBtn.textContent = 'No Report';
       }
     } catch(e) { console.error('Report search failed', e); }
   })();
 };
+
+// ─── Reviews ──────────────────────────────────────────────────────────────────
+// ... (rest of the file)
 
 // ─── Reviews ──────────────────────────────────────────────────────────────────
 window.openReviewModal = (doctorId) => {
@@ -695,20 +707,24 @@ function renderReports(reports) {
     const [icon, cls] = (iconMap[r.type] || 'file general').split(' ');
     const date = new Date(r.createdAt).toLocaleDateString('en', { month:'short', day:'numeric', year:'numeric' });
     return `
-      <div class="report-card" onclick="openReport('${r._id}')" style="cursor:pointer">
-        <div class="report-icon ${cls}"><i class="fas fa-${icon}"></i></div>
-        <div class="report-info">
-          <h4>${r.title}</h4>
-          <p>${r.description || 'No description'}</p>
-          <div class="report-date">${date}</div>
+      <div class="report-card" onclick="openReport('${r._id}')" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:15px;">
+          <div class="report-icon ${cls}"><i class="fas fa-${icon}"></i></div>
+          <div class="report-info">
+            <h4 style="margin:0;">${r.title}</h4>
+            <p style="margin:4px 0;">${r.description || 'No description'}</p>
+            <div class="report-date">${date}</div>
+          </div>
         </div>
-        <div style="color:var(--primary); font-size:1.2rem;"><i class="fas fa-external-link-alt"></i></div>
+        <div class="report-actions" style="display:flex; gap:10px;">
+          <button class="icon-btn" onclick="event.stopPropagation(); openReport('${r._id}', true)" title="Download/Print" style="background:#f0f7ff; color:#1C448E; border:none; padding:8px; border-radius:8px; cursor:pointer;"><i class="fas fa-download"></i></button>
+        </div>
       </div>`;
   }).join('');
 }
 
-window.openReport = (id) => {
-  window.open(`/shared/report.html?id=${id}`, '_blank');
+window.openReport = (id, autoPrint = false) => {
+  window.open(`/shared/report.html?id=${id}${autoPrint ? '&print=true' : ''}`, '_blank');
 };
 
 // ─── Assessment ───────────────────────────────────────────────────────────────
@@ -896,3 +912,69 @@ function logout() {
   navigate('screen-identity');
   showToast('Logged out successfully');
 }
+
+// --- Patient Profile & Health Records ---
+window.showEditProfile = () => {
+  const user = JSON.parse(localStorage.getItem('healify_user') || '{}');
+  document.getElementById('edit-name').value = user.name || '';
+  document.getElementById('edit-phone').value = user.phone || '';
+  document.getElementById('edit-profile-modal').style.display = 'flex';
+};
+
+window.saveProfile = async () => {
+  const btn = document.getElementById('btn-save-profile');
+  const name = document.getElementById('edit-name').value;
+  const phone = document.getElementById('edit-phone').value;
+  const age = document.getElementById('edit-age').value;
+  const bloodGroup = document.getElementById('edit-blood').value;
+
+  btn.disabled = true; btn.textContent = 'Saving...';
+  try {
+    const res = await api.put('/patients/profile', { name, phone, age, bloodGroup });
+    if (res.success) {
+      showToast('Profile updated');
+      const user = JSON.parse(localStorage.getItem('healify_user') || '{}');
+      user.name = name;
+      user.phone = phone;
+      localStorage.setItem('healify_user', JSON.stringify(user));
+      loadProfile();
+      document.getElementById('edit-profile-modal').style.display = 'none';
+    } else showToast(res.message);
+  } catch (err) { showToast('Error saving profile'); }
+  finally { btn.disabled = false; btn.textContent = 'Save Changes'; }
+};
+
+window.uploadHealthRecord = async () => {
+  const btn = document.getElementById('btn-upload-rec');
+  const title = document.getElementById('rec-title').value;
+  const desc = document.getElementById('rec-desc').value;
+  const fileInp = document.getElementById('rec-file');
+
+  if (!title) return showToast('Enter title');
+  
+  btn.disabled = true; btn.textContent = 'Uploading...';
+  try {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', desc);
+    formData.append('type', 'general');
+    if (fileInp.files[0]) formData.append('file', fileInp.files[0]);
+
+    const res = await fetch(`/api/patients/reports`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('healify_token')}` },
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('Record added');
+      document.getElementById('add-record-modal').style.display = 'none';
+      loadReports();
+      // Clear
+      document.getElementById('rec-title').value = '';
+      document.getElementById('rec-desc').value = '';
+      document.getElementById('rec-file').value = '';
+    } else showToast(data.message);
+  } catch (err) { showToast('Error uploading record'); }
+  finally { btn.disabled = false; btn.textContent = 'Upload Record'; }
+};

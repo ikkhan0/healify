@@ -43,8 +43,25 @@
       <div class="meta-item"><b>Type:</b> <span id="rep-type" style="text-transform: capitalize;">...</span></div>
     </div>
     
-    <div class="content-area" id="report-content">
-      Loading content...
+    <div id="clinical-info">
+      <div class="content-area" id="report-content" style="margin-bottom:20px; font-weight: 500;">
+        Loading content...
+      </div>
+
+      <div style="margin-top:30px; border-top: 1px solid #eee; padding-top:20px;">
+        <h3 style="color:#00509D; margin-bottom:10px;">Doctor's Remarks</h3>
+        <div id="rep-remarks" class="content-area">...</div>
+      </div>
+
+      <div style="margin-top:30px; border-top: 1px solid #eee; padding-top:20px;">
+        <h3 style="color:#00509D; margin-bottom:10px;">Prescription / Medicines</h3>
+        <div id="rep-medicines" class="content-area">...</div>
+      </div>
+
+      <div style="margin-top:30px; border-top: 1px solid #eee; padding-top:20px;">
+        <h3 style="color:#00509D; margin-bottom:10px;">Suggested Tests / Next Steps</h3>
+        <div id="rep-tests" class="content-area">...</div>
+      </div>
     </div>
   </div>
 
@@ -76,8 +93,6 @@
         }
 
         // Fetch Report Data
-        // Note: Using a generic endpoint or separate ones depending on who is logged in
-        // For simplicity, we assume the backend has a GET /api/reports/:id
         const rRes = await fetch(`/api/reports/${reportId}`, {
            headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -90,6 +105,33 @@
           document.getElementById('report-content').textContent = r.description;
           document.getElementById('pat-name').textContent = r.patientId?.name || 'N/A';
           document.getElementById('doc-name').textContent = r.doctorId?.name || 'N/A';
+          
+          document.getElementById('rep-remarks').textContent = r.remarks || 'No remarks provided.';
+          document.getElementById('rep-medicines').textContent = r.medicines || 'No medicines prescribed.';
+          document.getElementById('rep-tests').textContent = r.suggestedTests || 'No tests suggested.';
+
+          if (r.fileUrl) {
+            const attachmentDiv = document.createElement('div');
+            attachmentDiv.style.marginTop = '30px';
+            attachmentDiv.style.padding = '20px';
+            attachmentDiv.style.background = '#F0F7FF';
+            attachmentDiv.style.borderRadius = '12px';
+            attachmentDiv.style.textAlign = 'center';
+            attachmentDiv.innerHTML = `
+              <h3 style="color:#00509D; margin-bottom:15px;">Attachment Available</h3>
+              <a href="${r.fileUrl}" target="_blank" class="btn-print" style="text-decoration:none; display:inline-block;">View Attachment</a>
+            `;
+            document.querySelector('.report-body').appendChild(attachmentDiv);
+            
+            // If it's just a file upload from patient (no doctor), maybe hide the clinical sections if empty
+            if (!r.doctorId && !r.remarks && !r.medicines) {
+              document.getElementById('clinical-info').style.display = 'none';
+            }
+          }
+
+          if (urlParams.get('print') === 'true') {
+            setTimeout(() => window.print(), 1000);
+          }
         } else {
           document.getElementById('report-content').textContent = 'Failed to load report details: ' + rData.message;
         }

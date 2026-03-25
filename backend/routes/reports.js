@@ -3,6 +3,32 @@ const router = express.Router();
 const Report = require('../models/Report');
 const { protect } = require('../middleware/auth');
 
+// @desc    Get all reports (filtered by patientId for doctors)
+// @route   GET /api/reports
+// @access  Private
+router.get('/', protect, async (req, res) => {
+  try {
+    let query = {};
+    if (req.user.role === 'patient') {
+      query.patientId = req.user._id;
+    } else if (req.user.role === 'doctor') {
+      const { patientId } = req.query;
+      if (!patientId) return res.status(400).json({ success: false, message: 'patientId required' });
+      query.patientId = patientId;
+    }
+    
+    const reports = await Report.find(query)
+      .populate('patientId', 'name email')
+      .populate('doctorId', 'name specialty')
+      .sort({ createdAt: -1 });
+      
+    res.json({ success: true, reports });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // @desc    Get single report by ID
 // @route   GET /api/reports/:id
 // @access  Private

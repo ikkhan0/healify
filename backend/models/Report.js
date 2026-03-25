@@ -7,6 +7,9 @@ const reportSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, default: '' },
   type: { type: String, enum: ['assessment', 'prescription', 'lab', 'general'], default: 'general' },
+  remarks: { type: String, default: '' },
+  medicines: { type: String, default: '' }, // Could be array of objects for better structure, but string is easier for now
+  suggestedTests: { type: String, default: '' },
   fileUrl: { type: String, default: '' },
   tags: [String],
 }, { timestamps: true });
