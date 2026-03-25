@@ -581,8 +581,8 @@ window.openApptDetail = (apptId) => {
         </ul>
         <p style="color:#A3C6D9; font-weight:600; margin-bottom:15px; font-size:0.95rem;">Psychiatric Evaluation Report</p>
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">View Report</button>
-          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;">Download</button>
+          <button id="view-appt-report-btn" class="loading-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer; opacity:0.5;" disabled>Searching Report...</button>
+          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;" onclick="window.print()">Print This Page</button>
         </div>
       </div>
       
@@ -607,6 +607,24 @@ window.openApptDetail = (apptId) => {
       
     </div>
   `;
+
+  // Search for associated report
+  (async () => {
+    try {
+      const res = await api.get('/patients/reports');
+      const reports = res.reports || [];
+      const report = reports.find(r => r.appointmentId === apptId);
+      const btn = document.getElementById('view-appt-report-btn');
+      if (btn && report) {
+        btn.textContent = 'View Report';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        btn.onclick = () => openReport(report._id);
+      } else if (btn) {
+        btn.textContent = 'No Report Found';
+      }
+    } catch(e) { console.error('Report search failed', e); }
+  })();
 };
 
 // ─── Reviews ──────────────────────────────────────────────────────────────────
@@ -676,10 +694,22 @@ function renderReports(reports) {
     const iconMap = { assessment:'brain assessment', prescription:'prescription-bottle prescription', lab:'flask lab', general:'file-medical general' };
     const [icon, cls] = (iconMap[r.type] || 'file general').split(' ');
     const date = new Date(r.createdAt).toLocaleDateString('en', { month:'short', day:'numeric', year:'numeric' });
-    return `<div class="report-card"><div class="report-icon ${cls}"><i class="fas fa-${icon}"></i></div>
-      <div class="report-info"><h4>${r.title}</h4><p>${r.description || 'No description'}</p><div class="report-date">${date}</div></div></div>`;
+    return `
+      <div class="report-card" onclick="openReport('${r._id}')" style="cursor:pointer">
+        <div class="report-icon ${cls}"><i class="fas fa-${icon}"></i></div>
+        <div class="report-info">
+          <h4>${r.title}</h4>
+          <p>${r.description || 'No description'}</p>
+          <div class="report-date">${date}</div>
+        </div>
+        <div style="color:var(--primary); font-size:1.2rem;"><i class="fas fa-external-link-alt"></i></div>
+      </div>`;
   }).join('');
 }
+
+window.openReport = (id) => {
+  window.open(`/shared/report.html?id=${id}`, '_blank');
+};
 
 // ─── Assessment ───────────────────────────────────────────────────────────────
 function startAssessment() {
@@ -737,7 +767,15 @@ let callTimerInterval = null;
 let callSeconds = 0;
 const socket = io();
 
-const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+const iceServers = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' }
+    // Example TURN configuration (Required for working perfectly):
+    // { urls: 'turn:YOUR_TURN_SERVER_URL', username: 'YOUR_USERNAME', credential: 'YOUR_PASSWORD' }
+  ]
+};
+
 
 async function joinVideoCall(roomId, doctorName) {
   navigate('screen-video-call');
@@ -754,7 +792,13 @@ async function joinVideoCall(roomId, doctorName) {
       const s = String(callSeconds%60).padStart(2,'0');
       document.getElementById('call-timer').textContent = `${m}:${s}`;
     }, 1000);
-  } catch(e) { showToast('Could not access camera/microphone'); }
+    showToast('Video call joined! 🎥');
+  } catch (err) { 
+    console.error('Video Call Access Error:', err);
+    showToast('Failed to access camera/microphone. Please check permissions.');
+    navigate('screen-appointments');
+    return;
+  }
 
   socket.on('user-joined', async ({ socketId }) => {
     peerConnection = new RTCPeerConnection(iceServers);
@@ -781,24 +825,37 @@ async function joinVideoCall(roomId, doctorName) {
   socket.on('ice-candidate', async ({ candidate }) => { await peerConnection?.addIceCandidate(new RTCIceCandidate(candidate)); });
 }
 
-window.toggleMic = () => {
+window.toggleMic = (btn) => {
   if (!localStream) return;
   const track = localStream.getAudioTracks()[0];
-  if (track) { track.enabled = !track.enabled; document.getElementById('mic-btn').classList.toggle('muted', !track.enabled); }
+  if (track) { 
+    track.enabled = !track.enabled; 
+    btn.innerHTML = track.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+    btn.classList.toggle('muted', !track.enabled);
+    showToast(track.enabled ? 'Microphone On' : 'Microphone Muted');
+  }
 };
 
-window.toggleCam = () => {
+window.toggleCam = (btn) => {
   if (!localStream) return;
   const track = localStream.getVideoTracks()[0];
-  if (track) { track.enabled = !track.enabled; document.getElementById('cam-btn').classList.toggle('muted', !track.enabled); }
+  if (track) { 
+    track.enabled = !track.enabled; 
+    btn.innerHTML = track.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+    btn.classList.toggle('muted', !track.enabled);
+    showToast(track.enabled ? 'Camera On' : 'Camera Off');
+  }
 };
 
 function endCall() {
   localStream?.getTracks().forEach(t => t.stop());
   peerConnection?.close();
+  peerConnection = null;
   clearInterval(callTimerInterval);
   callSeconds = 0;
+  socket.emit('leave-room', { roomId: socket.roomId });
   navigate('screen-appointments');
+  showToast('Call ended');
 }
 
 // ─── Profile ──────────────────────────────────────────────────────────────────

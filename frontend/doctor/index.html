@@ -511,13 +511,13 @@
        
        <!-- Call Controls -->
        <div class="figma-call-controls">
-         <button class="c-btn"><i class="fas fa-microphone"></i></button>
-         <button class="c-btn"><i class="fas fa-video"></i></button>
-         <button class="c-btn end-btn" onclick="showSessionCompletedModal()"><i class="fas fa-phone-slash"></i></button>
-         <button class="c-btn"><i class="fas fa-camera"></i></button>
-         <button class="c-btn"><i class="fas fa-volume-up"></i></button>
+         <button class="c-btn" onclick="toggleMic(this)"><i class="fas fa-microphone"></i></button>
+         <button class="c-btn" onclick="toggleCam(this)"><i class="fas fa-video"></i></button>
+         <button class="c-btn end-btn" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
+         <button class="c-btn" onclick="showToast('Feature coming soon')"><i class="fas fa-camera"></i></button>
+         <button class="c-btn" onclick="showToast('Audio logic active')"><i class="fas fa-volume-up"></i></button>
        </div>
-     </div>
+</div>
 
      <!-- Right: Info Panels -->
      <div class="video-side-col">
@@ -619,6 +619,7 @@
 
 <div id="toast" class="toast"></div>
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="/js/settings-sync.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 </body>

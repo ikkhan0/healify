@@ -7,7 +7,16 @@ let peerConnection = null;
 let callSeconds = 0;
 let callTimerInterval = null;
 const socket = io();
-const iceServers = {iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+// Note: To work perfectly across all networks, you SHOULD replace these with real TURN server credentials 
+// from a provider like Metered.ca, Twilio, or Xirsys.
+const iceServers = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    // Example TURN configuration:
+    // { urls: 'turn:YOUR_TURN_SERVER_URL', username: 'YOUR_USERNAME', credential: 'YOUR_PASSWORD' }
+  ]
+};
 
 function navigate(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -322,7 +331,13 @@ async function joinVideoCall(roomId, patientName) {
       const s = String(callSeconds%60).padStart(2,'0');
       document.getElementById('call-timer').textContent = `${m}:${s}`;
     }, 1000);
-  } catch { showToast('Camera/mic access denied'); }
+    showToast('Video call joined! 🎥');
+  } catch (err) { 
+    console.error('Video Call Access Error:', err);
+    showToast('Failed to access camera/microphone. Please check permissions.');
+    navigate('screen-appointments');
+    return;
+  }
 
   socket.on('user-joined', async ({ socketId }) => {
     peerConnection = new RTCPeerConnection(iceServers);
@@ -347,20 +362,33 @@ async function joinVideoCall(roomId, patientName) {
   socket.on('ice-candidate', async ({candidate}) => { await peerConnection?.addIceCandidate(new RTCIceCandidate(candidate)); });
 }
 
-window.toggleMic = () => {
+window.toggleMic = (btn) => {
   const t = localStream?.getAudioTracks()[0];
-  if (t) { t.enabled = !t.enabled; document.getElementById('mic-btn').classList.toggle('muted', !t.enabled); }
+  if (t) { 
+    t.enabled = !t.enabled; 
+    btn.innerHTML = t.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+    btn.classList.toggle('muted', !t.enabled);
+    showToast(t.enabled ? 'Microphone On' : 'Microphone Muted');
+  }
 };
-window.toggleCam = () => {
+window.toggleCam = (btn) => {
   const t = localStream?.getVideoTracks()[0];
-  if (t) { t.enabled = !t.enabled; document.getElementById('cam-btn').classList.toggle('muted', !t.enabled); }
+  if (t) { 
+    t.enabled = !t.enabled; 
+    btn.innerHTML = t.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+    btn.classList.toggle('muted', !t.enabled);
+    showToast(t.enabled ? 'Camera On' : 'Camera Off');
+  }
 };
 function endCall() {
   localStream?.getTracks().forEach(t => t.stop());
   peerConnection?.close();
+  peerConnection = null;
   clearInterval(callTimerInterval);
   callSeconds = 0;
+  socket.emit('leave-room', { roomId: socket.roomId });
   navigate('screen-appointments');
+  showToast('Call ended');
 }
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
@@ -470,3 +498,6 @@ function logout() {
   navigate('screen-login');
   showToast('Logged out');
 }
+window.openReport = (id) => {
+  window.open(`/shared/report.html?id=${id}`, '_blank');
+};

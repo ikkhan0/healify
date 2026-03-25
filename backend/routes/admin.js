@@ -138,4 +138,37 @@ router.put('/appointment/:id', protect, authorize('admin'), async (req, res) => 
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// @PUT /api/admin/change-password
+router.put('/change-password', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user || !(await user.matchPassword(currentPassword))) {
+      return res.status(401).json({ success: false, message: 'Invalid current password' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/admin/admins
+router.get('/admins', protect, authorize('admin'), async (req, res) => {
+  try {
+    const admins = await User.find({ role: 'admin' }).select('-password').lean();
+    res.json({ success: true, admins });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @POST /api/admin/admins (Create a new admin)
+router.post('/admins', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const exists = await User.findOne({ email });
+    if (exists) return res.status(400).json({ success: false, message: 'Email already registered' });
+    const user = await User.create({ name, email, password, role: 'admin' });
+    res.status(201).json({ success: true, message: 'Admin created successfully', admin: { id: user._id, name: user.name, email: user.email, role: user.role } });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
 module.exports = router;

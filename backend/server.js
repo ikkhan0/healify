@@ -25,6 +25,7 @@ app.use('/uploads', express.static(path.join(root, 'uploads')));
 app.use('/patient', express.static(path.join(root, 'frontend/patient')));
 app.use('/doctor', express.static(path.join(root, 'frontend/doctor')));
 app.use('/admin', express.static(path.join(root, 'frontend/admin')));
+app.use('/shared', express.static(path.join(root, 'frontend/shared')));
 app.use('/assets', express.static(path.join(root, 'frontend/website/assets')));
 app.use('/', express.static(path.join(root, 'frontend/website')));
 
@@ -36,6 +37,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/patients', require('./routes/patients'));
 app.use('/api/doctors', require('./routes/doctors'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/reports', require('./routes/reports'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ success: true, message: 'Healify API is running 🏥' }));

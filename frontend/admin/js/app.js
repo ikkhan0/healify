@@ -83,6 +83,7 @@ function showSection(name, linkEl) {
   if (name === 'doctors') loadDoctors();
   if (name === 'appointments') loadAppointments();
   if (name === 'reports') loadReports();
+  if (name === 'settings') loadSettings();
 }
 
 // ─── Dashboard ─────────────────────────────────────────────────────────────
@@ -410,4 +411,100 @@ async function submitEditAppt(e) {
   const id = document.getElementById('edit-appt-id').value;
   const status = document.getElementById('edit-appt-status').value;
   try { await api.put(`/admin/appointment/${id}`, {status}); document.getElementById('edit-appt-modal').style.display = 'none'; showToast('Appointment status updated'); loadAppointments(); } catch(e) { showToast(e.message, true); }
+}
+
+// ─── Settings ───────────────────────────────────────────────────────────────
+function showSettingsTab(tab, btn) {
+  document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'admins') loadAdmins();
+}
+
+async function loadSettings() {
+  try {
+    const res = await api.get('/settings');
+    if (res.success && res.settings) {
+      const s = res.settings;
+      document.getElementById('set-logo').value = s.logoUrl || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-email').value = s.email || '';
+      document.getElementById('set-address').value = s.address || '';
+    }
+  } catch (e) { console.error('Failed to load settings', e); }
+}
+
+async function saveGeneralSettings(e) {
+  e.preventDefault();
+  const updates = {
+    logoUrl: document.getElementById('set-logo').value,
+    phone: document.getElementById('set-phone').value,
+    email: document.getElementById('set-email').value,
+    address: document.getElementById('set-address').value
+  };
+  try {
+    const res = await api.put('/settings', updates);
+    if (res.success) { showToast('Settings updated successfully ✅'); }
+  } catch (e) { showToast('Failed to update settings'); }
+}
+
+async function changeAdminPassword(e) {
+  e.preventDefault();
+  const currentPassword = document.getElementById('cur-password').value;
+  const newPassword = document.getElementById('new-password').value;
+  const confPassword = document.getElementById('conf-password').value;
+
+  if (newPassword !== confPassword) return showToast('New passwords do not match');
+
+  try {
+    const res = await api.put('/admin/change-password', { currentPassword, newPassword });
+    if (res.success) {
+      showToast('Password updated successfully ✅');
+      e.target.reset();
+    } else {
+      showToast(res.message || 'Error updating password');
+    }
+  } catch (e) { showToast('Error updating password'); }
+}
+
+async function loadAdmins() {
+  const tbody = document.getElementById('admins-tbody');
+  try {
+    const res = await api.get('/admin/admins');
+    const admins = res.admins || [];
+    if (!admins.length) { tbody.innerHTML = '<tr><td colspan="5" class="loading-row">No admins found</td></tr>'; return; }
+    tbody.innerHTML = admins.map((a, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td>${a.name}</td>
+        <td>${a.email}</td>
+        <td><span class="badge" style="background:#0A2753; color:#fff">${a.role}</span></td>
+        <td><span class="badge ${a.isActive?'badge-active':'badge-inactive'}">${a.isActive?'Active':'Inactive'}</span></td>
+      </tr>
+    `).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="5" class="loading-row">Error loading admins</td></tr>'; }
+}
+
+function openAddAdminModal() {
+  document.getElementById('add-admin-modal').style.display = 'flex';
+}
+
+async function submitAddAdmin(e) {
+  e.preventDefault();
+  const name = document.getElementById('add-adm-name').value;
+  const email = document.getElementById('add-adm-email').value;
+  const password = document.getElementById('add-adm-pass').value;
+
+  try {
+    const res = await api.post('/admin/admins', { name, email, password });
+    if (res.success) {
+      showToast('Admin created successfully ✅');
+      document.getElementById('add-admin-modal').style.display = 'none';
+      e.target.reset();
+      loadAdmins();
+    } else {
+      showToast(res.message || 'Error creating admin');
+    }
+  } catch (e) { showToast('Error creating admin'); }
 }

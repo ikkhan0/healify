@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Healify - Medical Report</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; line-height: 1.6; }
+    .report-header { display: flex; justify-content: space-between; border-bottom: 2px solid #00509D; padding-bottom: 20px; margin-bottom: 30px; }
+    .logo-side img { height: 60px; }
+    .contact-side { text-align: right; font-size: 14px; color: #666; }
+    .report-body { margin-bottom: 40px; }
+    .report-title { font-size: 24px; color: #00509D; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    .meta-item b { color: #555; }
+    .content-area { white-space: pre-wrap; margin-top: 20px; font-size: 16px; }
+    .report-footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #999; text-align: center; }
+    @media print { .no-print { display: none; } body { padding: 0; } }
+    .btn-print { background: #00509D; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="no-print" style="text-align: right; margin-bottom: 20px;">
+    <button class="btn-print" onclick="window.print()">Print Report</button>
+  </div>
+  
+  <div class="report-header">
+    <div class="logo-side" id="report-logo">
+       <h2 style="margin:0; color:#00509D;">Healify</h2>
+    </div>
+    <div class="contact-side">
+      <div id="report-address">Address Loading...</div>
+      <div id="report-phone">Phone Loading...</div>
+      <div id="report-email">Email Loading...</div>
+    </div>
+  </div>
+
+  <div class="report-body">
+    <h1 class="report-title" id="report-title">Medical Report</h1>
+    <div class="meta-grid">
+      <div class="meta-item"><b>Patient:</b> <span id="pat-name">...</span></div>
+      <div class="meta-item"><b>Date:</b> <span id="rep-date">...</span></div>
+      <div class="meta-item"><b>Doctor:</b> <span id="doc-name">...</span></div>
+      <div class="meta-item"><b>Type:</b> <span id="rep-type" style="text-transform: capitalize;">...</span></div>
+    </div>
+    
+    <div class="content-area" id="report-content">
+      Loading content...
+    </div>
+  </div>
+
+  <div class="report-footer">
+    This is an electronically generated report from Healify Platform. No signature is required.
+    <br>© <span id="curr-year"></span> Healify.pk
+  </div>
+
+  <script>
+    document.getElementById('curr-year').textContent = new Date().getFullYear();
+    
+    async function loadReport() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reportId = urlParams.get('id');
+      const token = localStorage.getItem('healify_token') || localStorage.getItem('healify_doctor_token');
+
+      if (!reportId) { document.body.innerHTML = '<h1>Report ID missing</h1>'; return; }
+
+      try {
+        // Fetch Global Settings
+        const sRes = await fetch('/api/settings');
+        const sData = await sRes.json();
+        if (sData.success && sData.settings) {
+          const s = sData.settings;
+          if (s.logoUrl) document.getElementById('report-logo').innerHTML = `<img src="${s.logoUrl}" alt="Logo">`;
+          document.getElementById('report-address').textContent = s.address;
+          document.getElementById('report-phone').textContent = s.phone;
+          document.getElementById('report-email').textContent = s.email;
+        }
+
+        // Fetch Report Data
+        // Note: Using a generic endpoint or separate ones depending on who is logged in
+        // For simplicity, we assume the backend has a GET /api/reports/:id
+        const rRes = await fetch(`/api/reports/${reportId}`, {
+           headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const rData = await rRes.json();
+        if (rData.success) {
+          const r = rData.report;
+          document.getElementById('report-title').textContent = r.title;
+          document.getElementById('rep-date').textContent = new Date(r.createdAt).toLocaleDateString();
+          document.getElementById('rep-type').textContent = r.type;
+          document.getElementById('report-content').textContent = r.description;
+          document.getElementById('pat-name').textContent = r.patientId?.name || 'N/A';
+          document.getElementById('doc-name').textContent = r.doctorId?.name || 'N/A';
+        } else {
+          document.getElementById('report-content').textContent = 'Failed to load report details: ' + rData.message;
+        }
+      } catch (e) {
+        console.error(e);
+        document.getElementById('report-content').textContent = 'Error connecting to server.';
+      }
+    }
+    loadReport();
+  </script>
+</body>
+</html>
