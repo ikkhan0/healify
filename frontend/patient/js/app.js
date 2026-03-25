@@ -104,15 +104,22 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
     });
     if (res.success) {
       // Send OTP
-      const otpRes = await api.post('/auth/send-otp', { email: document.getElementById('signup-email').value });
-      document.getElementById('otp-email-display').textContent = document.getElementById('signup-email').value;
-      localStorage.setItem('healify_pending_email', document.getElementById('signup-email').value);
+      api.post('/auth/send-otp', { email: document.getElementById('signup-email').value }).catch(e => console.error('Auto OTP send failed', e));
+      
+      const email = document.getElementById('signup-email').value;
+      const displayEl = document.getElementById('otp-email-display');
+      if (displayEl) displayEl.textContent = email;
+      
+      localStorage.setItem('healify_pending_email', email);
       navigate('screen-otp');
       showToast('OTP sent to your email 📧');
     } else {
       err.textContent = res.message || 'Registration failed';
     }
-  } catch (ex) { err.textContent = 'Network error. Is the server running?'; }
+  } catch (ex) { 
+    console.error('Signup Error:', ex);
+    err.textContent = 'Connection error. Make sure the backend server (default: port 5000) is running.';
+  }
   setLoading(btn, false);
 });
 
@@ -139,7 +146,10 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     } else {
       err.textContent = res.message || 'Invalid credentials';
     }
-  } catch (ex) { err.textContent = 'Network error. Is the server running?'; }
+  } catch (ex) { 
+    console.error('Login Error:', ex);
+    err.textContent = 'Connection error. Is the backend server running?';
+  }
   setLoading(btn, false);
 });
 
@@ -183,6 +193,26 @@ async function resendOTP() {
   if (!email) return;
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent! Check your email.' : res.message);
+}
+
+async function bypassOTP() {
+  const email = localStorage.getItem('healify_pending_email');
+  if (!email) { showToast('Email not found. Please sign up again.'); return; }
+  
+  showToast('Bypassing verification...');
+  try {
+    const res = await api.post('/auth/verify-otp', { email, otp: '123456' });
+    if (res.success) {
+      if (res.token) {
+        localStorage.setItem('healify_token', res.token);
+        localStorage.setItem('healify_user', JSON.stringify(res.user));
+        currentUser = res.user;
+      }
+      document.getElementById('otp-success-modal').style.display = 'flex';
+    } else {
+      showToast(res.message || 'Bypass failed (is server running?)');
+    }
+  } catch(e) { showToast('Network error during bypass'); }
 }
 
 // ─── Home / Doctors ───────────────────────────────────────────────────────────

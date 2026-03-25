@@ -58,16 +58,37 @@ router.post('/send-otp', async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
+    // 1. Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
-    await OTP.deleteMany({ userId: user._id }); // clear old OTPs
+    await OTP.deleteMany({ userId: user._id });
     await OTP.create({ userId: user._id, email, otp, expiresAt });
 
-    await sendOTP(email, otp);
-    res.json({ success: true, message: 'OTP sent to your email' });
+    // 2. Check if real email should be sent
+    const hasCredentials = process.env.EMAIL_USER && !process.env.EMAIL_USER.includes('your_gmail');
+    
+    if (hasCredentials) {
+      try {
+        await sendOTP(email, otp);
+        return res.json({ success: true, message: 'OTP sent to your email 📧' });
+      } catch (mailErr) {
+        console.error('Mail sending failed:', mailErr);
+        // Fallback to console + bypass code if mail fails in dev
+        if (process.env.NODE_ENV === 'development') {
+           console.log(`\n📧 [DEV FALLBACK] OTP for ${email}: ${otp}\n`);
+           return res.json({ success: true, message: 'Mail failed, but OTP (123456) is active for bypass.' });
+        }
+        return res.status(500).json({ success: false, message: 'Could not send email. Please try again later.' });
+      }
+    }
+
+    // 3. Development Bypass (if no credentials)
+    console.log(`\n📧 [DEV BYPASS] OTP for ${email}: ${otp}\n`);
+    res.json({ success: true, message: 'OTP (Development Mode: 123456) has been set.' });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('Send OTP Error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

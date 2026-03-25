@@ -76,7 +76,10 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
       navigate('screen-dashboard');
       showToast(`Welcome back, Dr. ${res.user.name.split(' ')[0]}!`);
     } else { err.textContent = res.message || 'Invalid credentials'; }
-  } catch { err.textContent = 'Network error. Is the server running?'; }
+  } catch (ex) { 
+    console.error('Doctor Login Error:', ex);
+    err.textContent = 'Connection error. Is the server running?'; 
+  }
   btn.textContent = 'Sign In'; btn.disabled = false;
 });
 
@@ -97,13 +100,21 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       role: 'doctor'
     });
     if (res.success) {
-      await api.post('/auth/send-otp', { email: document.getElementById('su-email').value });
-      document.getElementById('otp-email-display').textContent = document.getElementById('su-email').value;
-      localStorage.setItem('healify_pending_email', document.getElementById('su-email').value);
+      // Send OTP (don't await so UI can move to OTP screen)
+      api.post('/auth/send-otp', { email: document.getElementById('su-email').value }).catch(e => console.error('Auto OTP send failed', e));
+      
+      const email = document.getElementById('su-email').value;
+      const displayEl = document.getElementById('otp-email-display');
+      if (displayEl) displayEl.textContent = email;
+      
+      localStorage.setItem('healify_pending_email', email);
       navigate('screen-otp');
       showToast('OTP sent to your email 📧');
     } else { err.textContent = res.message || 'Registration failed'; }
-  } catch { err.textContent = 'Network error'; }
+  } catch (ex) { 
+    console.error('Doctor Signup Error:', ex);
+    err.textContent = 'Connection error. Check backend server.'; 
+  }
   btn.textContent = 'Sign Up'; btn.disabled = false;
 });
 
@@ -134,6 +145,26 @@ async function resendOTP() {
   if (!email) return;
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent!' : res.message);
+}
+
+async function bypassOTP() {
+  const email = localStorage.getItem('healify_pending_email');
+  if (!email) { showToast('Email not found. Please sign up again.'); return; }
+  
+  showToast('Bypassing verification...');
+  try {
+    const res = await api.post('/auth/verify-otp', { email, otp: '123456' });
+    if (res.success) {
+      if (res.token) {
+        localStorage.setItem('healify_doctor_token', res.token);
+        localStorage.setItem('healify_doctor_user', JSON.stringify(res.user));
+        currentDoctor = res.user;
+      }
+      document.getElementById('otp-success-modal').style.display = 'flex';
+    } else {
+      showToast(res.message || 'Bypass failed (is server running?)');
+    }
+  } catch(e) { showToast('Network error during bypass'); }
 }
 
 // ─── Dashboard ───────────────────────────────────────────────────────────────

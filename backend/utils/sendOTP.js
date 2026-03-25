@@ -23,6 +23,10 @@ const sendOTP = async (email, otp) => {
     `,
   };
 
+  if (!process.env.EMAIL_USER || process.env.EMAIL_USER.includes('your_gmail')) {
+    console.log('Skipping email send: EMAIL_USER is not configured correctly.');
+    return;
+  }
   await transporter.sendMail(mailOptions);
 };
 
