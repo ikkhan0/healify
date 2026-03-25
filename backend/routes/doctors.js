@@ -121,34 +121,30 @@ router.get('/earnings', protect, authorize('doctor'), async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
-// @POST /api/doctors/reports  - create a patient report
+// @POST /api/doctors/reports - create or manual patient report
 router.post('/reports', protect, authorize('doctor'), async (req, res) => {
   try {
-    const { patientId, appointmentId, title, description, type } = req.body;
-    const report = await Report.create({ patientId, doctorId: req.user._id, appointmentId, title, description, type });
-    res.status(201).json({ success: true, report });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
-});
+    const { patientId, appointmentId, title, description, remarks, medicines, suggestedTests, type } = req.body;
+    
+    // Validate patientId
+    if (!patientId) return res.status(400).json({ success: false, message: 'patientId is required' });
 
-// POST /reports - Manual report generation
-router.post('/reports', auth, async (req, res) => {
-  try {
-    const { patientId, title, description, remarks, medicines, suggestedTests, type } = req.body;
-    const report = new Report({
-      doctor: req.user.id,
-      patient: patientId,
+    const report = await Report.create({
+      patientId,
+      doctorId: req.user._id,
+      appointmentId,
       title: title || 'Medical Report',
-      description,
-      remarks,
-      medicines,
-      suggestedTests,
+      description: description || '',
+      remarks: remarks || '',
+      medicines: medicines || '',
+      suggestedTests: suggestedTests || '',
       type: type || 'prescription'
     });
-    await report.save();
-    res.json({ success: true, report });
-  } catch (error) {
-    console.error('Error creating report:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+
+    res.status(201).json({ success: true, report });
+  } catch (err) {
+    console.error('Report Creation Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
