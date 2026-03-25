@@ -369,27 +369,98 @@ async function loadProfile() {
     const res = await api.get('/doctors/profile');
     const u = res.user;
     const d = res.profile || {};
-    document.getElementById('profile-name').textContent = `Dr. ${u.name}`;
-    document.getElementById('profile-specialty').textContent = d.specialty || 'Specialist';
-    document.getElementById('profile-rating').textContent = `${d.rating || '4.0'} Rating`;
-    document.getElementById('profile-fee').textContent = `RS ${d.consultationFee || 0} per session`;
-    document.getElementById('profile-country').textContent = d.country || '---';
-    const bioEl = document.getElementById('edit-bio');
-    const feeEl = document.getElementById('edit-fee');
-    if (bioEl) bioEl.value = d.bio || '';
-    if (feeEl) feeEl.value = d.consultationFee || 0;
-    if (u.profileImage) document.getElementById('profile-img').src = u.profileImage;
-  } catch {}
+    
+    // Header
+    const nameEl = document.getElementById('profile-name');
+    if (nameEl) nameEl.textContent = `Dr. ${u.name}`;
+    
+    const specialtyTxt = document.getElementById('profile-specialty');
+    if (specialtyTxt) specialtyTxt.textContent = d.designation || d.specialty || 'Specialist';
+    
+    const ratingEl = document.getElementById('profile-rating');
+    if (ratingEl) ratingEl.textContent = `${d.rating || '4.0'} Rating`;
+    
+    const feeTxt = document.getElementById('profile-fee');
+    if (feeTxt) feeTxt.textContent = `RS ${d.consultationFee || 0} per session`;
+    
+    const countryTxt = document.getElementById('profile-country');
+    if (countryTxt) countryTxt.textContent = `${d.city ? d.city + ', ' : ''}${d.country || '---'}`;
+    
+    // Form Fields
+    const fields = {
+      'edit-name': u.name,
+      'edit-phone': u.phone || '',
+      'edit-designation': d.designation || '',
+      'edit-specialty': d.specialty || '',
+      'edit-education': d.education || '',
+      'edit-exp-years': d.experienceYears || 0,
+      'edit-gender': d.gender || 'Male',
+      'edit-city': d.city || '',
+      'edit-country': d.country || '',
+      'edit-languages': d.languages || '',
+      'edit-fee': d.consultationFee || 0,
+      'edit-bio': d.bio || ''
+    };
+    
+    for (const [id, val] of Object.entries(fields)) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
+
+    if (u.profileImage) {
+      const imgEl = document.getElementById('profile-img');
+      if (imgEl) imgEl.src = u.profileImage.startsWith('data:') ? u.profileImage : u.profileImage;
+    }
+  } catch (err) { console.error('Load Profile Error:', err); }
 }
 
+let profileImageBase64 = null;
+// Handle Image Upload Input
+document.getElementById('avatar-upload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    profileImageBase64 = event.target.result;
+    document.getElementById('profile-img').src = profileImageBase64;
+    showToast('Image selected 🖼️');
+  };
+  reader.readAsDataURL(file);
+});
+
 async function saveProfile() {
-  const bio = document.getElementById('edit-bio').value;
-  const fee = document.getElementById('edit-fee').value;
   try {
-    const res = await api.put('/doctors/profile', { bio, consultationFee: Number(fee) });
-    if (res.success) showToast('Profile updated ✅');
-    else showToast(res.message || 'Update failed');
-  } catch { showToast('Error'); }
+    const data = {
+      name: document.getElementById('edit-name').value,
+      phone: document.getElementById('edit-phone').value,
+      designation: document.getElementById('edit-designation').value,
+      specialty: document.getElementById('edit-specialty').value,
+      education: document.getElementById('edit-education').value,
+      experienceYears: Number(document.getElementById('edit-exp-years').value),
+      gender: document.getElementById('edit-gender').value,
+      city: document.getElementById('edit-city').value,
+      country: document.getElementById('edit-country').value,
+      languages: document.getElementById('edit-languages').value,
+      consultationFee: Number(document.getElementById('edit-fee').value),
+      bio: document.getElementById('edit-bio').value
+    };
+    
+    if (profileImageBase64) {
+      data.profileImage = profileImageBase64;
+    }
+
+    const res = await api.put('/doctors/profile', data);
+    if (res.success) {
+      showToast('Profile updated ✅');
+      loadProfile(); // Refresh UI
+    } else {
+      showToast(res.message || 'Update failed');
+    }
+  } catch (err) { 
+    console.error('Save Profile Error:', err);
+    showToast('Error saving profile'); 
+  }
 }
 
 function logout() {

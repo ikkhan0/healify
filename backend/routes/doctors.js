@@ -18,17 +18,31 @@ router.get('/profile', protect, authorize('doctor'), async (req, res) => {
 // @PUT /api/doctors/profile
 router.put('/profile', protect, authorize('doctor'), upload.single('profileImage'), async (req, res) => {
   try {
-    const { name, phone, specialty, country, bio, experience, consultationFee, availability, isAvailableForVideo } = req.body;
+    const { 
+      name, phone, specialty, country, bio, experience, consultationFee, 
+      isAvailableForVideo, education, languages, city, designation, gender, experienceYears,
+      profileImage // can be Base64
+    } = req.body;
+
     const updateUser = { name, phone };
-    if (req.file) updateUser.profileImage = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      updateUser.profileImage = `/uploads/${req.file.filename}`;
+    } else if (profileImage && profileImage.startsWith('data:image')) {
+      updateUser.profileImage = profileImage; // Directly store Base64
+    }
     await User.findByIdAndUpdate(req.user._id, updateUser);
 
-    const updateDoc = { specialty, country, bio, experience, consultationFee, isAvailableForVideo };
-    if (availability) updateDoc.availability = JSON.parse(availability);
+    const updateDoc = { 
+      specialty, country, bio, experience, consultationFee, isAvailableForVideo,
+      education, languages, city, designation, gender, experienceYears: Number(experienceYears || 0)
+    };
     await Doctor.findOneAndUpdate({ userId: req.user._id }, updateDoc, { new: true, upsert: true });
 
     res.json({ success: true, message: 'Profile updated' });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    console.error('Profile Update Error:', err);
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 // @GET /api/doctors/appointments

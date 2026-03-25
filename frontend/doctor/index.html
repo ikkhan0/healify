@@ -583,8 +583,32 @@
     </div>
     <div class="edit-section">
       <h3>Update Profile</h3>
-      <div class="input-group"><i class="fas fa-align-left"></i><textarea id="edit-bio" placeholder="Your bio..." class="inline-textarea"></textarea></div>
+      <div class="input-row-grid">
+        <div class="input-group"><i class="fas fa-user"></i><input type="text" id="edit-name" placeholder="Full Name" /></div>
+        <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="edit-phone" placeholder="Phone Number" /></div>
+      </div>
+      <div class="input-row-grid">
+        <div class="input-group"><i class="fas fa-id-badge"></i><input type="text" id="edit-designation" placeholder="Designation (e.g. Senior Consultant)" /></div>
+        <div class="input-group"><i class="fas fa-stethoscope"></i><input type="text" id="edit-specialty" placeholder="Specialty" /></div>
+      </div>
+      <div class="input-group"><i class="fas fa-graduation-cap"></i><input type="text" id="edit-education" placeholder="Education (e.g. MBBS, FCPS)" /></div>
+      <div class="input-row-grid">
+        <div class="input-group"><i class="fas fa-history"></i><input type="number" id="edit-exp-years" placeholder="Years of Experience" /></div>
+        <div class="input-group"><i class="fas fa-venus-mars"></i>
+          <select id="edit-gender" style="border:none; background:none; outline:none; width:100%; color:#112A61;">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row-grid">
+        <div class="input-group"><i class="fas fa-city"></i><input type="text" id="edit-city" placeholder="City" /></div>
+        <div class="input-group"><i class="fas fa-globe"></i><input type="text" id="edit-country" placeholder="Country" /></div>
+      </div>
+      <div class="input-group"><i class="fas fa-language"></i><input type="text" id="edit-languages" placeholder="Languages (e.g. English, Urdu)" /></div>
       <div class="input-group"><i class="fas fa-dollar-sign"></i><input type="number" id="edit-fee" placeholder="Consultation Fee (RS)" /></div>
+      <div class="input-group"><i class="fas fa-align-left"></i><textarea id="edit-bio" placeholder="Professional Bio..." class="inline-textarea"></textarea></div>
       <button class="btn-primary full" onclick="saveProfile()">Save Changes</button>
     </div>
     <div class="profile-menu">

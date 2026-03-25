@@ -163,6 +163,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .profile-item i{color:var(--primary);width:18px;text-align:center}
 .edit-section{background:#fff;border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
 .edit-section h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.input-row-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width: 480px){ .input-row-grid{grid-template-columns:1fr} }
 .profile-menu{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}
 .menu-item{display:flex;align-items:center;gap:14px;padding:16px;font-size:14px;font-weight:500;cursor:pointer;color:var(--text);text-decoration:none;border-bottom:1px solid var(--border)}
 .menu-item:last-child{border-bottom:none}
