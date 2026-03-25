@@ -282,13 +282,13 @@ function renderApptCard(a, withActions = false) {
   if (withActions) {
     if (a.status === 'pending') {
       actions = `<div class="appt-actions">
-        <button class="btn-primary" onclick="updateAppt('${a._id}','confirmed')"><i class="fas fa-check"></i> Confirm</button>
-        <button class="btn-danger" onclick="updateAppt('${a._id}','cancelled')"><i class="fas fa-times"></i> Cancel</button>
+        <button class="btn-primary" onclick="window.updateAppt('${a._id}','confirmed')"><i class="fas fa-check"></i> Confirm</button>
+        <button class="btn-danger" onclick="window.updateAppt('${a._id}','cancelled')"><i class="fas fa-times"></i> Cancel</button>
       </div>`;
     } else if (a.status === 'confirmed') {
       actions = `<div class="appt-actions">
-        <button class="btn-primary" onclick="joinVideoCall('${a.roomId || ''}','${p.name||'Patient'}')"><i class="fas fa-video"></i> Join Call</button>
-        <button class="btn-outline" onclick="updateAppt('${a._id}','completed')">Complete</button>
+        <button class="btn-primary" onclick="window.joinVideoCall('${a.roomId || ''}','${p.name||'Patient'}')"><i class="fas fa-video"></i> Join Call</button>
+        <button class="btn-outline" onclick="window.updateAppt('${a._id}','completed')">Complete</button>
       </div>`;
     }
   }
@@ -310,7 +310,7 @@ function renderApptCard(a, withActions = false) {
 
 let pendingCompletionId = null;
 
-async function updateAppt(id, status) {
+window.updateAppt = async (id, status) => {
   if (status === 'completed') {
     pendingCompletionId = id;
     document.getElementById('video-complete-details-modal').style.display = 'flex';
@@ -326,14 +326,25 @@ async function updateAppt(id, status) {
 let manualPatientId = null;
 
 window.generateManualReport = async (patientId, patientName) => {
-   manualPatientId = patientId;
-   pendingCompletionId = null; // resetting appt id
-   document.getElementById('comp-remarks').value = '';
-   document.getElementById('comp-medicines').value = '';
-   document.getElementById('comp-tests').value = '';
-   document.getElementById('video-complete-details-modal').style.display = 'flex';
-   document.getElementById('video-complete-details-modal').querySelector('h2').textContent = `Generate Report: ${patientName}`;
-}
+  try {
+    console.log('Generating Manual Report...', patientName, patientId);
+    manualPatientId = patientId;
+    pendingCompletionId = null; 
+    document.getElementById('comp-remarks').value = '';
+    document.getElementById('comp-medicines').value = '';
+    document.getElementById('comp-tests').value = '';
+    const modal = document.getElementById('video-complete-details-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      const h2 = modal.querySelector('h2');
+      if (h2) h2.textContent = `Generate Report: ${patientName}`;
+    } else {
+      console.error('MODAL NOT FOUND: video-complete-details-modal');
+      alert('Software Error: Report modal missing from page. Refreshing...');
+      window.location.reload();
+    }
+  } catch(e) { console.error('generateManualReport Error:', e); }
+};
 
 // Update the submit listener to handle manual reports
 document.getElementById('btn-submit-completion')?.addEventListener('click', async () => {
@@ -417,8 +428,8 @@ window.renderPatients = (patients) => {
         <div class="patient-info"><h4>${p.name}</h4><p>${p.email}</p></div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button class="btn-figma-small" style="background:#112A61; height:36px; padding:0 15px;" onclick="loadPatientReports('${p._id}', '${p.name}')">View Reports</button>
-        <button class="btn-figma-small" style="background:#1c78c0; height:36px; padding:0 15px;" onclick="generateManualReport('${p._id}', '${p.name}')"><i class="fas fa-plus"></i> Report</button>
+        <button class="btn-figma-small" style="background:#112A61; height:36px; padding:0 15px;" onclick="window.loadPatientReports('${p._id}', '${p.name}')">View Reports</button>
+        <button class="btn-figma-small" style="background:#1c78c0; height:36px; padding:0 15px;" onclick="window.generateManualReport('${p._id}', '${p.name}')"><i class="fas fa-plus"></i> Report</button>
       </div>
     </div>`;
   }).join('')}</div>`;
@@ -443,8 +454,8 @@ window.loadPatientReports = async (patientId, patientName) => {
                   <p style="margin:0; font-size:12px; color:#666;">${new Date(r.createdAt).toLocaleDateString()}</p>
                </div>
                <div style="display:flex; gap:10px;">
-                  <button class="btn-figma-small" onclick="openReport('${r._id}')">View</button>
-                  <button class="btn-figma-small" style="background:#1c78c0" onclick="openReport('${r._id}', true)">Download</button>
+                  <button class="btn-figma-small" onclick="window.openReport('${r._id}')">View</button>
+                  <button class="btn-figma-small" style="background:#1c78c0" onclick="window.openReport('${r._id}', true)">Download</button>
                </div>
             </div>
          `).join('');
@@ -457,7 +468,7 @@ window.loadPatientReports = async (patientId, patientName) => {
 }
 
 // ─── Video Call ───────────────────────────────────────────────────────────────
-async function joinVideoCall(roomId, patientName) {
+window.joinVideoCall = async (roomId, patientName) => {
   navigate('screen-video-call');
   document.getElementById('call-patient-name').textContent = patientName;
   try {
