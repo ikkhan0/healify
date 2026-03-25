@@ -469,7 +469,10 @@
 
 <!-- ALL REPORTS -->
 <div id="screen-all-reports" class="screen app-screen">
-  <div class="app-header"><h2>Medical Reports</h2></div>
+  <div class="app-header" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Medical Reports</h2>
+    <button class="btn-figma" style="width:auto; height:45px; padding:0 25px; margin:0;" onclick="window.navigate('screen-patients')"><i class="fas fa-plus"></i> Create New</button>
+  </div>
   <div class="dash-content-wrap">
     <div id="all-reports-list">
       <div class="loading-pulse">Loading all reports...</div>

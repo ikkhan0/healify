@@ -663,7 +663,14 @@ window.loadAllReports = async () => {
         </div>
       `).join('');
     } else {
-      container.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>No reports found</h3><p>Reports you generate will appear here</p></div>';
+      container.innerHTML = `
+        <div class="empty-state" style="padding:40px; text-align:center;">
+          <i class="fas fa-file-invoice" style="font-size:4rem; color:#EAF4FC; margin-bottom:20px;"></i>
+          <h3>No reports found</h3>
+          <p style="color:#666; margin-bottom:30px;">Reports you generate will appear here. Start by selecting a patient.</p>
+          <button class="btn-figma" style="width:auto; padding:0 30px;" onclick="window.navigate('screen-patients')">View My Patients</button>
+        </div>
+      `;
     }
   } catch(e) { container.innerHTML = '<div class="empty-state">Error loading reports</div>'; }
 };
