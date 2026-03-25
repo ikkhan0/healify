@@ -90,15 +90,23 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
   const btn = e.target.querySelector('button[type=submit]');
   btn.textContent = 'Creating...'; btn.disabled = true;
   try {
-    const res = await api.post('/auth/register', {
+    const data = {
       name: document.getElementById('su-name').value,
       email: document.getElementById('su-email').value,
       password: document.getElementById('su-password').value,
-      phone: document.getElementById('su-phone').value,
-      specialty: document.getElementById('su-specialty').value || 'General',
-      country: document.getElementById('su-country').value,
       role: 'doctor'
-    });
+    };
+    
+    // Optional fields
+    const phoneEl = document.getElementById('su-phone');
+    const specialtyEl = document.getElementById('su-specialty');
+    const countryEl = document.getElementById('su-country');
+    
+    if (phoneEl) data.phone = phoneEl.value;
+    if (specialtyEl) data.specialty = specialtyEl.value || 'General';
+    if (countryEl) data.country = countryEl.value;
+
+    const res = await api.post('/auth/register', data);
     if (res.success) {
       // Send OTP (don't await so UI can move to OTP screen)
       api.post('/auth/send-otp', { email: document.getElementById('su-email').value }).catch(e => console.error('Auto OTP send failed', e));

@@ -103,6 +103,24 @@
                <label>Password</label>
                <input type="password" id="su-password" required />
             </div>
+            <div class="figma-input-group">
+               <label>Phone Number</label>
+               <input type="tel" id="su-phone" required />
+            </div>
+            <div class="figma-input-group">
+               <label>Specialty</label>
+               <select id="su-specialty" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #EAF4FC; background:#F8FCFF; color:#112A61; font-family:inherit;">
+                  <option value="">Select Specialty</option>
+                  <option value="Psychiatrist">Psychiatrist</option>
+                  <option value="Psychologist">Psychologist</option>
+                  <option value="Therapist">Therapist</option>
+                  <option value="Neurologist">Neurologist</option>
+               </select>
+            </div>
+            <div class="figma-input-group">
+               <label>Country</label>
+               <input type="text" id="su-country" placeholder="e.g. Pakistan" />
+            </div>
             <p id="signup-err" class="err-msg"></p>
             <button type="submit" class="btn-figma">Sign Up</button>
           </form>
@@ -129,7 +147,7 @@
     <div class="auth-form-col">
       <div class="otp-wrap figma-card">
         <h2 class="figma-title">Email Verification</h2>
-        <p class="figma-sub">Enter the verification code we just sent<br>on your Email.</p>
+        <p class="figma-sub">Enter the verification code we just sent to<br><strong id="otp-email-display">your email</strong>.</p>
         <div class="otp-inputs figma-otp">
           <input type="text" maxlength="1" class="otp-box figma-box" /><input type="text" maxlength="1" class="otp-box figma-box" />
           <input type="text" maxlength="1" class="otp-box figma-box" /><input type="text" maxlength="1" class="otp-box figma-box" />
