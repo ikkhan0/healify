@@ -327,7 +327,8 @@ let manualPatientId = null;
 
 window.generateManualReport = async (patientId, patientName) => {
   try {
-    console.log('Generating Manual Report...', patientName, patientId);
+    console.log('--- generateManualReport INITIATED ---');
+    console.log('Patient:', patientName, 'ID:', patientId);
     manualPatientId = patientId;
     pendingCompletionId = null; 
     document.getElementById('comp-remarks').value = '';
@@ -469,8 +470,11 @@ window.loadPatientReports = async (patientId, patientName) => {
 
 // ─── Video Call ───────────────────────────────────────────────────────────────
 window.joinVideoCall = async (roomId, patientName) => {
-  navigate('screen-video-call');
-  document.getElementById('call-patient-name').textContent = patientName;
+  window.navigate('screen-video-call');
+  const patientBadge = document.getElementById('call-patient-name');
+  const doctorBadge = document.getElementById('call-doctor-name');
+  if (patientBadge) patientBadge.textContent = patientName;
+  if (doctorBadge) doctorBadge.textContent = (currentDoctor?.name ? `Dr. ${currentDoctor.name}` : 'Doctor');
   try {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     document.getElementById('local-video').srcObject = localStream;
