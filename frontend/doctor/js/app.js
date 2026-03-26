@@ -6,7 +6,7 @@ let localStream = null;
 let peerConnection = null;
 let callSeconds = 0;
 let callTimerInterval = null;
-const socket = io();
+let socket = null;
 // Note: To work perfectly across all networks, you SHOULD replace these with real TURN server credentials 
 // from a provider like Metered.ca, Twilio, or Xirsys.
 const iceServers = {
@@ -478,6 +478,12 @@ window.joinVideoCall = async (roomId, patientName) => {
   try {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     document.getElementById('local-video').srcObject = localStream;
+    
+    if (!socket) {
+      socket = io();
+      setupSocketListeners();
+    }
+    
     socket.emit('join-room', { roomId, userId: currentDoctor?._id, userName: `Dr. ${currentDoctor?.name || 'Doctor'}` });
     callTimerInterval = setInterval(() => {
       callSeconds++;
@@ -489,10 +495,14 @@ window.joinVideoCall = async (roomId, patientName) => {
   } catch (err) { 
     console.error('Video Call Access Error:', err);
     showToast('Failed to access camera/microphone. Please check permissions.');
-    navigate('screen-appointments');
+    window.navigate('screen-appointments');
     return;
   }
+}
 
+function setupSocketListeners() {
+  if (!socket) return;
+  
   socket.on('user-joined', async ({ socketId }) => {
     peerConnection = new RTCPeerConnection(iceServers);
     localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
@@ -502,6 +512,7 @@ window.joinVideoCall = async (roomId, patientName) => {
     await peerConnection.setLocalDescription(offer);
     socket.emit('offer', {to:socketId, offer});
   });
+  
   socket.on('offer', async ({from,offer}) => {
     peerConnection = new RTCPeerConnection(iceServers);
     localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
@@ -512,6 +523,7 @@ window.joinVideoCall = async (roomId, patientName) => {
     await peerConnection.setLocalDescription(answer);
     socket.emit('answer', {to:from, answer});
   });
+  
   socket.on('answer', async ({answer}) => { await peerConnection?.setRemoteDescription(new RTCSessionDescription(answer)); });
   socket.on('ice-candidate', async ({candidate}) => { await peerConnection?.addIceCandidate(new RTCIceCandidate(candidate)); });
 }
