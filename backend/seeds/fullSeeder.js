@@ -1,5 +1,5 @@
 /**
- * fullSeeder.js – Seeds Healify DB with realistic dummy data + profile photos
+ * fullSeeder.js – Seeds TeleMind DB with realistic dummy data + profile photos
  * Run: npm run seed
  */
 const path = require('path');
@@ -17,9 +17,9 @@ const DOCTORS = [
     name: 'Dr. Sarah Johnson',
     email: 'sarah.johnson@healify.com',
     phone: '+1-555-0101',
-    photo: '/assets/profiles/doctor_sarah_johnson.png',
+    photo: '/assets/profiles/service_provider_sarah_johnson.png',
     specialty: 'Psychiatrist',
-    bio: 'Board-certified psychiatrist with over 12 years of experience treating anxiety, depression, PTSD, and mood disorders. I believe in a holistic approach combining therapy and medication management to help patients achieve lasting mental wellness.',
+    bio: 'Board-certified psychiatrist with over 12 years of experience treating anxiety, depression, PTSD, and mood disorders. I believe in a holistic approach combining therapy and medication management to help clients achieve lasting mental wellness.',
     experience: 12,
     consultationFee: 1500,
     country: 'United States',
@@ -35,7 +35,7 @@ const DOCTORS = [
     name: 'Dr. James Malik',
     email: 'james.malik@healify.com',
     phone: '+1-555-0102',
-    photo: '/assets/profiles/doctor_james_malik.png',
+    photo: '/assets/profiles/service_provider_james_malik.png',
     specialty: 'Psychologist',
     bio: 'Clinical psychologist specialising in cognitive-behavioural therapy (CBT) for adults and adolescents. 9 years treating anxiety disorders, OCD, phobias and trauma-related conditions. Fluent in English and Urdu.',
     experience: 9,
@@ -53,9 +53,9 @@ const DOCTORS = [
     name: 'Dr. Amina Fatima',
     email: 'amina.fatima@healify.com',
     phone: '+92-300-1234567',
-    photo: '/assets/profiles/doctor_amina_fatima.png',
+    photo: '/assets/profiles/service_provider_amina_fatima.png',
     specialty: 'Therapist',
-    bio: 'Licensed mental health therapist with a focus on mindfulness-based stress reduction and couples therapy. 7 years of clinical experience. I create a safe, non-judgmental space for every patient.',
+    bio: 'Licensed mental health therapist with a focus on mindfulness-based stress reduction and couples therapy. 7 years of clinical experience. I create a safe, non-judgmental space for every client.',
     experience: 7,
     consultationFee: 800,
     country: 'Pakistan',
@@ -71,9 +71,9 @@ const DOCTORS = [
     name: 'Dr. Robert Chen',
     email: 'robert.chen@healify.com',
     phone: '+1-555-0104',
-    photo: '/assets/profiles/doctor_robert_chen.png',
+    photo: '/assets/profiles/service_provider_robert_chen.png',
     specialty: 'Neurologist',
-    bio: 'Fellowship-trained neurologist specialising in headaches, sleep disorders, and neuropsychiatric conditions. Over 15 years helping patients understand the mind-brain connection.',
+    bio: 'Fellowship-trained neurologist specialising in headaches, sleep disorders, and neuropsychiatric conditions. Over 15 years helping clients understand the mind-brain connection.',
     experience: 15,
     consultationFee: 2000,
     country: 'Canada',
@@ -89,7 +89,7 @@ const DOCTORS = [
     name: 'Dr. Maria Gonzalez',
     email: 'maria.gonzalez@healify.com',
     phone: '+1-555-0105',
-    photo: '/assets/profiles/doctor_maria_gonzalez.png',
+    photo: '/assets/profiles/service_provider_maria_gonzalez.png',
     specialty: 'Psychiatrist',
     bio: 'Child and adolescent psychiatrist with extensive experience in ADHD, autism-spectrum disorders and early-onset mood conditions. 10 years in practice. Bilingual English/Spanish.',
     experience: 10,

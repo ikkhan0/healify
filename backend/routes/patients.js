@@ -9,7 +9,7 @@ const Report = require('../models/Report');
 const upload = require('../middleware/upload');
 
 // @GET /api/patients/profile
-router.get('/profile', protect, authorize('patient'), async (req, res) => {
+router.get('/profile', protect, authorize('client'), async (req, res) => {
   try {
     const profile = await Patient.findOne({ userId: req.user._id });
     res.json({ success: true, user: req.user, profile });
@@ -17,7 +17,7 @@ router.get('/profile', protect, authorize('patient'), async (req, res) => {
 });
 
 // @PUT /api/patients/profile
-router.put('/profile', protect, authorize('patient'), upload.single('profileImage'), async (req, res) => {
+router.put('/profile', protect, authorize('client'), upload.single('profileImage'), async (req, res) => {
   try {
     const { name, phone, age, gender, bloodGroup, weight, height, allergies, medicalHistory, emergencyContact } = req.body;
     const updateUser = { name, phone };
@@ -62,24 +62,32 @@ router.get('/doctors/:id', async (req, res) => {
 });
 
 // @POST /api/patients/appointments  - book appointment
-router.post('/appointments', protect, authorize('patient'), async (req, res) => {
+router.post('/appointments', protect, authorize('client'), async (req, res) => {
   try {
-    const { doctorId, date, timeSlot, type, symptoms } = req.body;
+    const { doctorId, date, timeSlot, type, symptoms, intakeData, waiverData } = req.body;
     const doctor = await User.findById(doctorId);
     if (!doctor || doctor.role !== 'doctor') return res.status(404).json({ success: false, message: 'Doctor not found' });
 
     const docProfile = await Doctor.findOne({ userId: doctorId });
-    const roomId = `healify_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
+    const roomId = `telemind_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
     const appointment = await Appointment.create({
-      patientId: req.user._id, doctorId, date, timeSlot, type: type || 'video',
-      symptoms, fee: docProfile ? docProfile.consultationFee : 0, roomId
+      patientId: req.user._id, 
+      doctorId, 
+      date, 
+      timeSlot, 
+      type: type || 'video',
+      symptoms, 
+      fee: docProfile ? docProfile.consultationFee : 0, 
+      roomId,
+      intakeData,
+      waiverData
     });
     res.status(201).json({ success: true, appointment });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
 // @GET /api/patients/appointments
-router.get('/appointments', protect, authorize('patient'), async (req, res) => {
+router.get('/appointments', protect, authorize('client'), async (req, res) => {
   try {
     const appointments = await Appointment.find({ patientId: req.user._id })
       .populate('doctorId', 'name profileImage email')
@@ -89,7 +97,7 @@ router.get('/appointments', protect, authorize('patient'), async (req, res) => {
 });
 
 // @GET /api/patients/reports
-router.get('/reports', protect, authorize('patient'), async (req, res) => {
+router.get('/reports', protect, authorize('client'), async (req, res) => {
   try {
     const reports = await Report.find({ patientId: req.user._id })
       .populate('doctorId', 'name profileImage')
@@ -99,7 +107,7 @@ router.get('/reports', protect, authorize('patient'), async (req, res) => {
 });
 
 // @POST /api/patients/doctors/:id/reviews
-router.post('/doctors/:id/reviews', protect, authorize('patient'), async (req, res) => {
+router.post('/doctors/:id/reviews', protect, authorize('client'), async (req, res) => {
   try {
     const { rating, comment } = req.body;
     if (!rating || !comment) return res.status(400).json({ success: false, message: 'Rating and comment required' });
@@ -124,7 +132,7 @@ router.post('/doctors/:id/reviews', protect, authorize('patient'), async (req, r
 });
 
 // @POST /api/patients/reports - patient upload
-router.post('/reports', protect, authorize('patient'), upload.single('file'), async (req, res) => {
+router.post('/reports', protect, authorize('client'), upload.single('file'), async (req, res) => {
   try {
     const { title, description, type } = req.body;
     const report = new Report({

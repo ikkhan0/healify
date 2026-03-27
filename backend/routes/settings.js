@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
       settings = await Settings.create({
         logoUrl: '',
         phone: '123-456-7890',
-        email: 'info@healify.com',
+        email: 'info@telemind.pk',
         address: '123 Health St, Wellness City',
         socialLinks: {
           facebook: '',

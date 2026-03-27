@@ -18,7 +18,7 @@ const User = require('../models/User');
 
     const admin = new User({
       name: 'Admin',
-      email: 'admin@healify.com',
+      email: 'admin@telemind.pk',
       password: 'admin123',  // Will be hashed by pre-save hook
       role: 'admin',
       isVerified: true,
@@ -27,7 +27,7 @@ const User = require('../models/User');
     await admin.save();
 
     console.log('✅ Admin created!');
-    console.log('   Email:    admin@healify.com');
+    console.log('   Email:    admin@telemind.pk');
     console.log('   Password: admin123');
   } catch (err) {
     console.error('❌ Seeder error:', err.message);

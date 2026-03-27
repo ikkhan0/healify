@@ -8,7 +8,7 @@ const Report = require('../models/Report');
 const upload = require('../middleware/upload');
 
 // @GET /api/doctors/profile
-router.get('/profile', protect, authorize('doctor'), async (req, res) => {
+router.get('/profile', protect, authorize('service_provider'), async (req, res) => {
   try {
     const profile = await Doctor.findOne({ userId: req.user._id });
     res.json({ success: true, user: req.user, profile });
@@ -16,7 +16,7 @@ router.get('/profile', protect, authorize('doctor'), async (req, res) => {
 });
 
 // @PUT /api/doctors/profile
-router.put('/profile', protect, authorize('doctor'), upload.single('profileImage'), async (req, res) => {
+router.put('/profile', protect, authorize('service_provider'), upload.single('profileImage'), async (req, res) => {
   try {
     const { 
       name, phone, specialty, country, bio, experience, consultationFee, 
@@ -46,7 +46,7 @@ router.put('/profile', protect, authorize('doctor'), upload.single('profileImage
 });
 
 // @GET /api/doctors/appointments
-router.get('/appointments', protect, authorize('doctor'), async (req, res) => {
+router.get('/appointments', protect, authorize('service_provider'), async (req, res) => {
   try {
     const { status } = req.query;
     const filter = { doctorId: req.user._id };
@@ -59,7 +59,7 @@ router.get('/appointments', protect, authorize('doctor'), async (req, res) => {
 });
 
 // @PUT /api/doctors/appointments/:id
-router.put('/appointments/:id', protect, authorize('doctor'), async (req, res) => {
+router.put('/appointments/:id', protect, authorize('service_provider'), async (req, res) => {
   try {
     const { status, remarks, medicines, suggestedTests, notes, prescription } = req.body;
     const appt = await Appointment.findOne({ _id: req.params.id, doctorId: req.user._id });

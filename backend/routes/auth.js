@@ -9,7 +9,7 @@ const OTP = require('../models/OTP');
 const sendOTP = require('../utils/sendOTP');
 
 const generateToken = (id) => {
-  const secret = process.env.JWT_SECRET || 'healify_secret_key_123';
+  const secret = process.env.JWT_SECRET || 'telemind_secret_key_123';
   const expire = process.env.JWT_EXPIRE || '7d';
   return jwt.sign({ id }, secret, { expiresIn: expire });
 };
@@ -24,9 +24,9 @@ router.post('/register', async (req, res) => {
 
     const user = await User.create({ name, email, password, role, phone });
 
-    if (role === 'doctor') {
-      await Doctor.create({ userId: user._id, specialty: specialty || 'General', country: country || '' });
-    } else if (role === 'patient') {
+    if (role === 'service_provider') {
+      await Doctor.create({ userId: user._id, specialty: specialty || 'General Services', country: country || '' });
+    } else if (role === 'client') {
       await Patient.create({ userId: user._id });
     }
 

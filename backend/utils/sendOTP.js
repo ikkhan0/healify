@@ -10,12 +10,12 @@ const sendOTP = async (email, otp) => {
   });
 
   const mailOptions = {
-    from: `"Healify" <${process.env.EMAIL_USER}>`,
+    from: `"TeleMind" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Healify - Email Verification OTP',
+    subject: 'TeleMind - Email Verification OTP',
     html: `
       <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 480px; margin: auto; background: #E1F1FF; padding: 32px; border-radius: 16px;">
-        <h2 style="color: #00509D; text-align: center; margin-bottom: 8px;">🏥 Healify</h2>
+        <h2 style="color: #00509D; text-align: center; margin-bottom: 8px;">🏥 TeleMind</h2>
         <p style="color: #333; text-align: center;">Your verification code is:</p>
         <div style="background: #00509D; color: white; font-size: 36px; font-weight: bold; letter-spacing: 12px; text-align: center; padding: 20px; border-radius: 12px; margin: 20px 0;">${otp}</div>
         <p style="color: #666; text-align: center; font-size: 13px;">This code expires in <strong>10 minutes</strong>. Do not share it with anyone.</p>

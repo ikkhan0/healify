@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Healify - Medical Report</title>
+  <title>TeleMind - Medical Report</title>
   <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; line-height: 1.6; }
     .report-header { display: flex; justify-content: space-between; border-bottom: 2px solid #00509D; padding-bottom: 20px; margin-bottom: 30px; }
@@ -25,7 +25,7 @@
   
   <div class="report-header">
     <div class="logo-side" id="report-logo">
-       <h2 style="margin:0; color:#00509D;">Healify</h2>
+       <h2 style="margin:0; color:#00509D;">TeleMind</h2>
     </div>
     <div class="contact-side">
       <div id="report-address">Address Loading...</div>
@@ -66,8 +66,8 @@
   </div>
 
   <div class="report-footer">
-    This is an electronically generated report from Healify Platform. No signature is required.
-    <br>© <span id="curr-year"></span> Healify.pk
+    This is an electronically generated report from TeleMind Platform. No signature is required.
+    <br>© <span id="curr-year"></span> TeleMind.pk
   </div>
 
   <script>
@@ -76,7 +76,7 @@
     async function loadReport() {
       const urlParams = new URLSearchParams(window.location.search);
       const reportId = urlParams.get('id');
-      const token = localStorage.getItem('healify_token') || localStorage.getItem('healify_doctor_token');
+      const token = localStorage.getItem('telemind_token') || localStorage.getItem('telemind_service_provider_token');
 
       if (!reportId) { document.body.innerHTML = '<h1>Report ID missing</h1>'; return; }
 

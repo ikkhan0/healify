@@ -75,8 +75,8 @@ function togglePwd(id, btn) {
 // ─── Splash & Init ───────────────────────────────────────────────────────────
 window.onload = () => {
   setTimeout(() => {
-    const token = localStorage.getItem('healify_doctor_token');
-    const user = localStorage.getItem('healify_doctor_user');
+    const token = localStorage.getItem('telemind_service_provider_token');
+    const user = localStorage.getItem('telemind_service_provider_user');
     if (token && user) {
       currentDoctor = JSON.parse(user);
       updateDashboardHeader();
@@ -107,9 +107,9 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
   try {
     const res = await api.post('/auth/login', { email, password });
     if (res.success) {
-      if (res.user.role !== 'doctor') { err.textContent = 'Please use the Doctor Sign In.'; btn.textContent='Sign In'; btn.disabled=false; return; }
-      localStorage.setItem('healify_doctor_token', res.token);
-      localStorage.setItem('healify_doctor_user', JSON.stringify(res.user));
+      if (res.user.role !== 'service_provider') { err.textContent = 'Please use the Services Provider Sign In.'; btn.textContent='Sign In'; btn.disabled=false; return; }
+      localStorage.setItem('telemind_service_provider_token', res.token);
+      localStorage.setItem('telemind_service_provider_user', JSON.stringify(res.user));
       currentDoctor = res.user;
       updateDashboardHeader();
       navigate('screen-dashboard');
@@ -133,7 +133,7 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       name: document.getElementById('su-name').value,
       email: document.getElementById('su-email').value,
       password: document.getElementById('su-password').value,
-      role: 'doctor'
+      role: 'service_provider'
     };
     
     // Optional fields

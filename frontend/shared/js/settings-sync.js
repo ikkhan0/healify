@@ -14,7 +14,7 @@
               container.innerHTML = `<img src="${s.logoUrl}" style="width:100%; height:100%; object-fit:contain;">`;
               container.style.background = 'transparent';
            } else {
-              container.innerHTML = `<img src="${s.logoUrl}" alt="Healify" style="height:35px; vertical-align:middle; cursor:pointer;" onclick="window.location.href='/'">`;
+              container.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:35px; vertical-align:middle; cursor:pointer;" onclick="window.location.href='/'">`;
            }
         });
         
@@ -22,7 +22,7 @@
         const logoText = document.querySelector('.logo-text');
         const logoCircle = document.querySelector('.logo-circle-small');
         if (logoText) {
-          logoText.innerHTML = `<img src="${s.logoUrl}" alt="Healify" style="height:32px; vertical-align:middle;">`;
+          logoText.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:32px; vertical-align:middle;">`;
           if (logoCircle) logoCircle.style.display = 'none';
         }
       }
@@ -44,14 +44,14 @@
            <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:40px;">
              <div>
                <div class="logo" style="margin-bottom:20px; display:flex; align-items:center; gap:10px;">
-                 ${s.logoUrl ? `<img src="${s.logoUrl}" style="height:40px;">` : `<span style="font-size:1.5rem; font-weight:800;">Healify</span>`}
+                 ${s.logoUrl ? `<img src="${s.logoUrl}" style="height:40px;">` : `<span style="font-size:1.5rem; font-weight:800;">TeleMind</span>`}
                </div>
                <p style="color:rgba(255,255,255,0.7); line-height:1.6; font-size:0.95rem;">Your trusted partner for psychiatric consultations and mental wellness. We bring the best specialists to your screen with complete privacy and care.</p>
              </div>
              <div>
                <h3 style="margin-bottom:25px; font-size:1.2rem; font-weight:700; border-left:4px solid #5DADE2; padding-left:15px;">Contact Us</h3>
                <p style="margin-bottom:12px; display:flex; align-items:center; gap:12px;"><i class="fas fa-phone-alt" style="color:#5DADE2; width:20px;"></i> <span class="setting-phone">${s.phone || '+92 300 1234567'}</span></p>
-               <p style="margin-bottom:12px; display:flex; align-items:center; gap:12px;"><i class="fas fa-envelope" style="color:#5DADE2; width:20px;"></i> <span class="setting-email">${s.email || 'support@healify.pk'}</span></p>
+               <p style="margin-bottom:12px; display:flex; align-items:center; gap:12px;"><i class="fas fa-envelope" style="color:#5DADE2; width:20px;"></i> <span class="setting-email">${s.email || 'support@telemind.pk'}</span></p>
                <p style="margin-bottom:12px; display:flex; align-items:center; gap:12px;"><i class="fas fa-map-marker-alt" style="color:#5DADE2; width:20px;"></i> <span class="setting-address">${s.address || 'Lahore, Pakistan'}</span></p>
              </div>
              <div>
@@ -65,7 +65,7 @@
              </div>
            </div>
            <div style="text-align:center; margin-top:60px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.4); font-size:0.85rem;">
-             &copy; ${new Date().getFullYear()} ${s.softwareName || 'Healify'}. All rights reserved. Professional mental health at your doorstep.
+             &copy; ${new Date().getFullYear()} ${s.softwareName || 'TeleMind'}. All rights reserved. Professional mental health at your doorstep.
            </div>
          `;
          document.body.appendChild(footer);

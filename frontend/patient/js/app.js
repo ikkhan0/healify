@@ -59,16 +59,36 @@ function setLoading(btnEl, loading) {
 // ─── Splash ───────────────────────────────────────────────────────────────────
 window.onload = () => {
   setTimeout(() => {
-    const token = localStorage.getItem('healify_token');
-    const user = localStorage.getItem('healify_user');
+    const token = localStorage.getItem('telemind_token');
+    const user = localStorage.getItem('telemind_user');
+    const disclaimerAccepted = localStorage.getItem('telemind_disclaimer_accepted');
+    
     if (token && user) {
       currentUser = JSON.parse(user);
       updateHeaderUser();
       navigate('screen-home');
+    } else if (!disclaimerAccepted) {
+      navigate('screen-disclaimer');
     } else {
       navigate('screen-identity');
     }
   }, 2700);
+};
+
+window.setLanguage = (lang) => {
+  localStorage.setItem('telemind_lang', lang);
+  showToast(`Language set to ${lang === 'en' ? 'English' : 'Urdu'}`);
+  // In a real app, this would trigger a re-render or reload with new translations
+  // For now, we'll store the preference.
+};
+
+// Override navigate to mark disclaimer as accepted when moving from it
+const originalNavigate = window.navigate;
+window.navigate = (screenId) => {
+  if (document.querySelector('.screen.active')?.id === 'screen-disclaimer' && screenId === 'screen-identity') {
+    localStorage.setItem('telemind_disclaimer_accepted', 'true');
+  }
+  originalNavigate(screenId);
 };
 
 // ─── Auth Helpers ─────────────────────────────────────────────────────────────
@@ -100,7 +120,7 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       email: document.getElementById('signup-email').value,
       password: document.getElementById('signup-password').value,
       phone: document.getElementById('signup-phone').value,
-      role: 'patient'
+      role: 'client'
     });
     if (res.success) {
       // Send OTP
@@ -136,9 +156,9 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
       password: document.getElementById('login-password').value
     });
     if (res.success) {
-      if (res.user.role !== 'patient') { err.textContent = 'Please use the correct login panel.'; setLoading(btn,false); return; }
-      localStorage.setItem('healify_token', res.token);
-      localStorage.setItem('healify_user', JSON.stringify(res.user));
+      if (res.user.role !== 'client') { err.textContent = 'Please use the correct login panel.'; setLoading(btn,false); return; }
+      localStorage.setItem('telemind_token', res.token);
+      localStorage.setItem('telemind_user', JSON.stringify(res.user));
       currentUser = res.user;
       updateHeaderUser();
       navigate('screen-home');
@@ -434,8 +454,28 @@ window.selectType = (el, type) => {
 function confirmBooking() {
   if (!selectedDate) { showToast('Please select a date'); return; }
   if (!selectedSlot) { showToast('Please select a time slot'); return; }
+  
+  // Basic intake validation
+  const age = document.getElementById('intake-age').value;
+  if (!document.getElementById('intake-name').value || !age) {
+    showToast('Please fill in Name and Age'); return;
+  }
+  if (age < 16 && !document.getElementById('intake-guardian-name').value) {
+    showToast('Guardian name required for age < 16'); return;
+  }
+
   navigate('screen-payment');
 }
+
+window.toggleGuardianFields = (age) => {
+  const fields = document.getElementById('guardian-fields');
+  if (fields) fields.style.display = (age && age < 16) ? 'block' : 'none';
+};
+
+window.toggleWaiverFields = (checked) => {
+  const fields = document.getElementById('waiver-fields');
+  if (fields) fields.style.display = checked ? 'block' : 'none';
+};
 
 // ─── Payment ──────────────────────────────────────────────────────────────────
 window.selectPayment = (el) => {
@@ -457,13 +497,42 @@ async function processPayment() {
   
   try {
     const dp = selectedDoctor?.doctorProfile || {};
+    
+    // Collect Intake Data
+    const intakeData = {
+      name: document.getElementById('intake-name').value,
+      age: document.getElementById('intake-age').value,
+      guardianName: document.getElementById('intake-guardian-name').value,
+      guardianContact: document.getElementById('intake-guardian-contact').value,
+      gender: document.querySelector('input[name="intake-gender"]:checked')?.value,
+      education: document.getElementById('intake-education').value,
+      phone: document.getElementById('intake-phone').value,
+      email: document.getElementById('intake-email').value,
+      address: document.getElementById('intake-address').value,
+      counsellorPreference: document.getElementById('intake-counsellor-pref').value,
+      migrationStatus: document.querySelector('input[name="intake-migration"]:checked')?.value
+    };
+
+    // Collect Waiver Data
+    const isWaiver = document.getElementById('request-fee-waiver').checked;
+    const waiverData = isWaiver ? {
+      requestWaiver: true,
+      income: document.getElementById('waiver-income').value,
+      ses: document.getElementById('waiver-ses').value,
+      familyMembers: document.getElementById('waiver-members').value,
+      occupation: document.querySelector('input[name="waiver-occupation"]:checked')?.value,
+      residenceType: document.querySelector('input[name="waiver-residence"]:checked')?.value
+    } : { requestWaiver: false };
+
     const res = await api.post('/patients/appointments', {
       doctorId: selectedDoctor._id,
       date: selectedDate,
       timeSlot: selectedSlot,
       type: selectedType,
       symptoms: document.getElementById('booking-symptoms')?.value || '',
-      fee: dp.consultationFee || 300
+      fee: dp.consultationFee || 300,
+      intakeData,
+      waiverData
     });
     
     btn.innerHTML = originalText;

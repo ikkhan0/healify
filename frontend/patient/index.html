@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Healify – Patient</title>
+<title>TeleMind – Client</title>
 <base href="/patient/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -21,10 +21,42 @@
     <div class="splash-circle c2"></div>
     <div class="splash-logo">
       <div class="logo-icon"><i class="fas fa-stethoscope"></i></div>
-      <h1>Healify</h1>
-      <p>Your Mental Health Companion</p>
+      <h1>TeleMind</h1>
+      <p>A Mental Health Support App by NIP (Supported by GIZ)</p>
     </div>
     <div class="splash-loader"><div class="loader-bar"></div></div>
+  </div>
+</div>
+
+<!-- DISCLAIMER & PRIVACY -->
+<div id="screen-disclaimer" class="screen">
+  <div class="auth-wrap" style="background:#fff; padding:40px 24px; text-align:center;">
+    <div class="logo-icon" style="background:var(--primary-light); color:var(--primary);"><i class="fas fa-shield-alt"></i></div>
+    <h2 class="figma-title">Disclaimer & Privacy</h2>
+    
+    <div class="disclaimer-content" style="text-align:left; margin-top:20px; max-height:60vh; overflow-y:auto; padding:10px; border:1.5px solid var(--border); border-radius:12px; font-size:14px; color:var(--text); line-height:1.6;">
+      <h3 style="color:var(--primary); font-size:16px; margin-bottom:8px;">Safety Disclaimer</h3>
+      <p>This mobile application does not provide emergency services. If you or someone else are in immediate danger, please contact your nearest hospital emergency department, rescue services, embassy or a mental health helpline. Thank You.</p>
+      
+      <h3 style="color:var(--primary); font-size:16px; margin-top:16px; margin-bottom:8px;">Privacy Notice</h3>
+      <p>Your information and identity are kept confidential. Names and personal details entered in this app/website will not appear on web searches or public platforms.</p>
+      
+      <h3 style="color:var(--primary); font-size:16px; margin-top:16px; margin-bottom:8px;">Psychoeducation</h3>
+      <p>The information provided on this application is only for educational purposes and cannot be used for diagnosis purposes.</p>
+      
+      <h3 style="color:var(--primary); font-size:16px; margin-top:16px; margin-bottom:8px;">Screening</h3>
+      <p>Assessment tools used for general information and not to be used for self-diagnosis purpose. It is meant for our counsellors to evaluate nature of problem and plan customized care for the client accordingly during consultation.</p>
+    </div>
+
+    <div style="margin-top:24px;">
+      <h3 style="font-size:15px; margin-bottom:12px;">Language Selection</h3>
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button class="btn-outline" style="flex:1;" onclick="setLanguage('en')">English</button>
+        <button class="btn-outline" style="flex:1;" onclick="setLanguage('ur')">اردو (Urdu)</button>
+      </div>
+    </div>
+
+    <button class="btn-primary full" style="margin-top:30px;" onclick="navigate('screen-identity')">I Agree & Continue</button>
   </div>
 </div>
 
@@ -45,13 +77,13 @@
       <div class="identity-bg figma-card" style="background:transparent;box-shadow:none;padding:0;">
         <div class="identity-header" style="text-align:left;padding:0;margin-bottom:30px;">
           <h2 class="figma-title" style="text-align:left;font-size:32px;">Choose Your Role</h2>
-          <p class="figma-sub" style="text-align:left;">Choose your role to get started with Healify</p>
+          <p class="figma-sub" style="text-align:left;">Choose your role to get started with TeleMind</p>
         </div>
         <div class="identity-cards" style="display:flex;flex-direction:column;gap:20px;">
           <div class="id-card" onclick="navigate('screen-onboarding')" style="width:100%;max-width:400px;margin:0;">
             <div class="id-icon patient"><i class="fas fa-user"></i></div>
             <div style="flex:1">
-              <h3 style="margin:0;color:#112A61;">I am Patient</h3>
+              <h3 style="margin:0;color:#112A61;">I am Client</h3>
               <p style="margin:0;font-size:13px;opacity:0.8;">Book appointments & track your health</p>
             </div>
             <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
@@ -59,7 +91,7 @@
           <div class="id-card" onclick="window.location.href='/doctor'" style="width:100%;max-width:400px;margin:0;">
             <div class="id-icon doctor"><i class="fas fa-user-md"></i></div>
             <div style="flex:1">
-              <h3 style="margin:0;color:#112A61;">I am Doctor</h3>
+              <h3 style="margin:0;color:#112A61;">I am Services Provider</h3>
               <p style="margin:0;font-size:13px;opacity:0.8;">Manage patients & consultations</p>
             </div>
             <div class="id-arrow"><i class="fas fa-arrow-right"></i></div>
@@ -86,7 +118,7 @@
     <div class="auth-form-col">
       <div class="auth-wrap">
         <div class="onboard-content" style="text-align:left;padding:0;">
-          <h2 class="figma-title" style="text-align:left;font-size:36px;margin-bottom:15px;">Welcome to <span class="brand" style="color:#1c78c0">Healify</span></h2>
+          <h2 class="figma-title" style="text-align:left;font-size:36px;margin-bottom:15px;">Welcome to <span class="brand" style="color:#1c78c0">TeleMind</span></h2>
           <p class="figma-sub" style="text-align:left;font-size:16px;line-height:1.6;margin-bottom:30px;">Check your mental health and get professional support from certified specialists anytime, anywhere.</p>
           <div class="onboard-btns" style="display:flex;gap:15px;width:100%;max-width:400px;">
             <button class="btn-figma" onclick="navigate('screen-signup')">Sign Up</button>
@@ -275,7 +307,7 @@
   <div class="dash-desktop-header">
     <div class="search-wrap">
       <i class="fas fa-search"></i>
-      <input type="text" id="search-input" placeholder="Search Healify..." oninput="searchDoctors(this.value)" />
+      <input type="text" id="search-input" placeholder="Search TeleMind..." oninput="searchDoctors(this.value)" />
     </div>
     <div class="auth-nav-arrows">
       <i class="fas fa-chevron-left"></i>
@@ -423,24 +455,75 @@
     <div></div>
   </div>
   <div id="booking-doctor-info" class="booking-doc-mini"></div>
+  
   <div class="booking-section">
-    <h3>Select Date</h3>
-    <div class="calendar-mini" id="calendar-mini"></div>
-  </div>
-  <div class="booking-section">
-    <h3>Select Time Slot</h3>
-    <div class="time-slots" id="time-slots"></div>
-  </div>
-  <div class="booking-section">
-    <h3>Appointment Type</h3>
-    <div class="type-select">
-      <div class="type-opt active" onclick="selectType(this,'video')"><i class="fas fa-video"></i> Video Call</div>
-      <div class="type-opt" onclick="selectType(this,'in-person')"><i class="fas fa-hospital"></i> In-Person</div>
+    <h3>Intake / Demographic Data</h3>
+    <div class="input-group"><i class="fas fa-user"></i><input type="text" id="intake-name" placeholder="Full Name" required /></div>
+    <div class="input-group"><i class="fas fa-birthday-cake"></i><input type="number" id="intake-age" placeholder="Age (in years)" oninput="toggleGuardianFields(this.value)" required /></div>
+    
+    <div id="guardian-fields" style="display:none; margin-top:10px; padding:15px; background:var(--primary-light); border-radius:12px;">
+      <p style="font-size:12px; margin-bottom:10px; color:var(--primary-dark);">Age below 16 requires Guardian details:</p>
+      <div class="input-group"><i class="fas fa-user-shield"></i><input type="text" id="intake-guardian-name" placeholder="Father/Guardian Name" /></div>
+      <div class="input-group"><i class="fas fa-phone-alt"></i><input type="tel" id="intake-guardian-contact" placeholder="Father/Guardian Contact" /></div>
+    </div>
+
+    <div style="margin-top:15px;">
+      <p style="font-size:14px; margin-bottom:8px; font-weight:700;">Gender</p>
+      <div style="display:flex; gap:15px; flex-wrap:wrap;">
+        <label><input type="radio" name="intake-gender" value="Male" /> Male</label>
+        <label><input type="radio" name="intake-gender" value="Female" /> Female</label>
+        <label><input type="radio" name="intake-gender" value="Other" /> Other</label>
+      </div>
+    </div>
+
+    <div style="margin-top:15px;">
+      <p style="font-size:14px; margin-bottom:8px; font-weight:700;">Education</p>
+      <select id="intake-education" class="input-group" style="width:100%; appearance:none; -webkit-appearance:none;">
+        <option value="">Select Education Level</option>
+        <option value="No formal education">No formal education</option>
+        <option value="Primary">Primary</option>
+        <option value="Secondary">Secondary</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Graduate">Graduate</option>
+        <option value="Postgraduate">Postgraduate</option>
+      </select>
+    </div>
+
+    <div style="margin-top:15px;">
+      <p style="font-size:14px; margin-bottom:8px; font-weight:700;">Contact Information</p>
+      <div class="input-group"><i class="fas fa-phone"></i><input type="tel" id="intake-phone" placeholder="Phone Number" /></div>
+      <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="intake-email" placeholder="Email Address" /></div>
+      <div class="input-group"><i class="fas fa-map-marker-alt"></i><input type="text" id="intake-address" placeholder="Residential Address" /></div>
     </div>
   </div>
+
   <div class="booking-section">
-    <h3>Symptoms / Notes</h3>
-    <textarea id="booking-symptoms" placeholder="Describe your symptoms (optional)..." class="textarea-field"></textarea>
+    <h3>Reason for Consultation</h3>
+    <textarea id="booking-symptoms" placeholder="How can we help you?" class="textarea-field"></textarea>
+  </div>
+
+  <div class="booking-section">
+    <h3>Counsellor Preference</h3>
+    <p style="font-size:12px; margin-bottom:8px; color:var(--text-muted);">(Session will be assigned depends upon availability of counsellor)</p>
+    <div class="input-group"><i class="fas fa-user-md"></i><input type="text" id="intake-counsellor-pref" placeholder="Preference for counsellor (optional)" /></div>
+  </div>
+
+  <div class="booking-section">
+    <h3>Migration Status</h3>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label><input type="radio" name="intake-migration" value="Living in Pakistan" /> Living in Pakistan</label>
+      <label><input type="radio" name="intake-migration" value="Returned to Pakistan from abroad" /> Returned to Pakistan from abroad</label>
+      <label><input type="radio" name="intake-migration" value="Migrated abroad for study" /> Migrated abroad for study</label>
+      <label><input type="radio" name="intake-migration" value="Migrated abroad for work" /> Migrated abroad for work</label>
+      <label><input type="radio" name="intake-migration" value="Migrated abroad for other reasons" /> Migrated abroad for other reasons</label>
+      <label><input type="radio" name="intake-migration" value="Planning to migrate/go abroad" /> Planning to migrate/go abroad</label>
+    </div>
+  </div>
+
+  <div class="booking-section">
+    <h3>Select Date & Time</h3>
+    <div class="calendar-mini" id="calendar-mini" style="margin-bottom:15px;"></div>
+    <div class="time-slots" id="time-slots"></div>
   </div>
   <div class="booking-footer">
     <div class="fee-display">Fee: <strong id="booking-fee">RS 0</strong></div>
@@ -457,25 +540,69 @@
   </div>
   <div class="payment-summary">
     <h3>Payment Summary</h3>
-    <div class="summary-row"><span>Consultation Fees</span><strong id="pay-fee">RS 0</strong></div>
-    <div class="summary-row"><span>Platform Fee</span><strong>RS 50</strong></div>
-    <div class="summary-row total"><span>Total</span><strong id="pay-total">RS 50</strong></div>
+    <div class="summary-row"><span>Consultation Fee</span><strong id="pay-fee">RS 0</strong></div>
+    <div class="summary-row total"><span>Total</span><strong id="pay-total">RS 0</strong></div>
   </div>
-  <h3 class="pay-method-title">Select Payment Method</h3>
-  <div class="pay-methods">
-    <div class="pay-opt" onclick="selectPayment(this)"><i class="fab fa-google-pay"></i> Google Pay</div>
-    <div class="pay-opt" onclick="selectPayment(this)"><i class="fab fa-apple-pay"></i> Apple Pay</div>
-    <div class="pay-opt" onclick="selectPayment(this)"><i class="fas fa-credit-card"></i> Credit Card</div>
-  </div>
-  <div id="credit-card-form" style="display:none" class="card-form">
-    <div class="input-group"><i class="fas fa-user"></i><input type="text" placeholder="Cardholder Name" /></div>
-    <div class="input-group"><i class="fas fa-credit-card"></i><input type="text" placeholder="Card Number" maxlength="19" /></div>
-    <div class="card-row">
-      <div class="input-group half"><i class="fas fa-calendar"></i><input type="text" placeholder="MM/YY" maxlength="5" /></div>
-      <div class="input-group half"><i class="fas fa-lock"></i><input type="text" placeholder="CVV" maxlength="3" /></div>
+
+  <div class="booking-section" style="background:#f9fbfd; border-radius:12px; margin:0 20px 20px; padding:20px;">
+    <h3 style="margin-top:0;">Bank Account Details</h3>
+    <div style="font-size:14px; line-height:1.6; color:#0A4076;">
+      <p><strong>Bank name:</strong> Askari bank limited</p>
+      <p><strong>Branch:</strong> Usman Plaza Bara Kaho</p>
+      <p><strong>Titled:</strong> Training Course Workshop</p>
+      <p><strong>Account no:</strong> 01501450000456</p>
+      <p><strong>IBAN no:</strong> PK35ASCM0001501450000456</p>
+    </div>
+    
+    <div style="margin-top:20px; padding-top:15px; border-top:1px dashed #ccc;">
+      <p style="font-weight:700; font-size:14px; margin-bottom:10px;">Upload Fee Receipt</p>
+      <div class="input-group">
+        <i class="fas fa-file-upload"></i>
+        <label for="pay-receipt" style="flex:1; cursor:pointer;" id="receipt-filename">Click to upload screenshot</label>
+        <input type="file" id="pay-receipt" style="display:none" onchange="document.getElementById('receipt-filename').textContent=this.files[0].name" />
+      </div>
     </div>
   </div>
-  <button class="btn-primary full" style="margin:24px 20px;width:calc(100%-40px)" onclick="processPayment()">Confirm Payment</button>
+
+  <div class="booking-section" style="margin:0 20px 20px; border:1px solid var(--border); border-radius:12px; padding:15px;">
+    <label style="display:flex; align-items:center; gap:10px; font-weight:700; cursor:pointer;">
+      <input type="checkbox" id="request-fee-waiver" onchange="toggleWaiverFields(this.checked)" /> I cannot pay session fee and request fee waiver
+    </label>
+    
+    <div id="waiver-fields" style="display:none; margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+      <p style="font-size:12px; margin-bottom:10px; color:var(--text-muted);">In case you can’t pay, provide following information:</p>
+      <div class="input-group"><i class="fas fa-wallet"></i><input type="number" id="waiver-income" placeholder="Family's monthly income (PKR)" /></div>
+      
+      <div style="margin-bottom:15px;">
+        <p style="font-size:13px; margin-bottom:5px;">Socioeconomic status (1-10)</p>
+        <p style="font-size:11px; color:#888; margin-bottom:8px;">(1= Not at all bear living expenses, 10 = Easily manage)</p>
+        <input type="range" id="waiver-ses" min="1" max="10" step="1" value="5" style="width:100%;" oninput="document.getElementById('ses-val').textContent=this.value" />
+        <p style="text-align:right; font-weight:700; color:var(--primary);" id="ses-val">5</p>
+      </div>
+
+      <div class="input-group"><i class="fas fa-users"></i><input type="number" id="waiver-members" placeholder="Total family members" /></div>
+      
+      <div style="margin-bottom:15px;">
+        <p style="font-size:14px; margin-bottom:8px; font-weight:700;">Occupation</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label><input type="radio" name="waiver-occupation" value="Student" /> Student</label>
+          <label><input type="radio" name="waiver-occupation" value="Unemployed" /> Unemployed</label>
+          <label><input type="radio" name="waiver-occupation" value="Part-Time Employee/Intern" /> Part-Time Employee/Intern</label>
+        </div>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <p style="font-size:14px; margin-bottom:8px; font-weight:700;">Residential Setup</p>
+        <div style="display:flex; gap:15px;">
+          <label><input type="radio" name="waiver-residence" value="Rural" /> Rural</label>
+          <label><input type="radio" name="waiver-residence" value="Semi-Urban" /> Semi-Urban</label>
+          <label><input type="radio" name="waiver-residence" value="Urban" /> Urban</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-primary full" style="margin:24px 20px; width:calc(100% - 40px)" onclick="processPayment()">Confirm Booking & Request Consultation</button>
 </div>
 
 <!-- APPOINTMENTS -->

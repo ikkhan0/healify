@@ -10,7 +10,7 @@
         const logoText = document.querySelector('.logo-text');
         const logoCircle = document.querySelector('.logo-circle-small');
         if (logoText) {
-          logoText.innerHTML = `<img src="${s.logoUrl}" alt="Healify" style="height:32px; vertical-align:middle;">`;
+          logoText.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:32px; vertical-align:middle;">`;
           if (logoCircle) logoCircle.style.display = 'none';
         }
       }

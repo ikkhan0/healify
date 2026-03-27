@@ -41,7 +41,7 @@ app.use('/api/settings', require('./routes/settings'));
 app.use('/api/reports', require('./routes/reports'));
 
 // Health check
-app.get('/api/health', (req, res) => res.json({ success: true, message: 'Healify API is running 🏥' }));
+app.get('/api/health', (req, res) => res.json({ success: true, message: 'TeleMind API is running 🏥' }));
 
 // ─── Socket.io – Video Call Signaling ──────────────────────────────────────
 const rooms = {};
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => console.log(`\n🏥 Healify Server running on http://localhost:${PORT}\n`));
+  server.listen(PORT, () => console.log(`\n🏥 TeleMind Server running on http://localhost:${PORT}\n`));
 }
 
 // Export for Vercel
