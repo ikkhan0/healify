@@ -56,6 +56,11 @@ window.navigate = (screenId) => {
     document.getElementById('nav-reports')?.classList.add('active');
     loadAllReports();
   }
+  if (screenId === 'screen-reset-password') {
+    document.getElementById('reset-step-1').style.display = 'block';
+    document.getElementById('reset-step-2').style.display = 'none';
+    document.getElementById('reset-step-3').style.display = 'none';
+  }
 }
 
 function showToast(msg, dur=2800) {
@@ -167,10 +172,15 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
 
 // OTP
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.otp-box').forEach((box, i, boxes) => {
-    box.addEventListener('input', () => { if (box.value && i < boxes.length-1) boxes[i+1].focus(); });
-    box.addEventListener('keydown', (e) => { if (e.key==='Backspace' && !box.value && i>0) boxes[i-1].focus(); });
-  });
+  const setupOTP = (selector) => {
+    const boxes = document.querySelectorAll(selector);
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => { if (box.value && i < boxes.length - 1) boxes[i+1].focus(); });
+      box.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i-1].focus(); } });
+    });
+  };
+  setupOTP('.otp-box');
+  setupOTP('.otp-box-reset');
 });
 
 async function verifyOTP() {
@@ -193,6 +203,65 @@ async function resendOTP() {
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent!' : res.message);
 }
+
+// ─── Forgot Password Logic ──────────────────────────────────────────────────
+window.requestPasswordReset = async (e) => {
+  if (e) e.preventDefault();
+  const email = document.getElementById('reset-email').value;
+  const err = document.getElementById('reset-err-1');
+  const btn = document.querySelector('#reset-step-1 button');
+  if (!email) return;
+  
+  err.textContent = '';
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  try {
+    const res = await api.post('/auth/forgot-password', { email });
+    if (res.success) {
+      showToast('OTP sent to your email 📧');
+      document.getElementById('reset-step-1').style.display = 'none';
+      document.getElementById('reset-step-2').style.display = 'block';
+    } else {
+      err.textContent = res.message || 'Error occurred';
+    }
+  } catch (ex) { err.textContent = 'Connection error'; }
+  btn.textContent = 'Send Code'; btn.disabled = false;
+};
+
+window.verifyResetOTP = async () => {
+  const otp = [...document.querySelectorAll('.otp-box-reset')].map(b => b.value).join('');
+  const err = document.getElementById('reset-err-2');
+  if (otp.length < 6) { err.textContent = 'Enter 6 digits'; return; }
+  err.textContent = '';
+  // Move to password set screen (validation happens at final step)
+  document.getElementById('reset-step-2').style.display = 'none';
+  document.getElementById('reset-step-3').style.display = 'block';
+};
+
+window.handlePasswordReset = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('reset-email').value;
+  const otp = [...document.querySelectorAll('.otp-box-reset')].map(b => b.value).join('');
+  const newPassword = document.getElementById('reset-new-password').value;
+  const confirmPassword = document.getElementById('reset-confirm-password').value;
+  const err = document.getElementById('reset-err-3');
+  const btn = document.querySelector('#reset-step-3 button');
+
+  if (newPassword !== confirmPassword) { err.textContent = 'Passwords do not match'; return; }
+  if (newPassword.length < 6) { err.textContent = 'Too short (min 6 chars)'; return; }
+
+  err.textContent = '';
+  btn.textContent = 'Updating...'; btn.disabled = true;
+  try {
+    const res = await api.post('/auth/reset-password', { email, otp, newPassword });
+    if (res.success) {
+      showToast('Password reset successfully! ✅');
+      setTimeout(() => navigate('screen-login'), 1500);
+    } else {
+      err.textContent = res.message || 'Reset failed';
+    }
+  } catch (ex) { err.textContent = 'Connection error'; }
+  btn.textContent = 'Update Password'; btn.disabled = false;
+};
 
 async function bypassOTP() {
   const email = localStorage.getItem('healify_pending_email');

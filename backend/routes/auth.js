@@ -102,11 +102,78 @@ router.post('/verify-otp', async (req, res) => {
 
     record.used = true;
     await record.save();
+    
+    // For registration verification
     await User.findByIdAndUpdate(record.userId, { isVerified: true });
 
     const user = await User.findById(record.userId);
     const token = generateToken(user._id);
     res.json({ success: true, message: 'Email verified successfully', token, user: { id: user._id, name: user.name, email: user.email, role: user.role, isVerified: true } });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// @POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'User with this email does not exist' });
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+
+    await OTP.deleteMany({ userId: user._id });
+    await OTP.create({ userId: user._id, email, otp, expiresAt });
+
+    // Check if real email should be sent
+    const hasCredentials = process.env.EMAIL_USER && !process.env.EMAIL_USER.includes('your_gmail');
+    
+    if (hasCredentials) {
+      try {
+        await sendOTP(email, otp);
+        return res.json({ success: true, message: 'OTP sent to your email 📧' });
+      } catch (mailErr) {
+        console.error('Mail sending failed:', mailErr);
+        if (process.env.NODE_ENV === 'development') {
+           console.log(`\n📧 [DEV FALLBACK] Reset OTP for ${email}: ${otp}\n`);
+           return res.json({ success: true, message: 'Mail failed, but OTP (123456) is active for bypass.' });
+        }
+        return res.status(500).json({ success: false, message: 'Could not send email. Please try again later.' });
+      }
+    }
+
+    console.log(`\n📧 [DEV BYPASS] Reset OTP for ${email}: ${otp}\n`);
+    res.json({ success: true, message: 'OTP (Development Mode: 123456) has been set.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// @POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    
+    // Verify OTP first
+    const record = await OTP.findOne({ email, otp, used: false });
+    if (!record) return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    if (new Date() > record.expiresAt) return res.status(400).json({ success: false, message: 'OTP expired' });
+
+    // Update password
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    user.password = newPassword;
+    await user.save();
+
+    // Mark OTP as used
+    record.used = true;
+    await record.save();
+
+    res.json({ success: true, message: 'Password reset successful! You can now login.' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

@@ -42,6 +42,11 @@ window.navigate = (screenId) => {
   if (screenId === 'screen-reports') loadReports();
   if (screenId === 'screen-profile') loadProfile();
   if (screenId === 'screen-assessment') startAssessment();
+  if (screenId === 'screen-reset-password') {
+    document.getElementById('reset-step-1').style.display = 'block';
+    document.getElementById('reset-step-2').style.display = 'none';
+    document.getElementById('reset-step-3').style.display = 'none';
+  }
 }
 
 function showToast(msg, duration = 2800) {
@@ -176,11 +181,15 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
 // ─── OTP ──────────────────────────────────────────────────────────────────────
 // OTP inputs auto-advance
 document.addEventListener('DOMContentLoaded', () => {
-  const boxes = document.querySelectorAll('.otp-box');
-  boxes.forEach((box, i) => {
-    box.addEventListener('input', () => { if (box.value && i < boxes.length - 1) boxes[i+1].focus(); });
-    box.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i-1].focus(); } });
-  });
+  const setupOTP = (selector) => {
+    const boxes = document.querySelectorAll(selector);
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => { if (box.value && i < boxes.length - 1) boxes[i+1].focus(); });
+      box.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i-1].focus(); } });
+    });
+  };
+  setupOTP('.otp-box');
+  setupOTP('.otp-box-reset');
 });
 
 function getOTPValue() {
@@ -214,6 +223,76 @@ async function resendOTP() {
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent! Check your email.' : res.message);
 }
+
+// ─── Forgot Password Logic ──────────────────────────────────────────────────
+window.requestPasswordReset = async (e) => {
+  if (e) e.preventDefault();
+  const email = document.getElementById('reset-email').value;
+  const err = document.getElementById('reset-err-1');
+  const btn = document.querySelector('#reset-step-1 button');
+  if (!email) return;
+  
+  err.textContent = '';
+  setLoading(btn, true);
+  try {
+    const res = await api.post('/auth/forgot-password', { email });
+    if (res.success) {
+      showToast('OTP sent to your email 📧');
+      document.getElementById('reset-step-1').style.display = 'none';
+      document.getElementById('reset-step-2').style.display = 'block';
+    } else {
+      err.textContent = res.message || 'Failed to send OTP';
+    }
+  } catch (ex) { err.textContent = 'Connection error'; }
+  setLoading(btn, false);
+};
+
+window.verifyResetOTP = async () => {
+  const otp = [...document.querySelectorAll('.otp-box-reset')].map(b => b.value).join('');
+  const email = document.getElementById('reset-email').value;
+  const err = document.getElementById('reset-err-2');
+  if (otp.length < 6) { err.textContent = 'Enter 6 digits'; return; }
+  
+  err.textContent = '';
+  try {
+    // We use verify-otp but without updating isVerified if it's for reset?
+    // Actually our new reset-password backend route will verify OTP again.
+    // But for better UX, we can verify it here too.
+    // Or just skip to step 3 and let reset-password handle it.
+    // Let's just move to step 3 to keep it simple, or call a verify only endpoint.
+    // For now, let's just trust and move to step 3. 
+    // Wait, the backend reset-password ALREADY verifies OTP.
+    // So we just move to Step 3.
+    document.getElementById('reset-step-2').style.display = 'none';
+    document.getElementById('reset-step-3').style.display = 'block';
+  } catch(ex) { err.textContent = 'Error'; }
+};
+
+window.handlePasswordReset = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('reset-email').value;
+  const otp = [...document.querySelectorAll('.otp-box-reset')].map(b => b.value).join('');
+  const newPassword = document.getElementById('reset-new-password').value;
+  const confirmPassword = document.getElementById('reset-confirm-password').value;
+  const err = document.getElementById('reset-err-3');
+  const btn = document.querySelector('#reset-step-3 button');
+
+  if (newPassword !== confirmPassword) { err.textContent = 'Passwords do not match'; return; }
+  if (newPassword.length < 6) { err.textContent = 'Password too short'; return; }
+
+  err.textContent = '';
+  setLoading(btn, true);
+  try {
+    const res = await api.post('/auth/reset-password', { email, otp, newPassword });
+    if (res.success) {
+      showToast('Password reset successfully! ✅');
+      setTimeout(() => navigate('screen-login'), 1500);
+    } else {
+      err.textContent = res.message || 'Reset failed';
+    }
+  } catch (ex) { err.textContent = 'Connection error'; }
+  setLoading(btn, false);
+};
 
 async function bypassOTP() {
   const email = localStorage.getItem('healify_pending_email');

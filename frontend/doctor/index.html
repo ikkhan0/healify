@@ -172,7 +172,7 @@
   </div>
 </div>
 
-<!-- RESET PASSWORD -->
+<!-- RESET PASSWORD (FORGOT PASSWORD FLOW) -->
 <div id="screen-reset-password" class="screen">
   <header class="auth-desktop-nav">
     <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
@@ -188,22 +188,54 @@
     <div class="auth-form-col">
       <div class="auth-wrap">
         <div class="auth-card figma-card">
-          <h2 class="figma-title">set new password</h2>
-          <form id="form-reset">
-            <div class="figma-input-group">
-              <label>Previous password</label>
-              <input type="password" required />
+          
+          <!-- STEP 1: Enter Email -->
+          <div id="reset-step-1">
+            <h2 class="figma-title">Forgot Password</h2>
+            <p class="figma-sub">Enter your registered email to receive a reset code.</p>
+            <form id="form-forgot-request" onsubmit="requestPasswordReset(event)">
+              <div class="figma-input-group">
+                <label>Email Address</label>
+                <input type="email" id="reset-email" required placeholder="name@tele-mind.com" />
+              </div>
+              <p id="reset-err-1" class="err-msg"></p>
+              <button type="submit" class="btn-figma">Send Code</button>
+            </form>
+          </div>
+
+          <!-- STEP 2: Enter OTP -->
+          <div id="reset-step-2" style="display:none">
+            <h2 class="figma-title">Verify Code</h2>
+            <p class="figma-sub">Enter the 6-digit code sent to your email.</p>
+            <div class="otp-inputs figma-otp" id="reset-otp-inputs" style="margin-bottom:20px;">
+              <input type="text" maxlength="1" class="otp-box-reset figma-box" /><input type="text" maxlength="1" class="otp-box-reset figma-box" />
+              <input type="text" maxlength="1" class="otp-box-reset figma-box" /><input type="text" maxlength="1" class="otp-box-reset figma-box" />
+              <input type="text" maxlength="1" class="otp-box-reset figma-box" /><input type="text" maxlength="1" class="otp-box-reset figma-box" />
             </div>
-            <div class="figma-input-group">
-              <label>New password</label>
-              <input type="password" required />
-            </div>
-            <div class="figma-input-group">
-              <label>Confirm new password</label>
-              <input type="password" required />
-            </div>
-            <button type="submit" class="btn-figma" onclick="event.preventDefault();navigate('screen-login')">Update</button>
-          </form>
+            <p id="reset-err-2" class="err-msg"></p>
+            <button class="btn-figma" onclick="verifyResetOTP()">Verify Code</button>
+            <p class="figma-link" style="margin-top:15px;">Resend code? <a href="#" onclick="requestPasswordReset(event)">Resend</a></p>
+          </div>
+
+          <!-- STEP 3: New Password -->
+          <div id="reset-step-3" style="display:none">
+            <h2 class="figma-title">Reset Password</h2>
+            <p class="figma-sub">Create a new strong password for your account.</p>
+            <form id="form-reset-final" onsubmit="handlePasswordReset(event)">
+              <div class="figma-input-group">
+                <label>New Password</label>
+                <input type="password" id="reset-new-password" required minlength="6" />
+              </div>
+              <div class="figma-input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="reset-confirm-password" required minlength="6" />
+              </div>
+              <p id="reset-err-3" class="err-msg"></p>
+              <button type="submit" class="btn-figma">Update Password</button>
+            </form>
+          </div>
+
+          <p class="figma-link" style="margin-top:20px;"><a href="#" onclick="navigate('screen-login')">Back to Login</a></p>
         </div>
       </div>
     </div>
