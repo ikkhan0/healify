@@ -28,6 +28,9 @@
       <div class="logo-circle-small"></div>
       <span class="logo-text" style="color:#fff">TeleMind</span>
     </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars"></i>
+    </div>
     <nav class="nav-links">
       <a href="/" style="color:#fff">Home</a>
       <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
@@ -61,5 +64,10 @@
   </div>
 
   <script src="/shared/js/settings-sync.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+  </script>
 </body>
 </html>

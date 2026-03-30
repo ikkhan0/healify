@@ -3,7 +3,7 @@
 const BASE_URL = '/api';
 
 const api = {
-  token: () => localStorage.getItem('healify_token'),
+  token: () => localStorage.getItem('telemind_client_token'),
 
   headers() {
     const h = { 'Content-Type': 'application/json' };

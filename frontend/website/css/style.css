@@ -247,3 +247,68 @@ footer {
   background: var(--dark-navy);
   color: #B5C6DE;
 }
+
+/* ─── Responsive Design ─────────────────────────────────────────────────── */
+
+/* Tablet & Mobile (Max 1024px) */
+@media (max-width: 1024px) {
+  .navbar, .top-nav { padding: 1.2rem 2rem; }
+  .landing-container { padding: 2rem; flex-direction: column; text-align: center; }
+  .landing-right img { width: 100%; max-width: 500px; margin-top: 2rem; }
+  .brand-text h1 { font-size: 3rem; justify-content: center; }
+  .brand-text p { margin: 0 auto 2rem; }
+  .hero-content { padding: 4rem 2rem; text-align: center; }
+  .hero-content h1 { font-size: 2.8rem; }
+  .hero-content p { margin: 0 auto; }
+  .btn-main { margin: 1.5rem auto 0; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+
+/* Mobile (Max 768px) */
+@media (max-width: 768px) {
+  .nav-links { display: none; } /* Hide desktop nav */
+  .hamburger { display: block !important; cursor: pointer; font-size: 1.5rem; color: #0A2753; }
+  
+  .navbar, .top-nav { padding: 1rem 1.5rem; }
+  .brand-text h1 { font-size: 2.2rem; }
+  .brand-text p { font-size: 1.1rem; }
+  .landing-container { padding: 1rem; }
+  
+  .stat-banner { flex-direction: column; gap: 2rem; padding: 2rem; }
+  .stat-item h2 { font-size: 2rem; }
+  
+  .cards-grid { grid-template-columns: 1fr; }
+  .info-section { padding: 2rem 1.5rem; }
+  .info-text h2 { font-size: 1.8rem; }
+  
+  /* About Us/Generic Page Container */
+  .page-container { flex-direction: column; padding: 2rem 1.5rem; margin: 1rem 1rem 0; gap: 24px; }
+  .page-title { font-size: 2rem; text-align: center; }
+  .about-text { text-align: left; }
+  .about-visual { padding: 1.5rem; }
+  .stat-grid { grid-template-columns: 1fr; }
+
+  /* Role Selection */
+  .role-body { padding-left: 0; justify-content: center; text-align: center; }
+  .role-container { padding: 2rem; width: 100%; }
+  .role-title { font-size: 2rem; margin: 1rem auto 2rem; }
+  .btn-role { margin: 0 auto 1rem; }
+  .decorative-circles { display: none; }
+}
+
+/* Utility Classes */
+.hamburger { display: none; }
+.mobile-nav-active .nav-links {
+  display: flex !important;
+  flex-direction: column;
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: #C4E2F6;
+  padding: 2rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  z-index: 1000;
+  gap: 1.5rem;
+  text-align: center;
+}

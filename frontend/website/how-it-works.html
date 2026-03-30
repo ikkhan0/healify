@@ -12,6 +12,11 @@
     .page-subtitle { color:#1C448E; font-size:1.2rem; text-align:center; margin-bottom:4rem; }
     
     .steps-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; }
+    @media (max-width: 991px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .page-container { padding: 3rem 1.5rem; }
+      .page-title { font-size: 2.2rem; }
+    }
     .step-card { background:#F3FAFE; padding:3rem 2rem; border-radius:20px; text-align:center; position:relative; overflow:hidden; }
     .step-num { width:50px; height:50px; background:#1C448E; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:800; position:absolute; top:20px; left:20px; }
     .step-icon { font-size:4rem; color:#5DADE2; margin-bottom:1.5rem; }
@@ -25,6 +30,9 @@
     <div class="logo">
       <div class="logo-circle-small"></div>
       <span class="logo-text" style="color:#fff">TeleMind</span>
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars"></i>
     </div>
     <nav class="nav-links">
       <a href="/" style="color:#fff">Home</a>
@@ -67,5 +75,10 @@
   </div>
 
   <script src="/shared/js/settings-sync.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+  </script>
 </body>
 </html>

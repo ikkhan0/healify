@@ -130,6 +130,38 @@ router.put('/patient/:id', protect, authorize('admin'), async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// @PUT /api/admin/user/:id/reset-password
+router.put('/user/:id/reset-password', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+    }
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    user.password = newPassword;
+    await user.save();
+    res.json({ success: true, message: 'User password reset successful' });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/admin/user/:id/role
+router.put('/user/:id/role', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['client', 'service_provider', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, message: 'Invalid role' });
+    }
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    user.role = role;
+    await user.save();
+    res.json({ success: true, message: 'User role updated successfully', role: user.role });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
 // @PUT /api/admin/appointment/:id
 router.put('/appointment/:id', protect, authorize('admin'), async (req, res) => {
   try {

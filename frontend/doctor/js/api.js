@@ -1,7 +1,7 @@
 /* api.js – Doctor Panel */
 const BASE_URL = '/api';
 const api = {
-  token: () => localStorage.getItem('healify_doctor_token'),
+  token: () => localStorage.getItem('telemind_doctor_token'),
   headers() {
     const h = {'Content-Type':'application/json'};
     if (this.token()) h['Authorization'] = `Bearer ${this.token()}`;

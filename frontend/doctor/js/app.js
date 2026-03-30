@@ -80,8 +80,8 @@ function togglePwd(id, btn) {
 // ─── Splash & Init ───────────────────────────────────────────────────────────
 window.onload = () => {
   setTimeout(() => {
-    const token = localStorage.getItem('telemind_service_provider_token');
-    const user = localStorage.getItem('telemind_service_provider_user');
+    const token = localStorage.getItem('telemind_doctor_token');
+    const user = localStorage.getItem('telemind_doctor_user');
     if (token && user) {
       currentDoctor = JSON.parse(user);
       updateDashboardHeader();
@@ -113,8 +113,8 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     const res = await api.post('/auth/login', { email, password });
     if (res.success) {
       if (res.user.role !== 'service_provider') { err.textContent = 'Please use the Services Provider Sign In.'; btn.textContent='Sign In'; btn.disabled=false; return; }
-      localStorage.setItem('telemind_service_provider_token', res.token);
-      localStorage.setItem('telemind_service_provider_user', JSON.stringify(res.user));
+      localStorage.setItem('telemind_doctor_token', res.token);
+      localStorage.setItem('telemind_doctor_user', JSON.stringify(res.user));
       currentDoctor = res.user;
       updateDashboardHeader();
       navigate('screen-dashboard');
@@ -159,7 +159,7 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       const displayEl = document.getElementById('otp-email-display');
       if (displayEl) displayEl.textContent = email;
       
-      localStorage.setItem('healify_pending_email', email);
+      localStorage.setItem('telemind_doctor_pending_email', email);
       navigate('screen-otp');
       showToast('OTP sent to your email 📧');
     } else { err.textContent = res.message || 'Registration failed'; }
@@ -185,20 +185,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function verifyOTP() {
   const otp = [...document.querySelectorAll('.otp-box')].map(b=>b.value).join('');
-  const email = localStorage.getItem('healify_pending_email');
+  const email = localStorage.getItem('telemind_doctor_pending_email');
   const err = document.getElementById('otp-err');
   if (otp.length < 6) { err.textContent='Enter all 6 digits'; return; }
   try {
     const res = await api.post('/auth/verify-otp', { email, otp });
     if (res.success) {
-      if (res.token) { localStorage.setItem('healify_doctor_token', res.token); localStorage.setItem('healify_doctor_user', JSON.stringify(res.user)); currentDoctor=res.user; }
+      if (res.token) { localStorage.setItem('telemind_doctor_token', res.token); localStorage.setItem('telemind_doctor_user', JSON.stringify(res.user)); currentDoctor=res.user; }
       document.getElementById('otp-success-modal').style.display = 'flex';
     } else { err.textContent = res.message || 'Invalid OTP'; }
   } catch { err.textContent = 'Network error'; }
 }
 
 async function resendOTP() {
-  const email = localStorage.getItem('healify_pending_email');
+  const email = localStorage.getItem('telemind_doctor_pending_email');
   if (!email) return;
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent!' : res.message);
@@ -264,7 +264,7 @@ window.handlePasswordReset = async (e) => {
 };
 
 async function bypassOTP() {
-  const email = localStorage.getItem('healify_pending_email');
+  const email = localStorage.getItem('telemind_doctor_pending_email');
   if (!email) { showToast('Email not found. Please sign up again.'); return; }
   
   showToast('Bypassing verification...');
@@ -272,8 +272,8 @@ async function bypassOTP() {
     const res = await api.post('/auth/verify-otp', { email, otp: '123456' });
     if (res.success) {
       if (res.token) {
-        localStorage.setItem('healify_doctor_token', res.token);
-        localStorage.setItem('healify_doctor_user', JSON.stringify(res.user));
+        localStorage.setItem('telemind_doctor_token', res.token);
+        localStorage.setItem('telemind_doctor_user', JSON.stringify(res.user));
         currentDoctor = res.user;
       }
       document.getElementById('otp-success-modal').style.display = 'flex';
@@ -727,8 +727,8 @@ async function saveProfile() {
 }
 
 function logout() {
-  localStorage.removeItem('healify_doctor_token');
-  localStorage.removeItem('healify_doctor_user');
+  localStorage.removeItem('telemind_doctor_token');
+  localStorage.removeItem('telemind_doctor_user');
   currentDoctor = null;
   navigate('screen-login');
   showToast('Logged out');

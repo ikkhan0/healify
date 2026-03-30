@@ -4,8 +4,8 @@ let allPatients = [], allDoctors = [], allAppointments = [];
 
 // ─── Init ─────────────────────────────────────────────────────────────────
 window.onload = () => {
-  const token = localStorage.getItem('healify_admin_token');
-  const user  = localStorage.getItem('healify_admin_user');
+  const token = localStorage.getItem('telemind_admin_token');
+  const user  = localStorage.getItem('telemind_admin_user');
   if (token && user) { adminUser = JSON.parse(user); showApp(); }
   startClock();
 };
@@ -44,8 +44,8 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
       password: document.getElementById('admin-password').value
     });
     if (res.success) {
-      localStorage.setItem('healify_admin_token', res.token);
-      localStorage.setItem('healify_admin_user', JSON.stringify(res.user));
+      localStorage.setItem('telemind_admin_token', res.token);
+      localStorage.setItem('telemind_admin_user', JSON.stringify(res.user));
       adminUser = res.user;
       showApp();
     } else { err.textContent = res.message || 'Invalid admin credentials'; }
@@ -62,8 +62,8 @@ function showApp() {
 }
 
 function logout() {
-  localStorage.removeItem('healify_admin_token');
-  localStorage.removeItem('healify_admin_user');
+  localStorage.removeItem('telemind_admin_token');
+  localStorage.removeItem('telemind_admin_user');
   document.getElementById('page-app').classList.remove('active');
   document.getElementById('page-app').style.display = 'none';
   document.getElementById('page-login').classList.add('active');
@@ -156,7 +156,9 @@ function renderPatients(patients) {
       <td>${joined}</td>
       <td><span class="badge ${p.isActive?'badge-active':'badge-inactive'}">${p.isActive?'Active':'Inactive'}</span></td>
       <td>
-        <button class="action-btn" style="background:#1C448E; color:#fff" onclick="openEditPat('${p._id}', '${p.name}', '${p.email}', '${p.phone || ''}', '${pp.age || ''}')">Edit</button>
+        <button class="action-btn" title="Edit Profile" style="background:#1C448E; color:#fff" onclick="openEditPat('${p._id}', '${p.name}', '${p.email}', '${p.phone || ''}', '${pp.age || ''}')"><i class="fas fa-edit"></i></button>
+        <button class="action-btn" title="Reset Password" style="background:#f39c12; color:#fff" onclick="openResetPasswordModal('${p._id}', '${p.name}')"><i class="fas fa-key"></i></button>
+        <button class="action-btn" title="Change Role" style="background:#8e44ad; color:#fff" onclick="openChangeRoleModal('${p._id}', '${p.name}', '${p.role}')"><i class="fas fa-user-tag"></i></button>
         <button class="action-btn btn-toggle" onclick="toggleUser('${p._id}',this)">${p.isActive?'Disable':'Enable'}</button>
         <button class="action-btn btn-delete" onclick="deleteUser('${p._id}','patient')">Delete</button>
       </td>
@@ -189,8 +191,10 @@ function renderDoctors(doctors) {
       <td>⭐ ${dp.rating || '4.0'}</td>
       <td>RS ${dp.totalEarnings || 0}</td>
       <td>
-        <button class="action-btn" style="background:#5DADE2; color:#fff" onclick="openViewDoctor('${d._id}')">View</button>
-        <button class="action-btn" style="background:#1C448E; color:#fff" onclick="openEditDoc('${d._id}', '${d.name}', '${d.email}', '${dp.specialty || ''}', '${dp.consultationFee || 0}', '${dp.experience || ''}', '${dp.education || ''}', '${dp.bio || ''}', '${d.profileImage || ''}')">Edit</button>
+        <button class="action-btn" title="View Profile" style="background:#5DADE2; color:#fff" onclick="openViewDoctor('${d._id}')"><i class="fas fa-eye"></i></button>
+        <button class="action-btn" title="Edit Profile" style="background:#1C448E; color:#fff" onclick="openEditDoc('${d._id}', '${d.name}', '${d.email}', '${dp.specialty || ''}', '${dp.consultationFee || 0}', '${dp.experience || ''}', '${dp.education || ''}', '${dp.bio || ''}', '${d.profileImage || ''}')"><i class="fas fa-edit"></i></button>
+        <button class="action-btn" title="Reset Password" style="background:#f39c12; color:#fff" onclick="openResetPasswordModal('${d._id}', '${d.name}')"><i class="fas fa-key"></i></button>
+        <button class="action-btn" title="Change Role" style="background:#8e44ad; color:#fff" onclick="openChangeRoleModal('${d._id}', '${d.name}', '${d.role}')"><i class="fas fa-user-tag"></i></button>
         <button class="action-btn btn-toggle" onclick="toggleUser('${d._id}',this)">${d.isActive?'Disable':'Enable'}</button>
         <button class="action-btn btn-delete" onclick="deleteUser('${d._id}','doctor')">Delete</button>
       </td>
@@ -507,4 +511,56 @@ async function submitAddAdmin(e) {
       showToast(res.message || 'Error creating admin');
     }
   } catch (e) { showToast('Error creating admin'); }
+}
+
+// ─── Reset Password & Role Actions ──────────────────────────────────────────
+function openResetPasswordModal(userId, userName) {
+  document.getElementById('reset-user-id').value = userId;
+  document.getElementById('reset-user-info').textContent = `Set a new password for ${userName}`;
+  document.getElementById('reset-password-form').reset();
+  document.getElementById('reset-password-modal').style.display = 'flex';
+}
+
+async function submitResetPassword(e) {
+  e.preventDefault();
+  const userId = document.getElementById('reset-user-id').value;
+  const newPassword = document.getElementById('reset-new-pass').value;
+  const confPassword = document.getElementById('reset-conf-pass').value;
+
+  if (newPassword !== confPassword) return showToast('Passwords do not match');
+  if (newPassword.length < 6) return showToast('Password must be at least 6 characters');
+
+  try {
+    const res = await api.put(`/admin/user/${userId}/reset-password`, { newPassword });
+    if (res.success) {
+      showToast('Password reset successfully ✅');
+      document.getElementById('reset-password-modal').style.display = 'none';
+    } else {
+      showToast(res.message || 'Error occurred');
+    }
+  } catch (e) { showToast('Error resetting password'); }
+}
+
+function openChangeRoleModal(userId, userName, currentRole) {
+  document.getElementById('role-user-id').value = userId;
+  document.getElementById('role-user-info').textContent = `Current role for ${userName} is "${currentRole}"`;
+  document.getElementById('role-select').value = currentRole;
+  document.getElementById('change-role-modal').style.display = 'flex';
+}
+
+async function submitChangeRole(e) {
+  e.preventDefault();
+  const userId = document.getElementById('role-user-id').value;
+  const role = document.getElementById('role-select').value;
+
+  try {
+    const res = await api.put(`/admin/user/${userId}/role`, { role });
+    if (res.success) {
+      showToast(`User role updated to ${role} ✅`);
+      document.getElementById('change-role-modal').style.display = 'none';
+      loadPatients(); loadDoctors();
+    } else {
+      showToast(res.message || 'Error updating role');
+    }
+  } catch (e) { showToast('Error updating role'); }
 }

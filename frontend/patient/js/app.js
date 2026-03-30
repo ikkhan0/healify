@@ -64,8 +64,8 @@ function setLoading(btnEl, loading) {
 // ─── Splash ───────────────────────────────────────────────────────────────────
 window.onload = () => {
   setTimeout(() => {
-    const token = localStorage.getItem('telemind_token');
-    const user = localStorage.getItem('telemind_user');
+    const token = localStorage.getItem('telemind_client_token');
+    const user = localStorage.getItem('telemind_client_user');
     const disclaimerAccepted = localStorage.getItem('telemind_disclaimer_accepted');
     
     if (token && user) {
@@ -135,7 +135,7 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       const displayEl = document.getElementById('otp-email-display');
       if (displayEl) displayEl.textContent = email;
       
-      localStorage.setItem('healify_pending_email', email);
+      localStorage.setItem('telemind_client_pending_email', email);
       navigate('screen-otp');
       showToast('OTP sent to your email 📧');
     } else {
@@ -162,8 +162,8 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     });
     if (res.success) {
       if (res.user.role !== 'client') { err.textContent = 'Please use the correct login panel.'; setLoading(btn,false); return; }
-      localStorage.setItem('telemind_token', res.token);
-      localStorage.setItem('telemind_user', JSON.stringify(res.user));
+      localStorage.setItem('telemind_client_token', res.token);
+      localStorage.setItem('telemind_client_user', JSON.stringify(res.user));
       currentUser = res.user;
       updateHeaderUser();
       navigate('screen-home');
@@ -206,8 +206,8 @@ async function verifyOTP() {
     const res = await api.post('/auth/verify-otp', { email, otp });
     if (res.success) {
       if (res.token) {
-        localStorage.setItem('healify_token', res.token);
-        localStorage.setItem('healify_user', JSON.stringify(res.user));
+        localStorage.setItem('telemind_client_token', res.token);
+        localStorage.setItem('telemind_client_user', JSON.stringify(res.user));
         currentUser = res.user;
       }
       document.getElementById('otp-success-modal').style.display = 'flex';
@@ -218,7 +218,7 @@ async function verifyOTP() {
 }
 
 async function resendOTP() {
-  const email = localStorage.getItem('healify_pending_email');
+  const email = localStorage.getItem('telemind_pending_email');
   if (!email) return;
   const res = await api.post('/auth/send-otp', { email });
   showToast(res.success ? 'OTP resent! Check your email.' : res.message);
@@ -295,7 +295,7 @@ window.handlePasswordReset = async (e) => {
 };
 
 async function bypassOTP() {
-  const email = localStorage.getItem('healify_pending_email');
+  const email = localStorage.getItem('telemind_pending_email');
   if (!email) { showToast('Email not found. Please sign up again.'); return; }
   
   showToast('Bypassing verification...');
@@ -303,8 +303,8 @@ async function bypassOTP() {
     const res = await api.post('/auth/verify-otp', { email, otp: '123456' });
     if (res.success) {
       if (res.token) {
-        localStorage.setItem('healify_token', res.token);
-        localStorage.setItem('healify_user', JSON.stringify(res.user));
+        localStorage.setItem('telemind_client_token', res.token);
+        localStorage.setItem('telemind_client_user', JSON.stringify(res.user));
         currentUser = res.user;
       }
       document.getElementById('otp-success-modal').style.display = 'flex';
@@ -1054,8 +1054,8 @@ window.uploadAvatar = async (input) => {
 };
 
 function logout() {
-  localStorage.removeItem('healify_token');
-  localStorage.removeItem('healify_user');
+  localStorage.removeItem('telemind_client_token');
+  localStorage.removeItem('telemind_client_user');
   currentUser = null;
   navigate('screen-identity');
   showToast('Logged out successfully');

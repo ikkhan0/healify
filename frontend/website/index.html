@@ -6,13 +6,17 @@
   <title>TeleMind - Psychiatric Appointments</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="landing-body">
   <header class="top-nav">
     <div class="logo">
       <div class="logo-circle-small"></div>
-      <span class="logo-text">logo</span>
+      <span class="logo-text">TeleMind</span>
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars"></i>
     </div>
     <nav class="nav-links">
       <a href="/" class="active">Home</a>
@@ -39,5 +43,10 @@
     </div>
   </div>
   <script src="/shared/js/settings-sync.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+  </script>
 </body>
 </html>

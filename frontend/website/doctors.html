@@ -9,6 +9,11 @@
   <style>
     .page-container { max-width:1200px; margin:0 auto; padding:2rem 4rem; background:#fff; min-height:80vh; border-radius:16px; margin-top:2rem; box-shadow:0 10px 30px rgba(0,0,0,0.05); }
     .page-header { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #EAF4FC; padding-bottom:1.5rem; margin-bottom:2rem; }
+    @media (max-width: 768px) {
+      .page-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .search-box { width: 100%; flex-direction: column; }
+      .search-box input, .search-box select { width: 100%; }
+    }
     .page-title { color:#0A2753; font-size:2.5rem; margin:0; }
     .search-box { display:flex; gap:10px; }
     .search-box input, .search-box select { padding:12px 20px; border-radius:30px; border:1px solid #c7ecee; font-size:1rem; outline:none; }
@@ -35,6 +40,9 @@
     <div class="logo">
       <div class="logo-circle-small"></div>
       <span class="logo-text" style="color:#fff">TeleMind</span>
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars"></i>
     </div>
     <nav class="nav-links">
       <a href="/" style="color:#fff">Home</a>
@@ -204,5 +212,10 @@
     fetchPublicDoctors();
   </script>
   <script src="/shared/js/settings-sync.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+  </script>
 </body>
 </html>
