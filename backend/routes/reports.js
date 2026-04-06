@@ -9,9 +9,9 @@ const { protect } = require('../middleware/auth');
 router.get('/', protect, async (req, res) => {
   try {
     let query = {};
-    if (req.user.role === 'patient') {
+    if (req.user.role === 'client') {
       query.patientId = req.user._id;
-    } else if (req.user.role === 'doctor') {
+    } else if (req.user.role === 'service_provider') {
       const { patientId, all } = req.query;
       if (all === 'true') {
         query.doctorId = req.user._id;
@@ -47,11 +47,11 @@ router.get('/:id', protect, async (req, res) => {
     }
 
     // Check ownership/access
-    if (req.user.role === 'patient' && report.patientId._id.toString() !== req.user._id.toString()) {
+    if (req.user.role === 'client' && report.patientId._id.toString() !== req.user._id.toString()) {
       return res.status(401).json({ success: false, message: 'Not authorized to view this report' });
     }
     
-    if (req.user.role === 'doctor' && report.doctorId?._id.toString() !== req.user._id.toString()) {
+    if (req.user.role === 'service_provider' && report.doctorId?._id.toString() !== req.user._id.toString()) {
        // Doctors can see reports they created
     }
 

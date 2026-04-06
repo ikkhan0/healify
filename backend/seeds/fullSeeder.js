@@ -143,7 +143,7 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d
     console.log('✅ Connected to MongoDB Atlas');
 
     // Clear previous non-admin data
-    await User.deleteMany({ role: { $in: ['patient', 'doctor'] } });
+    await User.deleteMany({ role: { $in: ['client', 'service_provider'] } });
     await Doctor.deleteMany({});
     await Patient.deleteMany({});
     await Appointment.deleteMany({});
@@ -155,7 +155,7 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d
     for (const d of DOCTORS) {
       const user = new User({
         name: d.name, email: d.email, phone: d.phone,
-        password: 'doctor123', role: 'doctor',
+        password: 'doctor123', role: 'service_provider',
         profileImage: d.photo,
         isVerified: true, isActive: true
       });
@@ -184,7 +184,7 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d
     for (const p of PATIENTS) {
       const user = new User({
         name: p.name, email: p.email, phone: p.phone,
-        password: 'patient123', role: 'patient',
+        password: 'patient123', role: 'client',
         profileImage: p.photo,
         isVerified: true, isActive: true
       });
@@ -268,8 +268,8 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d
     console.log('\n🎉 Seed complete!\n');
     console.log('─────────────────────────────────────────────────');
     console.log('  Admin:    admin@healify.com      / admin123');
-    console.log('  Doctors:  sarah.johnson@...      / doctor123');
-    console.log('  Patients: ali.hassan@email.com   / patient123');
+    console.log('  Services Providers:  sarah.johnson@...  / doctor123');
+    console.log('  Clients:  ali.hassan@email.com   / patient123');
     console.log('─────────────────────────────────────────────────\n');
 
   } catch (err) {

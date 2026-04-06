@@ -10,8 +10,8 @@ const Report = require('../models/Report');
 // @GET /api/admin/stats
 router.get('/stats', protect, authorize('admin'), async (req, res) => {
   try {
-    const totalPatients = await User.countDocuments({ role: 'patient' });
-    const totalDoctors = await User.countDocuments({ role: 'doctor' });
+    const totalPatients = await User.countDocuments({ role: 'client' });
+    const totalDoctors = await User.countDocuments({ role: 'service_provider' });
     const totalAppointments = await Appointment.countDocuments();
     const completedAppts = await Appointment.countDocuments({ status: 'completed' });
 
@@ -36,7 +36,7 @@ router.get('/stats', protect, authorize('admin'), async (req, res) => {
 // @GET /api/admin/patients
 router.get('/patients', protect, authorize('admin'), async (req, res) => {
   try {
-    const users = await User.find({ role: 'patient' }).select('-password').lean();
+    const users = await User.find({ role: 'client' }).select('-password').lean();
     const results = await Promise.all(users.map(async (u) => {
       const p = await Patient.findOne({ userId: u._id }).lean();
       return { ...u, patientProfile: p };
@@ -48,7 +48,7 @@ router.get('/patients', protect, authorize('admin'), async (req, res) => {
 // @GET /api/admin/doctors
 router.get('/doctors', protect, authorize('admin'), async (req, res) => {
   try {
-    const users = await User.find({ role: 'doctor' }).select('-password').lean();
+    const users = await User.find({ role: 'service_provider' }).select('-password').lean();
     const results = await Promise.all(users.map(async (u) => {
       const d = await Doctor.findOne({ userId: u._id }).lean();
       return { ...u, doctorProfile: d };

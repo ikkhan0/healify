@@ -103,7 +103,7 @@ router.put('/appointments/:id', protect, authorize('service_provider'), async (r
 });
 
 // @GET /api/doctors/patients
-router.get('/patients', protect, authorize('doctor'), async (req, res) => {
+router.get('/patients', protect, authorize('service_provider'), async (req, res) => {
   try {
     const appointments = await Appointment.find({ doctorId: req.user._id }).distinct('patientId');
     const patients = await User.find({ _id: { $in: appointments } }).select('-password');
@@ -112,7 +112,7 @@ router.get('/patients', protect, authorize('doctor'), async (req, res) => {
 });
 
 // @GET /api/doctors/earnings
-router.get('/earnings', protect, authorize('doctor'), async (req, res) => {
+router.get('/earnings', protect, authorize('service_provider'), async (req, res) => {
   try {
     const profile = await Doctor.findOne({ userId: req.user._id });
     const totalAppts = await Appointment.countDocuments({ doctorId: req.user._id });
@@ -122,7 +122,7 @@ router.get('/earnings', protect, authorize('doctor'), async (req, res) => {
 });
 
 // @POST /api/doctors/reports - create or manual patient report
-router.post('/reports', protect, authorize('doctor'), async (req, res) => {
+router.post('/reports', protect, authorize('service_provider'), async (req, res) => {
   try {
     const { patientId, appointmentId, title, description, remarks, medicines, suggestedTests, type } = req.body;
     

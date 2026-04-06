@@ -38,7 +38,7 @@ router.put('/profile', protect, authorize('client'), upload.single('profileImage
 router.get('/doctors', async (req, res) => {
   try {
     const { specialty, search } = req.query;
-    let match = { role: 'doctor', isActive: true };
+    let match = { role: 'service_provider', isActive: true };
     if (search) match.name = { $regex: search, $options: 'i' };
 
     const users = await User.find(match).select('-password');
@@ -56,7 +56,7 @@ router.get('/doctors/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     const doc = await Doctor.findOne({ userId: req.params.id });
-    if (!user || user.role !== 'doctor') return res.status(404).json({ success: false, message: 'Doctor not found' });
+    if (!user || user.role !== 'service_provider') return res.status(404).json({ success: false, message: 'Doctor not found' });
     res.json({ success: true, doctor: { ...user.toObject(), doctorProfile: doc } });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
@@ -66,7 +66,7 @@ router.post('/appointments', protect, authorize('client'), async (req, res) => {
   try {
     const { doctorId, date, timeSlot, type, symptoms, intakeData, waiverData } = req.body;
     const doctor = await User.findById(doctorId);
-    if (!doctor || doctor.role !== 'doctor') return res.status(404).json({ success: false, message: 'Doctor not found' });
+    if (!doctor || doctor.role !== 'service_provider') return res.status(404).json({ success: false, message: 'Doctor not found' });
 
     const docProfile = await Doctor.findOne({ userId: doctorId });
     const roomId = `telemind_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
