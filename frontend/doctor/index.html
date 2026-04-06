@@ -276,8 +276,8 @@
        <h3>Your health, just a click away.</h3>
     </div>
     <div class="figma-banner-text">
-       <h4>Care for Your Mental Health, Online</h4>
-       <p>Connect with licensed psychiatrists<br>from the comfort of your home.</p>
+       <h4>Tele-Health, Refined</h4>
+       <p>Providing high-quality care to patients worldwide.<br>Your expertise, delivered seamlessly.</p>
     </div>
 
     <!-- Upcoming Appointments row -->
@@ -374,7 +374,30 @@
        </div>
     </div>
 
-  </div>
+    <!-- Recent Activity / Live Feed placeholder for premium feel -->
+    <div class="dash-section desktop-only">
+       <div class="section-top">
+          <h3>Live Activity</h3>
+          <span>Real-time updates</span>
+       </div>
+       <div class="live-activity-grid">
+          <div class="activity-card glass">
+             <i class="fas fa-bell"></i>
+             <p>New appointment from <strong>Ali Raza</strong></p>
+             <span>2 mins ago</span>
+          </div>
+          <div class="activity-card glass">
+             <i class="fas fa-check-circle"></i>
+             <p>Report completed for <strong>Sana Khan</strong></p>
+             <span>15 mins ago</span>
+          </div>
+          <div class="activity-card glass">
+             <i class="fas fa-video"></i>
+             <p>Scheduled call in <strong>10 minutes</strong></p>
+             <span>Upcoming</span>
+          </div>
+       </div>
+    </div>
   
   </div>
   <div style="height:80px"></div>
@@ -612,6 +635,8 @@
   <a class="nav-item" id="nav-appointments" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i><span>Appointment</span></a>
   <a class="nav-item" id="nav-reports" onclick="navigate('screen-all-reports')"><i class="far fa-file-alt"></i><span>Reports</span></a>
   <a class="nav-item" id="nav-profile" onclick="navigate('screen-profile')"><i class="far fa-user-circle"></i><span>Profile</span></a>
+  <a class="nav-item desktop-only" onclick="showToast('Support: support@tele-mind.com')"><i class="far fa-question-circle"></i><span>Support</span></a>
+  <a class="nav-item desktop-only logout-nav" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
 </nav>
 
 <div id="toast" class="toast"></div>

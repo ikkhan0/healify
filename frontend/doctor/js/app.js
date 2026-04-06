@@ -112,14 +112,22 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
   try {
     const res = await api.post('/auth/login', { email, password });
     if (res.success) {
-      if (res.user.role !== 'service_provider') { err.textContent = 'Please use the Services Provider Sign In.'; btn.textContent='Sign In'; btn.disabled=false; return; }
+      // Login succeeded, now check role
+      if (res.user.role !== 'service_provider') { 
+        err.textContent = 'Access denied: Please use the Services Provider Sign In.'; 
+        btn.textContent='Sign In'; btn.disabled=false; 
+        return; 
+      }
       localStorage.setItem('telemind_doctor_token', res.token);
       localStorage.setItem('telemind_doctor_user', JSON.stringify(res.user));
       currentDoctor = res.user;
       updateDashboardHeader();
       navigate('screen-dashboard');
       showToast(`Welcome back, Dr. ${res.user.name.split(' ')[0]}!`);
-    } else { err.textContent = res.message || 'Invalid credentials'; }
+    } else { 
+      // Login failed (wrong password or email)
+      err.textContent = res.message || 'Invalid email or password'; 
+    }
   } catch (ex) { 
     console.error('Doctor Login Error:', ex);
     err.textContent = 'Connection error. Is the server running?'; 
