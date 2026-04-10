@@ -36,10 +36,16 @@
       if (s.email) emailEls.forEach(el => el.textContent = s.email);
       if (s.address) addressEls.forEach(el => el.textContent = s.address);
 
-      // 3. Inject Global Footer if on website/portal
-      if (!document.querySelector('footer') && !document.querySelector('.no-footer')) {
+      // 3. Inject Global Footer if on website/portal (skip SPA app dashboards)
+      const isAppDashboard = !!document.querySelector('.app-screen, #page-app');
+      if (!document.querySelector('footer') && !document.querySelector('.no-footer') && !isAppDashboard) {
          const footer = document.createElement('footer');
-         footer.style.cssText = 'background:#0A2753; color:#fff; padding:4rem 2rem; margin-top:4rem; font-family:"Plus Jakarta Sans", sans-serif;';
+
+         // Detect admin panel: sidebar is fixed at var(--sidebar-w) = 260px
+         const sidebar = document.querySelector('.sidebar');
+         const sidebarW = sidebar ? (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w')) || 260) : 0;
+         
+         footer.style.cssText = `background:#0A2753; color:#fff; padding:4rem 2rem; margin-top:4rem; font-family:"Plus Jakarta Sans", sans-serif; margin-left:${sidebarW}px;`;
          footer.innerHTML = `
            <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:40px;">
              <div>

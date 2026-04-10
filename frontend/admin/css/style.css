@@ -206,6 +206,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+/* ─── Injected global footer: must clear the fixed sidebar ────────────────── */
+body > footer {
+  margin-left: var(--sidebar-w, 260px) !important;
+}
+
 @media (max-width: 768px) {
   .form-row { grid-template-columns: 1fr; }
+  body > footer { margin-left: 0 !important; }
 }
+
