@@ -1034,7 +1034,7 @@ function endCall() {
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
 async function loadProfile() {
-  const token = localStorage.getItem('telemind_token');
+  const token = localStorage.getItem('telemind_client_token');
   if (!token) { navigate('screen-login'); return; }
   try {
     const res = await api.get('/patients/profile');

@@ -72,8 +72,8 @@
       }
 
       // 4. Update Document Title / Brand Name if needed
-      if (s.otherSettings && s.otherSettings.get('softwareName')) {
-         const name = s.otherSettings.get('softwareName');
+      if (s.otherSettings && s.otherSettings['softwareName']) {
+         const name = s.otherSettings['softwareName'];
          document.querySelectorAll('.brand-name, .logo-text').forEach(el => el.textContent = name);
       }
     }
