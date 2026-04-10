@@ -367,17 +367,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   .auth-nav-arrows { font-size: 24px; color: #112A61; display:flex; gap:16px; cursor:pointer; }
   
   .auth-desktop-grid { 
-     display: grid; grid-template-columns: 1fr 1fr; height: 100dvh; 
+     display: grid; grid-template-columns: 1fr 1fr; min-height: 100dvh; 
      max-width: 1200px; margin: 0 auto; padding-top: 80px; align-items: center; justify-content: center;
   }
   .auth-image-col { display: flex; justify-content: center; align-items: center; height: 100%; padding: 40px; }
   .auth-image-inner { 
-     background: #112A61; border-radius: 40px; overflow: hidden; height: 80%; width: 100%; max-height: 600px; max-width: 450px;
-     display: flex; align-items: flex-end; justify-content: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+     background: #112A61; border-radius: 40px; overflow: hidden; height: 100%; width: 100%; max-height: 600px; max-width: 450px;
+     display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
   }
-  .auth-image-inner img { width: 90%; object-fit: contain; }
+  .auth-image-inner img { width: 100%; height: 100%; object-fit: cover; }
   
-  .auth-form-col { display: flex; justify-content: center; align-items: center; height: 100%; }
+  .auth-form-col { display: flex; justify-content: center; align-items: center; height: 100%; width: 100%; padding: 40px; }
   
   .auth-wrap, .auth-card { 
      width: 100%; max-width: 460px; margin: 0; 

@@ -1,4 +1,4 @@
-/* app.js – Healify Patient Panel Main Logic */
+/* app.js – TeleMind Patient Panel Main Logic */
 'use strict';
 
 // ─── State ──────────────────────────────────────────────────────────────────
@@ -198,7 +198,7 @@ function getOTPValue() {
 
 async function verifyOTP() {
   const otp = getOTPValue();
-  const email = localStorage.getItem('healify_pending_email') || document.getElementById('otp-email-display').textContent;
+  const email = localStorage.getItem('telemind_pending_email') || document.getElementById('otp-email-display').textContent;
   const err = document.getElementById('otp-err');
   if (otp.length < 6) { err.textContent = 'Please enter all 6 digits'; return; }
   err.textContent = '';
@@ -1024,7 +1024,7 @@ function endCall() {
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
 async function loadProfile() {
-  const token = localStorage.getItem('healify_token');
+  const token = localStorage.getItem('telemind_token');
   if (!token) { navigate('screen-login'); return; }
   try {
     const res = await api.get('/patients/profile');
@@ -1087,10 +1087,10 @@ window.saveProfile = async () => {
     const res = await api.put('/patients/profile', { name, phone, age: Number(age), bloodGroup });
     if (res.success) {
       showToast('Profile updated');
-      const user = JSON.parse(localStorage.getItem('healify_user') || '{}');
+      const user = JSON.parse(localStorage.getItem('telemind_user') || '{}');
       user.name = name;
       user.phone = phone;
-      localStorage.setItem('healify_user', JSON.stringify(user));
+      localStorage.setItem('telemind_user', JSON.stringify(user));
       loadProfile();
       document.getElementById('edit-profile-modal').style.display = 'none';
     } else showToast(res.message);
@@ -1116,7 +1116,7 @@ window.uploadHealthRecord = async () => {
 
     const res = await fetch(`/api/patients/reports`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('healify_token')}` },
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('telemind_token')}` },
       body: formData
     });
     const data = await res.json();

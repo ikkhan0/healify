@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Resources - TeleMind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/resources.css">
+</head>
+<body class="landing-body" style="background:#f4f9fd;">
+  <header class="top-nav" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color:#fff; padding:1.5rem 4rem;">
+    <div class="logo">
+      <div class="logo-circle-small" style="background:#fff;"></div>
+      <span class="logo-text" style="color:#fff">TeleMind</span>
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <nav class="nav-links">
+      <a href="/" style="color:#fff">Home</a>
+      <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
+      <a href="/how-it-works.html" style="color:#fff">How it works</a>
+      <a href="/resources.html" class="active" style="color:#fff; border-bottom:2px solid #0A2753;">Resources</a>
+      <a href="/about-us.html" style="color:#fff">About us</a>
+      <a href="/contact-us.html" style="color:#fff">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="color:#fff">
+      <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
+    </div>
+  </header>
+  
+  <div class="resources-hero">
+    <div class="rh-bg-shapes">
+      <div class="rh-circle rh-c1"></div>
+      <div class="rh-circle rh-c2"></div>
+    </div>
+    <div class="rh-text">
+        <h1>Mental Health &amp; Self-Help Guide</h1>
+        <p>Your mental well-being matters. Explore our comprehensive library on identifying conditions and evidence-based self-care coping techniques.</p>
+    </div>
+    <div class="rh-image">
+        <img src="/assets/therapy-realistic.png" alt="Peaceful Therapy Space Illustration" style="border:4px solid rgba(255,255,255,0.4);">
+    </div>
+  </div>
+
+  <div class="hub-container">
+    <aside class="hub-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Psychoeducation</div>
+            <button class="tab-btn active" onclick="openTab(event, 'depression')"><i class="fas fa-cloud-rain"></i> Depression</button>
+            <button class="tab-btn" onclick="openTab(event, 'anxiety')"><i class="fas fa-wind"></i> Anxiety</button>
+            <button class="tab-btn" onclick="openTab(event, 'panic')"><i class="fas fa-heartbeat"></i> Panic Attacks</button>
+            <button class="tab-btn" onclick="openTab(event, 'trauma')"><i class="fas fa-hands-holding"></i> Trauma & PTSD</button>
+            <button class="tab-btn" onclick="openTab(event, 'addiction')"><i class="fas fa-capsules"></i> Drug Addiction</button>
+            <button class="tab-btn" onclick="openTab(event, 'suicide')"><i class="fas fa-life-ring"></i> Suicide Prevention</button>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Self-Help Strategies</div>
+            <button class="tab-btn" onclick="openTab(event, 'breathing')"><i class="fas fa-lungs"></i> Deep Breathing</button>
+            <button class="tab-btn" onclick="openTab(event, 'relaxation')"><i class="fas fa-spa"></i> Progressive Relaxation</button>
+            <button class="tab-btn" onclick="openTab(event, 'mindfulness')"><i class="fas fa-leaf"></i> Mindfulness</button>
+            <button class="tab-btn" onclick="openTab(event, 'grounding')"><i class="fas fa-anchor"></i> Grounding Techniques</button>
+        </div>
+    </aside>
+
+    <main class="hub-content">
+        <!-- DEPRESSION -->
+        <article id="depression" class="tab-pane active">
+            <div class="article-header">
+                <h2>Depression</h2>
+                <p>Understanding mood disorders and finding a path to recovery.</p>
+            </div>
+            <div class="article-body">
+                <div class="glass-panel text-center" style="padding: 1.5rem; display: flex; align-items:center; gap: 20px;">
+                   <i class="fas fa-info-circle fa-2x" style="color: #0984e3;"></i>
+                   <p style="margin:0; flex:1; text-align:left;">Depression happens when feelings of sadness, emptiness, or loss of interest last for weeks or months and interfere with work, school, relationships, or daily tasks. It is not a sign of weakness or laziness.</p>
+                </div>
+                
+                <h3>Signs and Symptoms</h3>
+                <p>If you have five or more of the following symptoms for at least two weeks, it may be depression:</p>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-heart-broken" style="margin-right:10px;"></i> Emotional Signs</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <ul>
+                                    <li>Feeling sad, empty, hopeless, or tearful most of the day, nearly every day.</li>
+                                    <li>Loss of interest or pleasure in things you once enjoyed (hobbies, family time, food, sex).</li>
+                                    <li>Irritability, anger, or frustration over small things.</li>
+                                    <li>Feelings of worthlessness, guilt, or excessive self-blame.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-bed" style="margin-right:10px;"></i> Physical Signs</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <ul>
+                                    <li>Big changes in appetite or weight (loss or gain without trying).</li>
+                                    <li>Trouble sleeping (insomnia) or sleeping too much.</li>
+                                    <li>Feeling tired or having no energy, even for small tasks.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-brain" style="margin-right:10px;"></i> Thinking & Behavioral Signs</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <ul>
+                                    <li>Difficulty concentrating, making decisions, or remembering things.</li>
+                                    <li>Recurrent thoughts of death, dying, or suicide.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Self-Care Management Steps</h3>
+                <div class="step-cards">
+                   <div class="step-card-modern">
+                      <div class="step-num">01</div>
+                      <h4>Stay connected</h4>
+                      <p>Talk to a trusted family member, friend, or neighbour. Share how you feel—even a short call can reduce loneliness.</p>
+                   </div>
+                   <div class="step-card-modern">
+                      <div class="step-num">02</div>
+                      <h4>Move your body</h4>
+                      <p>Exercise is one of the best natural mood boosters. Walk for 30 minutes a day to release feel-good chemicals in the brain.</p>
+                   </div>
+                   <div class="step-card-modern">
+                      <div class="step-num">03</div>
+                      <h4>Sleep better</h4>
+                      <p>Go to bed and wake up at the same time. Avoid screens one hour before bed. Poor sleep makes depression worse.</p>
+                   </div>
+                   <div class="step-card-modern">
+                      <div class="step-num">04</div>
+                      <h4>Set small goals</h4>
+                      <p>Break tasks into tiny steps. Make your bed, wash one dish. Celebrate every win to build confidence.</p>
+                   </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>When to Seek Professional Help</h4>
+                    <p>Self-care is great, but seek professional help if symptoms last more than two weeks, affect work, studies, or relationships, or if you have thoughts of harming yourself.</p>
+                </div>
+                
+                <div class="article-cta">
+                    <h3>Need to talk to someone?</h3>
+                    <p>Our licensed psychiatrists are here to listen and help.</p>
+                    <a href="/doctors.html" class="btn-cta-small">Find a Doctor</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- ANXIETY -->
+        <article id="anxiety" class="tab-pane">
+            <div class="article-header">
+                <h2>Anxiety</h2>
+                <p>Managing excessive worry and regaining control.</p>
+            </div>
+            <div class="article-body">
+                <p>Anxiety is a normal human response to stress or perceived threat. It helps us stay alert and respond to danger (like the "fight-or-flight" response). However, it becomes a problem when it is excessive, persistent, difficult to control, and interferes with daily life.</p>
+                
+                <h3>Understanding the Vicious Cycle</h3>
+                <div class="glass-panel" style="border-top: 4px solid #64A3D9;">
+                   <ol style="margin-left: 20px; font-weight: 500; font-size: 1.1rem;">
+                      <li style="margin-bottom: 10px;">A small worry or bodily sensation starts.</li>
+                      <li style="margin-bottom: 10px;">You interpret it as dangerous or threatening.</li>
+                      <li style="margin-bottom: 10px;">Anxiety increases → more symptoms appear.</li>
+                      <li>You avoid situations, seek constant reassurance, or overthink, which temporarily relieves anxiety but makes it stronger long-term.</li>
+                   </ol>
+                </div>
+
+                <h3>Self-Help Strategies</h3>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-lungs" style="margin-right:10px;"></i> Breathing Exercises</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Regular deep breathing may help reduce tension, lower heart rate, and reverse the biological fight-or-flight response. Check out our <strong>Deep Breathing</strong> tab for exact exercises.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-anchor" style="margin-right:10px;"></i> Grounding Techniques</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Use your five senses to divert attention from overpowering fear. Focus on the present moment to stop racing thoughts cycle.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-comment-dots" style="margin-right:10px;"></i> Challenge Worries</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Ask yourself: "What is the evidence for and against this worry?" "What would I tell a friend in this situation?" "What is the realistic outcome, not the worst-case?"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- PANIC ATTACKS -->
+        <article id="panic" class="tab-pane">
+            <div class="article-header">
+                <h2>Panic Attacks</h2>
+                <p>Understanding and coping with sudden surges of fear.</p>
+            </div>
+            <div class="article-body">
+                <p>A panic attack is a sudden, intense surge of fear or discomfort that reaches a peak within minutes. It feels overwhelming and can happen even when there is no real danger. Many describe it as a "false alarm" in the body's fight-or-flight system.</p>
+
+                <h3>Signs and Symptoms</h3>
+                <ul style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Pounding or racing heart</li>
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Sweating, trembling or shaking</li>
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Shortness of breath</li>
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Chest pain or discomfort</li>
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Dizziness, lightheadedness</li>
+                    <li><i class="fas fa-check" style="color: #64A3D9; margin-right: 8px;"></i> Fear of losing control</li>
+                </ul>
+
+                <h3 style="margin-top: 3rem;">In the Moment: Coping Strategies</h3>
+                <div class="step-cards">
+                   <div class="step-card-modern">
+                      <div class="step-num"><i class="fas fa-lungs"></i></div>
+                      <h4>Breathe Properly</h4>
+                      <p>Try slow diaphragmatic breathing. Inhale slowly for 4 counts, hold for 2, exhale for 6.</p>
+                   </div>
+                   <div class="step-card-modern">
+                      <div class="step-num"><i class="fas fa-anchor"></i></div>
+                      <h4>Ground Yourself</h4>
+                      <p>Distract yourself and stay in the present using the 5-4-3-2-1 method.</p>
+                   </div>
+                   <div class="step-card-modern">
+                      <div class="step-num"><i class="fas fa-wave-square"></i></div>
+                      <h4>Ride it Out</h4>
+                      <p>Remind yourself: "This is a panic attack. It will peak and pass. I'm safe. These sensations are not harmful."</p>
+                   </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- TRAUMA -->
+        <article id="trauma" class="tab-pane">
+            <div class="article-header">
+                <h2>Trauma & PTSD</h2>
+                <p>Healing from extremely stressful or terrifying events.</p>
+            </div>
+            <div class="article-body">
+                <p>Trauma refers to an extremely stressful or terrifying event that threatens your life, safety, or the safety of others. While many experience temporary reactions, PTSD develops when symptoms persist or intensify.</p>
+
+                <h3>Signs and Symptoms of PTSD</h3>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-history" style="margin-right:10px;"></i> Re-experiencing Symptoms</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Flashbacks, nightmares, intense emotional or physical reactions when reminded of the trauma.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-ban" style="margin-right:10px;"></i> Avoidance</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Avoiding thoughts, feelings, places, or situations that remind you of the event.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-bolt" style="margin-right:10px;"></i> Changes in Arousal</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Feeling irritable, angry outbursts, hypervigilance (being overly alert), or exaggerated startle response.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>First Step – Safety & Coping</h3>
+                <p>The primary step towards healing is helping the nervous system feel safe again:</p>
+                <ul>
+                    <li><strong>Change Physical Space:</strong> Step out of threatening environments.</li>
+                    <li><strong>Connect:</strong> Reach out to a trustworthy individual.</li>
+                    <li><strong>Butterfly Hug:</strong> Cross arms over your chest, close eyes, and tap slowly (left, right, left, right) to soothe the nervous system through bilateral stimulation.</li>
+                </ul>
+            </div>
+        </article>
+
+         <!-- DRUG ADDICTION -->
+         <article id="addiction" class="tab-pane">
+            <div class="article-header">
+                <h2>Drug Addiction / Substance Use</h2>
+                <p>Breaking the cycle and seeking recovery.</p>
+            </div>
+            <div class="article-body">
+                <div class="glass-panel text-center" style="padding: 1.5rem; display: flex; align-items:center; gap: 20px;">
+                    <i class="fas fa-capsules fa-2x" style="color: #0984e3;"></i>
+                    <p style="margin:0; flex:1; text-align:left;">Substance use becomes a problem when it starts controlling your life, harming your health, relationships, work, or studies. It is not a moral failing or "bad character." It is a medical condition that is treatable.</p>
+                 </div>
+
+                <h3>Self-Care and Coping Strategies</h3>
+                <div class="step-cards">
+                    <div class="step-card-modern">
+                       <div class="step-num"><i class="fas fa-lemon"></i></div>
+                       <h4>Flavor Fix</h4>
+                       <p>Strong flavors (like biting into a lemon or something spicy) can interrupt the cycle of a craving instantly.</p>
+                    </div>
+                    <div class="step-card-modern">
+                       <div class="step-num"><i class="fas fa-book"></i></div>
+                       <h4>Track Progress</h4>
+                       <p>Keep a diary of when urges hit, what happened before, and how you felt, to understand the pattern.</p>
+                    </div>
+                    <div class="step-card-modern">
+                       <div class="step-num"><i class="fas fa-shield-alt"></i></div>
+                       <h4>Avoid Triggers</h4>
+                       <p>Learn refusal skills. Stay away from environments or people heavily linked to drug use.</p>
+                    </div>
+                 </div>
+            </div>
+        </article>
+
+        <!-- SUICIDE PREVENTION -->
+        <article id="suicide" class="tab-pane">
+            <div class="article-header">
+                <h2>Suicide Prevention</h2>
+                <p>Warning signs and how to help someone in crisis.</p>
+            </div>
+            <div class="article-body">
+                <div class="alert-box" style="box-shadow: 0 10px 25px rgba(252, 129, 129, 0.2);">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Immediate Emergency</h4>
+                    <p>If you or someone you know is feeling overwhelmed with thoughts of self-harm, please DO NOT stay alone. Reach out immediately to emergency services, a hospital psychiatric department, or a crisis helpline.</p>
+                    <button class="btn-cta-small btn-emergency mt-2">Get Emergency Help Now</button>
+                </div>
+
+                <p>There are many reasons why someone might feel so overwhelmed that they lose interest or purpose in life. A lack of support is a major reason. Being there for someone with kindness and without judgment is critical.</p>
+
+                <h3>Warning Signs</h3>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-comment" style="margin-right:10px;"></i> Verbal Signs</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Talking about ending life, feeling hopeless, having no reason to live, feeling trapped or being a burden to others.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><i class="fas fa-walking" style="margin-right:10px;"></i> Behavioral Signs</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                Withdrawing from family/friends, increased substance use, extreme mood swings, giving away belongings.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="border-left-color: #2D74B3;">
+                    <h4 style="color: #2D74B3;">How to Help?</h4>
+                    <p>First and foremost, try to help the individual express their thoughts freely by offering unconditional positive regard and being a good listener. Be non-judgmental and supportive. <strong>DO NOT LEAVE THE INDIVIDUAL ALONE.</strong></p>
+                </div>
+            </div>
+        </article>
+
+        <!-- BREATHING -->
+        <article id="breathing" class="tab-pane">
+            <div class="article-header">
+                <h2>Deep Breathing Exercises</h2>
+                <p>Calm your mind and body through controlled breathing.</p>
+            </div>
+            <div class="article-body">
+                <div class="image-text-split">
+                    <div class="it-img">
+                        <img src="/assets/nature-realistic.png" alt="Deep breath nature scene">
+                    </div>
+                    <div class="it-text">
+                        <p>Deep breathing (diaphragmatic breathing) integrates the mind and body. Taking slow, leisurely breaths helps reverse the "fight-or-flight" response, reducing tension and inducing sleep.</p>
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Box Breathing</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <ol>
+                                            <li>Take a leisurely deep breath in for 4 seconds.</li>
+                                            <li>Hold your breath for 4 seconds.</li>
+                                            <li>Exhale gently through your mouth for 4 seconds.</li>
+                                            <li>Hold your breath for an additional 4 seconds.</li>
+                                            <li>Repeat cycle.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>The 4-7-8 Target Method</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        <p>Based on pranayama, this method acts as a natural tranquilizer:</p>
+                                        <ol>
+                                            <li>Inhale softly through your nose for 4 counts.</li>
+                                            <li>Hold your breath for 7 counts.</li>
+                                            <li>Make a "whoosh" sound forcefully exhaling through your mouth for 8 counts.</li>
+                                            <li>Repeat for a total of four rounds.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- RELAXATION -->
+        <article id="relaxation" class="tab-pane">
+            <div class="article-header">
+                <h2>Progressive Muscle Relaxation (PMR)</h2>
+                <p>Release physical tension stored in the body.</p>
+            </div>
+            <div class="article-body">
+                <p>Stress hormones increase muscle tone. Progressive Muscle Relaxation helps reduce this tension, increasing blood circulation and acting almost like an internal massage.</p>
+
+                <div class="glass-panel" style="margin-top: 2rem;">
+                    <h3 style="margin-top: 0;">How to Practice</h3>
+                    <p>Select a comfortable posture, relax your jaw, and let your shoulders drop. Work your way through your body (toes to head or head to toes):</p>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><i class="fas fa-circle" style="color: #64A3D9; font-size: 0.5rem; vertical-align: middle; margin-right: 10px;"></i> Tightly tense or squeeze your forehead muscles for 10 seconds to the extent that it feels uncomfortable.</li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><i class="fas fa-circle" style="color: #64A3D9; font-size: 0.5rem; vertical-align: middle; margin-right: 10px;"></i> Relax your forehead completely for 10 seconds. Notice the difference.</li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><i class="fas fa-circle" style="color: #64A3D9; font-size: 0.5rem; vertical-align: middle; margin-right: 10px;"></i> Tightly blow up cheeks or squeeze face muscles for 10 seconds, then relax.</li>
+                        <li style="padding: 10px 0;"><i class="fas fa-circle" style="color: #64A3D9; font-size: 0.5rem; vertical-align: middle; margin-right: 10px;"></i> Progress to your neck, shoulders, arms, fists, belly, hips, legs, and toes.</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- MINDFULNESS -->
+        <article id="mindfulness" class="tab-pane">
+            <div class="article-header">
+                <h2>Mindfulness & Guided Imagery</h2>
+                <p>Being present in the moment without judgment.</p>
+            </div>
+            <div class="article-body">
+                <div class="image-text-split">
+                    <div class="it-text">
+                        <p>Mindfulness is the consciousness of the current moment. Your aim is to concentrate on your thoughts, feelings, and environment without judging them as good or bad.</p>
+                        <h3>Exercises</h3>
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span><i class="fas fa-mug-hot" style="margin-right:10px;"></i> Mindful Eating / Drinking</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        Take your time, smell your food or warm tea, taste its flavor, and feel its warmth. Enjoy the occasion fully.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span><i class="fas fa-child" style="margin-right:10px;"></i> Mindfulness Body Scan</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        Inhale slowly. Shift your focus to each area of your body (head to toe). Take note of any sensations (warmth, cold, tightness) without criticizing.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <button class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span><i class="fas fa-image" style="margin-right:10px;"></i> Guided Imagery</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner">
+                                        Take a comfy seat, shut your eyes, take deep breaths. Imagine a tranquil environment (beach, meadow, forest). Include details: the sound of birds, aroma of flowers, warmth of the sun.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="it-img">
+                        <img src="/assets/mindfulness-realistic.png" alt="Mindful tea realistic">
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- GROUNDING -->
+        <article id="grounding" class="tab-pane">
+            <div class="article-header">
+                <h2>Grounding Techniques</h2>
+                <p>Drawing mental energy back into the body.</p>
+            </div>
+            <div class="article-body">
+                <p>During a panic attack or racing thoughts, the mind spirals out of control. Grounding draws anxious energy back into the body so you can concentrate in the "here" and "now."</p>
+
+                <div class="glass-panel" style="margin-top: 2rem;">
+                    <h3 style="margin-top: 0; color: #0A2753;">The 5-4-3-2-1 Sensory Method</h3>
+                    <p style="margin-bottom: 2rem;">Activate your five senses in your current environment:</p>
+                    
+                    <div style="display: flex; align-items:center; margin-bottom: 15px; background: #fff; padding: 10px 20px; border-radius: 8px;">
+                        <div style="width: 40px; height: 40px; background: #EAF4FC; color: #2D74B3; border-radius: 50%; display: flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin-right: 15px;">5</div>
+                        <div style="flex:1;"><strong>Things you see:</strong> Pinpoint and verbalize colors and forms.</div>
+                    </div>
+                    <div style="display: flex; align-items:center; margin-bottom: 15px; background: #fff; padding: 10px 20px; border-radius: 8px;">
+                        <div style="width: 40px; height: 40px; background: #EAF4FC; color: #2D74B3; border-radius: 50%; display: flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin-right: 15px;">4</div>
+                        <div style="flex:1;"><strong>Things you touch:</strong> Feel your clothes, the chair, the table. Are they rough? Cold?</div>
+                    </div>
+                    <div style="display: flex; align-items:center; margin-bottom: 15px; background: #fff; padding: 10px 20px; border-radius: 8px;">
+                        <div style="width: 40px; height: 40px; background: #EAF4FC; color: #2D74B3; border-radius: 50%; display: flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin-right: 15px;">3</div>
+                        <div style="flex:1;"><strong>Things you hear:</strong> A fan, birds, distant traffic.</div>
+                    </div>
+                    <div style="display: flex; align-items:center; margin-bottom: 15px; background: #fff; padding: 10px 20px; border-radius: 8px;">
+                        <div style="width: 40px; height: 40px; background: #EAF4FC; color: #2D74B3; border-radius: 50%; display: flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin-right: 15px;">2</div>
+                        <div style="flex:1;"><strong>Things you smell:</strong> Perfume, coffee, fresh air.</div>
+                    </div>
+                    <div style="display: flex; align-items:center; background: #fff; padding: 10px 20px; border-radius: 8px;">
+                        <div style="width: 40px; height: 40px; background: #EAF4FC; color: #2D74B3; border-radius: 50%; display: flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; margin-right: 15px;">1</div>
+                        <div style="flex:1;"><strong>Thing you taste:</strong> Water, mint, or your favorite snack.</div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+    </main>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 TeleMind. All rights reserved.</p>
+  </footer>
+
+  <script src="/shared/js/settings-sync.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+
+    function openTab(event, tabId) {
+        // Remove active class from all buttons
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // Remove active class from all tabs
+        const tabs = document.querySelectorAll('.tab-pane');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        // Add active class to current button and tab
+        event.currentTarget.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+    }
+
+    function toggleAccordion(element) {
+        element.classList.toggle('active');
+        const content = element.nextElementSibling;
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    }
+  </script>
+</body>
+</html>

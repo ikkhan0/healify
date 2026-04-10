@@ -300,7 +300,7 @@ function exportReport() {
   const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = `healify-report-${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = `telemind-report-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   showToast('Report exported ✅');
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Healify – Doctor</title>
+<title>TeleMind – Doctor</title>
 <base href="/doctor/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -18,7 +18,7 @@
     <div class="splash-circle c1"></div><div class="splash-circle c2"></div>
     <div class="splash-logo">
       <div class="logo-icon"><i class="fas fa-user-md"></i></div>
-      <h1>Healify</h1><p>Doctor Portal</p>
+      <h1>TeleMind</h1><p>Doctor Portal</p>
     </div>
     <div class="splash-loader"><div class="loader-bar"></div></div>
   </div>
@@ -26,15 +26,23 @@
 
 <!-- SIGN IN -->
 <div id="screen-login" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-btn"><button onclick="navigate('screen-signup')">Sign Up</button></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons"><button onclick="navigate('screen-signup')" style="background:#112A61; color:#fff; border:none; padding:12px 30px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px;">Sign Up</button></div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
        <div class="auth-image-inner">
-         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+         <img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
        </div>
     </div>
     <div class="auth-form-col">
@@ -71,22 +79,30 @@
 
 <!-- SIGN UP -->
 <div id="screen-signup" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons"><button onclick="navigate('screen-login')" style="background:#112A61; color:#fff; border:none; padding:12px 30px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px;">Sign In</button></div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
        <div class="auth-image-inner">
-         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+         <img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
        </div>
     </div>
     <div class="auth-form-col">
       <div class="auth-wrap">
         <div class="auth-hero mobile-only">
           <div class="auth-hero-icon secondary"><i class="fas fa-user-plus"></i></div>
-          <h2>Create Account</h2><p>Join the Healify Doctor Network</p>
+          <h2>Create Account</h2><p>Join the TeleMind Doctor Network</p>
         </div>
         <div class="auth-card figma-card">
           <h2 class="figma-title">Sign Up</h2>
@@ -133,15 +149,23 @@
 
 <!-- OTP -->
 <div id="screen-otp" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-signup')"></i><i class="fas fa-chevron-right"></i></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;"><i class="fas fa-chevron-left" onclick="navigate('screen-signup')"></i><i class="fas fa-chevron-right"></i></div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
        <div class="auth-image-inner">
-         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+         <img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
        </div>
     </div>
     <div class="auth-form-col">
@@ -174,15 +198,23 @@
 
 <!-- RESET PASSWORD (FORGOT PASSWORD FLOW) -->
 <div id="screen-reset-password" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-login')"></i><i class="fas fa-chevron-right"></i></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;"><i class="fas fa-chevron-left" onclick="navigate('screen-login')"></i><i class="fas fa-chevron-right"></i></div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
        <div class="auth-image-inner">
-         <img src="/assets/doctor-hero.png" alt="Doctor" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=800&auto=format&fit=crop'" />
+         <img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
        </div>
     </div>
     <div class="auth-form-col">
@@ -248,9 +280,9 @@
   <div class="dash-desktop-header">
     <div class="search-wrap">
       <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search Healify" />
+      <input type="text" placeholder="Search TeleMind" />
     </div>
-    <div class="auth-nav-arrows">
+    <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;">
       <i class="fas fa-chevron-left"></i>
       <i class="fas fa-chevron-right"></i>
     </div>
@@ -269,7 +301,7 @@
          <p>Take a moment to reflect on how you're feeling.<br>Our secure telehealth platform connects you with<br>licensed professionals who provide confidential,<br>personalized care to support your mental and<br>emotional well-being.</p>
          <button class="btn-figma-small" style="background:#112A61;width:120px;height:36px;border-radius:6px;margin-top:10px;"></button>
       </div>
-      <div class="banner-img"><img src="/assets/doctor-hero.png" alt="Hand" style="object-fit:cover;opacity:0;"/></div>
+      <div class="banner-img"><img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" /></div>
     </div>
     <!-- Banner 2 -->
     <div class="figma-banner-sub">
@@ -284,7 +316,7 @@
     <div class="dash-section">
       <div class="section-top">
          <h3>Upcoming Appointments</h3>
-         <div class="auth-nav-arrows"><i class="fas fa-chevron-left" style="font-size:16px;"></i><i class="fas fa-chevron-right" style="font-size:16px;"></i></div>
+         <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;"><i class="fas fa-chevron-left" style="font-size:16px;"></i><i class="fas fa-chevron-right" style="font-size:16px;"></i></div>
       </div>
       <!-- In Figma, this is a list of 4 blue bars. We will render them statically for UI matching, but also keep the dynamic list rendering container if JS injects here -->
       <div id="dash-appointments" class="figma-appt-list">
@@ -409,9 +441,9 @@
   <div class="dash-desktop-header">
     <div class="search-wrap">
       <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search Healify" />
+      <input type="text" placeholder="Search TeleMind" />
     </div>
-    <div class="auth-nav-arrows">
+    <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;">
       <i class="fas fa-chevron-left"></i>
       <i class="fas fa-chevron-right"></i>
     </div>
@@ -648,7 +680,7 @@
      <!-- Left Side Panel -->
      <div class="pm-left">
         <div class="pm-photo">
-           <img src="/assets/doctor-hero.png" alt="Patient" style="width:100%;height:100%;object-fit:cover;"/>
+           <img src="/assets/doctor_signup_dummy.png" alt="TeleMind Provider" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
         </div>
         <div class="pm-details bg-blue">
            <p><strong>Patient Name:</strong> Danial</p>

@@ -15,7 +15,7 @@ const Report = require('../models/Report');
 const DOCTORS = [
   {
     name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@healify.com',
+    email: 'sarah.johnson@telemind.com',
     phone: '+1-555-0101',
     photo: '/assets/profiles/service_provider_sarah_johnson.png',
     specialty: 'Psychiatrist',
@@ -33,7 +33,7 @@ const DOCTORS = [
   },
   {
     name: 'Dr. James Malik',
-    email: 'james.malik@healify.com',
+    email: 'james.malik@telemind.com',
     phone: '+1-555-0102',
     photo: '/assets/profiles/service_provider_james_malik.png',
     specialty: 'Psychologist',
@@ -51,7 +51,7 @@ const DOCTORS = [
   },
   {
     name: 'Dr. Amina Fatima',
-    email: 'amina.fatima@healify.com',
+    email: 'amina.fatima@telemind.com',
     phone: '+92-300-1234567',
     photo: '/assets/profiles/service_provider_amina_fatima.png',
     specialty: 'Therapist',
@@ -69,7 +69,7 @@ const DOCTORS = [
   },
   {
     name: 'Dr. Robert Chen',
-    email: 'robert.chen@healify.com',
+    email: 'robert.chen@telemind.com',
     phone: '+1-555-0104',
     photo: '/assets/profiles/service_provider_robert_chen.png',
     specialty: 'Neurologist',
@@ -87,7 +87,7 @@ const DOCTORS = [
   },
   {
     name: 'Dr. Maria Gonzalez',
-    email: 'maria.gonzalez@healify.com',
+    email: 'maria.gonzalez@telemind.com',
     phone: '+1-555-0105',
     photo: '/assets/profiles/service_provider_maria_gonzalez.png',
     specialty: 'Psychiatrist',
@@ -104,7 +104,7 @@ const DOCTORS = [
   },
   {
     name: 'Dr. Usman Tariq',
-    email: 'usman.tariq@healify.com',
+    email: 'usman.tariq@telemind.com',
     phone: '+92-321-9876543',
     photo: '/assets/profiles/doctor_usman_tariq.png',
     specialty: 'Psychologist',
@@ -267,7 +267,7 @@ function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return d
 
     console.log('\n🎉 Seed complete!\n');
     console.log('─────────────────────────────────────────────────');
-    console.log('  Admin:    admin@healify.com      / admin123');
+    console.log('  Admin:    admin@telemind.com      / admin123');
     console.log('  Services Providers:  sarah.johnson@...  / doctor123');
     console.log('  Clients:  ali.hassan@email.com   / patient123');
     console.log('─────────────────────────────────────────────────\n');

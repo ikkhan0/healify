@@ -104,15 +104,25 @@
 
 <!-- ONBOARDING -->
 <div id="screen-onboarding" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons">
+      <button onclick="navigate('screen-login')" style="background:#112A61; color:#fff; border:none; padding:12px 30px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px;">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
        <div class="auth-image-inner">
-         <img src="/assets/doctor-hero.svg" alt="Healthcare" onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop'" />
+         <img src="/assets/patient_signup_dummy.png" alt="Patient Remote Consultation" style="width:100%; height:100%; object-fit:cover; object-position:center; border-radius:30px;" />
        </div>
     </div>
     <div class="auth-form-col">
@@ -180,10 +190,20 @@
 
 <!-- LOGIN -->
 <div id="screen-login" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-btn"><button onclick="navigate('screen-signup')">Sign Up</button></div>
+  <header class="top-nav" style="padding: 24px 60px; position: absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind Logo" style="height:40px; border-radius:8px; object-fit:cover;">
+      <span class="logo-text" style="font-weight:800; font-size:1.2rem; margin-left:8px; color:#112A61;">TeleMind</span>
+    </div>
+    <nav class="nav-links" style="display:flex; gap:3rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:800; font-size:15px;">Contact Us</a>
+    </nav>
+    <div class="nav-icons">
+      <button onclick="navigate('screen-signup')" style="background:#112A61; color:#fff; border:none; padding:12px 30px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px;">Sign Up</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
