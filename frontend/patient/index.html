@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>TeleMind â€“ Client</title>
+<title>TeleMind Ã¢â‚¬â€œ Client</title>
 <base href="/patient/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<!-- â”€â”€â”€ SCREENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ SCREENS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ -->
 
 <!-- SPLASH -->
 <div id="screen-splash" class="screen active">
@@ -52,7 +52,7 @@
       <h3 style="font-size:15px; margin-bottom:12px;">Language Selection</h3>
       <div style="display:flex; gap:12px; justify-content:center;">
         <button class="btn-outline" style="flex:1;" onclick="setLanguage('en')">English</button>
-        <button class="btn-outline" style="flex:1;" onclick="setLanguage('ur')">Ø§Ø±Ø¯Ùˆ (Urdu)</button>
+        <button class="btn-outline" style="flex:1;" onclick="setLanguage('ur')">Ã˜Â§Ã˜Â±Ã˜Â¯Ã™Ë† (Urdu)</button>
       </div>
     </div>
 
@@ -63,19 +63,23 @@
 <!-- IDENTITY -->
 <div id="screen-identity" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-login')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign In</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-login')">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -115,19 +119,23 @@
 <!-- ONBOARDING -->
 <div id="screen-onboarding" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-login')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign In</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-login')">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -153,19 +161,23 @@
 <!-- SIGN UP -->
 <div id="screen-signup" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-login')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign In</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-login')">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -211,19 +223,23 @@
 <!-- LOGIN -->
 <div id="screen-login" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-signup')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign Up</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-signup')">Sign Up</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -265,19 +281,23 @@
 <!-- OTP VERIFICATION -->
 <div id="screen-otp" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-signup')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign Up</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-login')">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -316,19 +336,23 @@
 <!-- RESET PASSWORD (FORGOT PASSWORD FLOW) -->
 <div id="screen-reset-password" class="screen">
   <header class="tm-nav">
-    <div class="logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:40px;border-radius:8px;object-fit:cover;">
-      <span style="font-weight:800;font-size:1.2rem;color:#112A61;">TeleMind</span>
+    <div class="logo">
+      <div class="logo-circle-small tm-logo-circle">
+        <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      </div>
+      <span class="logo-text">TeleMind</span>
     </div>
-    <nav class="nav-links" style="display:flex;gap:2.5rem;">
-      <a href="/" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Home</a>
-      <a href="/doctors.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Find a Doctor</a>
-      <a href="/how-it-works.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">How it works</a>
-      <a href="/resources.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Resources</a>
-      <a href="/about-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">About us</a>
-      <a href="/contact-us.html" style="text-decoration:none;color:#112A61;font-weight:700;font-size:15px;">Contact Us</a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/doctors.html">Find a Doctor</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/resources.html">Resources</a>
+      <a href="/about-us.html">About us</a>
+      <a href="/contact-us.html">Contact Us</a>
     </nav>
-    <div class="nav-icons"><button onclick="navigate('screen-login')" style="background:#112A61;color:#fff;border:none;padding:11px 28px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px;">Sign In</button></div>
+    <div class="nav-icons">
+      <button class="btn-nav-cta" onclick="navigate('screen-login')">Sign In</button>
+    </div>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -409,7 +433,7 @@
 
   <div class="app-header mobile-only">
     <div class="app-greeting">
-      <p>Hi, <strong id="user-name-display">Friend</strong> ðŸ‘‹</p>
+      <p>Hi, <strong id="user-name-display">Friend</strong> Ã°Å¸â€˜â€¹</p>
       <span>How are you feeling today?</span>
     </div>
     <div class="app-avatar" onclick="navigate('screen-profile')">
@@ -423,7 +447,7 @@
       <div class="banner-text">
          <h2>How are you feeling today?</h2>
          <p>Take a moment to reflect on how you're feeling.<br>Our secure telehealth platform connects you with<br>licensed professionals who provide confidential,<br>personalized care to support your mental and<br>emotional well-being.</p>
-         <button class="btn-figma-small" style="background:#fff;color:#112A61;width:auto;padding:10px 24px;border-radius:30px;margin-top:16px;border:none;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.15);" onclick="navigate('screen-assessment')">Start Now →</button>
+         <button class="btn-figma-small" style="background:#fff;color:#112A61;width:auto;padding:10px 24px;border-radius:30px;margin-top:16px;border:none;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.15);" onclick="navigate('screen-assessment')">Start Now â†’</button>
       </div>
       <div class="banner-img"><img src="/assets/doctor-hero.png" alt="Hand" style="object-fit:cover;opacity:0;"/></div>
     </div>
@@ -665,7 +689,7 @@
     </label>
     
     <div id="waiver-fields" style="display:none; margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
-      <p style="font-size:12px; margin-bottom:10px; color:var(--text-muted);">In case you canâ€™t pay, provide following information:</p>
+      <p style="font-size:12px; margin-bottom:10px; color:var(--text-muted);">In case you canÃ¢â‚¬â„¢t pay, provide following information:</p>
       <div class="input-group"><i class="fas fa-wallet"></i><input type="number" id="waiver-income" placeholder="Family's monthly income (PKR)" /></div>
       
       <div style="margin-bottom:15px;">
@@ -768,7 +792,7 @@
 <!-- ASSESSMENT RESULT -->
 <div id="screen-assess-result" class="screen app-screen">
   <div class="result-wrap">
-    <div class="result-emoji" id="result-emoji">ðŸ˜Š</div>
+    <div class="result-emoji" id="result-emoji">Ã°Å¸ËœÅ </div>
     <h2 id="result-title">Feeling Good</h2>
     <p id="result-desc">Your mental health score indicates you are doing well. Keep up your healthy habits!</p>
     <div class="result-score-ring">
@@ -953,4 +977,6 @@
 <script src="js/app.js"></script>
 </body>
 </html>
+
+
 

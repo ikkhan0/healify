@@ -1,0 +1,135 @@
+/**
+ * TeleMind Unified Navigation Styles
+ * Applies to: website, patient portal, doctor portal
+ * Import: <link rel="stylesheet" href="/shared/css/nav.css">
+ */
+
+/* ── Shared navbar shell ────────────────────────────────────────────────────── */
+.tm-nav {
+  display: none; /* mobile: hidden — handled by mobile header or hamburger */
+}
+
+/* ── Desktop navbar ─────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  body.has-tm-bg,
+  .screen.active.has-tm-bg {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  }
+
+  .tm-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 4rem;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    /* Transparent — inherits the blue gradient from the page background */
+    background: transparent;
+  }
+
+  /* ── Logo area ─────────────────────────────────────────────────────────────── */
+  .tm-nav .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: #0A2753;
+  }
+
+  /* White circle logo — same as main website */
+  .tm-logo-circle {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  .tm-logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .tm-nav .logo-text {
+    color: #0A2753;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+
+  /* ── Nav links ─────────────────────────────────────────────────────────────── */
+  .tm-nav .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .tm-nav .nav-links a {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #1C448E;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .tm-nav .nav-links a:hover,
+  .tm-nav .nav-links a.active {
+    color: #0A2753;
+  }
+
+  .tm-nav .nav-links a.active::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: #0A2753;
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    border-radius: 2px;
+  }
+
+  /* ── CTA button ────────────────────────────────────────────────────────────── */
+  .tm-nav .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-nav-cta {
+    background: #fff;
+    color: #0A2753;
+    border: none;
+    padding: 0.65rem 1.8rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .btn-nav-cta:hover {
+    background: #0A2753;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+}

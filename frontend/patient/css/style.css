@@ -451,20 +451,15 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); overflo
   }
   body > .screen:not(.app-screen).active { 
     display: block; 
-    background: linear-gradient(135deg, #7fc8ef 0%, #d4eaf9 100%);
+    /* Exact same gradient as main website */
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
   }
   
-  /* Unified auth navbar (matches main website exactly) */
+  /* tm-nav: color/style handled by /shared/css/nav.css  */
   .tm-nav { 
-    display: flex; align-items: center; justify-content: space-between; 
-    padding: 22px 60px; position: absolute; top: 0; left: 0; right: 0; z-index: 100;
-    background: transparent;
+    position: absolute; top: 0; left: 0; right: 0; z-index: 100;
   }
   .auth-desktop-nav { display: none !important; }
-  .auth-nav-links { display: flex; gap: 40px; }
-  .auth-nav-links a { color: #112A61; font-weight: 700; text-decoration: none; font-size: 15px; }
-  .auth-nav-btn button { background: #112A61; color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; cursor: pointer; }
-  .auth-nav-arrows { font-size: 24px; color: #112A61; display:flex; gap:16px; cursor:pointer; }
   
   .auth-desktop-grid { 
      display: grid; grid-template-columns: 1fr 1fr; min-height: 100dvh; 
@@ -516,7 +511,7 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); overflo
     border-right: none;
     box-shadow: 4px 0 20px rgba(0,0,0,0.03);
     transform: none;
-    background: linear-gradient(to bottom, #7fc8ef, #cde6f7);
+    background: linear-gradient(to bottom, #74b9ff, #C4E2F6);
     border-radius: 0 30px 30px 0;
   }
   .nav-logo { display:flex !important; align-items:center; justify-content:center; gap:10px; width:100%; padding:10px 20px 20px; border-bottom:1px solid rgba(17,42,97,0.1); margin-bottom:20px; }
