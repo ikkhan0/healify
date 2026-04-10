@@ -195,6 +195,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .figma-remember-row a { color: #112A61; text-decoration: underline; }
 .btn-figma { background: #112A61; color: #fff; width: 100%; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
 .btn-figma:hover { background: #0A1C44; }
+.btn-figma-small { background: #112A61; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, opacity 0.2s; white-space: nowrap; }
+.btn-figma-small:hover { opacity: 0.85; }
 .figma-link { text-align: center; margin-top: 16px; font-size: 14px; color: #112A61; }
 .figma-link a { color: #112A61; font-weight: 800; text-decoration: none; }
 .figma-otp .figma-box { background: #1c78c0; border: none; border-radius: 8px; color: #fff; width: 50px; height: 60px; font-size: 24px; }
