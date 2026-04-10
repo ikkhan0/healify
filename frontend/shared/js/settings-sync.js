@@ -7,24 +7,38 @@
       
       // 1. Update Logo in all placeholders
       if (s.logoUrl) {
-        const logoContainers = document.querySelectorAll('.auth-logo, .nav-logo, .logo, .sidebar-brand .brand-icon, .login-brand i');
-        logoContainers.forEach(container => {
-           // If it's the brand-icon (font-awesome), replace with img
-           if (container.classList.contains('brand-icon') || container.tagName === 'I') {
-              container.innerHTML = `<img src="${s.logoUrl}" style="width:100%; height:100%; object-fit:contain;">`;
-              container.style.background = 'transparent';
-           } else {
-              container.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:35px; vertical-align:middle; cursor:pointer;" onclick="window.location.href='/'">`;
-           }
+
+        // A) Update <img> tags already inside logo circles (patient/doctor .tm-logo-circle)
+        document.querySelectorAll('.tm-logo-circle img, .logo-circle-small img').forEach(img => {
+          img.src = s.logoUrl;
+          img.style.display = '';
         });
-        
-        // Website specific logo update
-        const logoText = document.querySelector('.logo-text');
-        const logoCircle = document.querySelector('.logo-circle-small');
-        if (logoText) {
-          logoText.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:32px; vertical-align:middle;">`;
-          if (logoCircle) logoCircle.style.display = 'none';
-        }
+
+        // B) Update any nav-logo area images (sidebar and bottom-nav)
+        document.querySelectorAll('.nav-logo img').forEach(img => {
+          img.src = s.logoUrl;
+          img.style.display = '';
+        });
+
+        // C) Admin sidebar brand-icon (replaces FontAwesome <i> with img)
+        document.querySelectorAll('.sidebar-brand .brand-icon, .login-brand i').forEach(container => {
+          if (container.tagName === 'I' || container.classList.contains('brand-icon')) {
+            container.innerHTML = `<img src="${s.logoUrl}" style="width:100%; height:100%; object-fit:contain;">`;
+            container.style.background = 'transparent';
+          }
+        });
+
+        // D) Website specific: .auth-logo standalone containers (not circles)
+        document.querySelectorAll('.auth-logo').forEach(container => {
+          if (!container.querySelector('img')) {
+            container.innerHTML = `<img src="${s.logoUrl}" alt="TeleMind" style="height:35px; vertical-align:middle; cursor:pointer;" onclick="window.location.href='/'">`;
+          } else {
+            container.querySelector('img').src = s.logoUrl;
+          }
+        });
+
+        // E) Logo text span — just keep the text, don't replace with an img
+        // (the circle img is already handled above)
       }
 
       // 2. Update Contact Info globally

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -686,7 +686,12 @@
 </div>
 
 <nav id="main-nav" class="bottom-nav" style="display:none;">
-  <div class="nav-logo" style="display:none;"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;margin:10px auto;">logo</div></div>
+  <div class="nav-logo" style="display:none;">
+    <div class="logo-circle-small tm-logo-circle" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:10px auto;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display='none'">
+    </div>
+    <span class="nav-brand" style="font-weight:800;font-size:14px;color:#112A61;text-align:center;display:block;">TeleMind</span>
+  </div>
   <a class="nav-item" id="nav-home" onclick="navigate('screen-dashboard')"><i class="fas fa-home"></i><span>Home</span></a>
   <a class="nav-item" id="nav-appointments" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i><span>Appointment</span></a>
   <a class="nav-item" id="nav-reports" onclick="navigate('screen-all-reports')"><i class="far fa-file-alt"></i><span>Reports</span></a>
