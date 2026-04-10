@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>TeleMind – Client</title>
+<title>TeleMind â€“ Client</title>
 <base href="/patient/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<!-- ─── SCREENS ─────────────────────────────────────────────────────────── -->
+<!-- â”€â”€â”€ SCREENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
 
 <!-- SPLASH -->
 <div id="screen-splash" class="screen active">
@@ -52,7 +52,7 @@
       <h3 style="font-size:15px; margin-bottom:12px;">Language Selection</h3>
       <div style="display:flex; gap:12px; justify-content:center;">
         <button class="btn-outline" style="flex:1;" onclick="setLanguage('en')">English</button>
-        <button class="btn-outline" style="flex:1;" onclick="setLanguage('ur')">اردو (Urdu)</button>
+        <button class="btn-outline" style="flex:1;" onclick="setLanguage('ur')">Ø§Ø±Ø¯Ùˆ (Urdu)</button>
       </div>
     </div>
 
@@ -62,10 +62,18 @@
 
 <!-- IDENTITY -->
 <div id="screen-identity" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
-    <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
-    <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
+  <header class="top-nav" style="padding:20px 60px; position:absolute; top:0; left:0; width:100%; box-sizing:border-box; z-index:100; display:flex; justify-content:space-between; align-items:center;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;">
+      <img src="/assets/telemind_logo.png" alt="TeleMind" style="height:38px; border-radius:8px; object-fit:cover;">
+      <span style="font-weight:800; font-size:1.15rem; color:#112A61;">TeleMind</span>
+    </div>
+    <nav style="display:flex; gap:2.5rem;">
+      <a href="/" style="text-decoration:none; color:#112A61; font-weight:700; font-size:15px;">Home</a>
+      <a href="/how-it-works.html" style="text-decoration:none; color:#112A61; font-weight:700; font-size:15px;">How it works</a>
+      <a href="/about-us.html" style="text-decoration:none; color:#112A61; font-weight:700; font-size:15px;">About us</a>
+      <a href="/contact-us.html" style="text-decoration:none; color:#112A61; font-weight:700; font-size:15px;">Contact Us</a>
+    </nav>
+    <button onclick="navigate('screen-login')" style="background:#112A61; color:#fff; border:none; padding:11px 28px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px;">Sign In</button>
   </header>
   <div class="auth-desktop-grid">
     <div class="auth-image-col">
@@ -142,8 +150,8 @@
 
 <!-- SIGN UP -->
 <div id="screen-signup" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+  <header class="auth-desktop-nav" style="display:flex; justify-content:space-between; align-items:center; padding:20px 60px;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="/assets/telemind_logo.png" alt="TeleMind" style="height:38px; border-radius:8px; object-fit:cover;"><span style="font-weight:800; font-size:1.15rem; color:#112A61;">TeleMind</span></div>
     <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
     <div class="auth-nav-btn"><button onclick="navigate('screen-login')">Sign In</button></div>
   </header>
@@ -244,8 +252,8 @@
 
 <!-- OTP VERIFICATION -->
 <div id="screen-otp" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+  <header class="auth-desktop-nav" style="display:flex; justify-content:space-between; align-items:center; padding:20px 60px;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="/assets/telemind_logo.png" alt="TeleMind" style="height:38px; border-radius:8px; object-fit:cover;"><span style="font-weight:800; font-size:1.15rem; color:#112A61;">TeleMind</span></div>
     <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
     <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-signup')"></i><i class="fas fa-chevron-right"></i></div>
   </header>
@@ -285,8 +293,8 @@
 
 <!-- RESET PASSWORD (FORGOT PASSWORD FLOW) -->
 <div id="screen-reset-password" class="screen">
-  <header class="auth-desktop-nav">
-    <div class="auth-logo"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;">logo</div></div>
+  <header class="auth-desktop-nav" style="display:flex; justify-content:space-between; align-items:center; padding:20px 60px;">
+    <div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="/assets/telemind_logo.png" alt="TeleMind" style="height:38px; border-radius:8px; object-fit:cover;"><span style="font-weight:800; font-size:1.15rem; color:#112A61;">TeleMind</span></div>
     <div class="auth-nav-links"><a href="/" class="active">Home</a><a href="/how-it-works.html">How it works</a><a href="/about-us.html">About us</a><a href="/contact-us.html">Contact Us</a></div>
     <div class="auth-nav-arrows"><i class="fas fa-chevron-left" onclick="navigate('screen-login')"></i><i class="fas fa-chevron-right"></i></div>
   </header>
@@ -369,7 +377,7 @@
 
   <div class="app-header mobile-only">
     <div class="app-greeting">
-      <p>Hi, <strong id="user-name-display">Friend</strong> 👋</p>
+      <p>Hi, <strong id="user-name-display">Friend</strong> ðŸ‘‹</p>
       <span>How are you feeling today?</span>
     </div>
     <div class="app-avatar" onclick="navigate('screen-profile')">
@@ -383,7 +391,7 @@
       <div class="banner-text">
          <h2>How are you feeling today?</h2>
          <p>Take a moment to reflect on how you're feeling.<br>Our secure telehealth platform connects you with<br>licensed professionals who provide confidential,<br>personalized care to support your mental and<br>emotional well-being.</p>
-         <button class="btn-figma-small" style="background:#112A61;width:120px;height:36px;border-radius:6px;margin-top:10px;color:#fff;border:none;font-weight:700;cursor:pointer;" onclick="navigate('screen-assessment')">Start Now</button>
+         <button class="btn-figma-small" style="background:#fff;color:#112A61;width:auto;padding:10px 24px;border-radius:30px;margin-top:16px;border:none;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.15);" onclick="navigate('screen-assessment')">Start Now →</button>
       </div>
       <div class="banner-img"><img src="/assets/doctor-hero.png" alt="Hand" style="object-fit:cover;opacity:0;"/></div>
     </div>
@@ -450,7 +458,10 @@
   <div style="display:none;"><span id="stat-reports">0</span></div>
   <div style="height:80px"></div>
   <nav class="bottom-nav">
-    <div class="nav-logo" style="display:none;"><div class="logo-circle-small" style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:12px;margin:10px auto;">logo</div></div>
+    <div class="nav-logo">
+      <img src="/assets/telemind_logo.png" alt="TeleMind" onerror="this.style.display='none'">
+      <span class="nav-brand">TeleMind</span>
+    </div>
     <a class="nav-item active" onclick="navigate('screen-home')"><i class="fas fa-home"></i><span>Home</span></a>
     <a class="nav-item" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-alt"></i><span>Appointment</span></a>
     <a class="nav-item" onclick="navigate('screen-reports')"><i class="fas fa-file-medical"></i><span>Reports</span></a>
@@ -622,7 +633,7 @@
     </label>
     
     <div id="waiver-fields" style="display:none; margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
-      <p style="font-size:12px; margin-bottom:10px; color:var(--text-muted);">In case you can’t pay, provide following information:</p>
+      <p style="font-size:12px; margin-bottom:10px; color:var(--text-muted);">In case you canâ€™t pay, provide following information:</p>
       <div class="input-group"><i class="fas fa-wallet"></i><input type="number" id="waiver-income" placeholder="Family's monthly income (PKR)" /></div>
       
       <div style="margin-bottom:15px;">
@@ -725,7 +736,7 @@
 <!-- ASSESSMENT RESULT -->
 <div id="screen-assess-result" class="screen app-screen">
   <div class="result-wrap">
-    <div class="result-emoji" id="result-emoji">😊</div>
+    <div class="result-emoji" id="result-emoji">ðŸ˜Š</div>
     <h2 id="result-title">Feeling Good</h2>
     <p id="result-desc">Your mental health score indicates you are doing well. Keep up your healthy habits!</p>
     <div class="result-score-ring">
@@ -910,3 +921,4 @@
 <script src="js/app.js"></script>
 </body>
 </html>
+

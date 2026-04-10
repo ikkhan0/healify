@@ -477,6 +477,16 @@ function openBooking() {
   }
   renderCalendar();
   renderTimeSlots();
+
+  // ── Auto-fill intake form from logged-in user profile ─────────────────────
+  if (currentUser) {
+    const nameEl  = document.getElementById('intake-name');
+    const phoneEl = document.getElementById('intake-phone');
+    const emailEl = document.getElementById('intake-email');
+    if (nameEl  && !nameEl.value)  nameEl.value  = currentUser.name  || '';
+    if (phoneEl && !phoneEl.value) phoneEl.value = currentUser.phone || '';
+    if (emailEl && !emailEl.value) emailEl.value = currentUser.email || '';
+  }
 }
 
 function renderCalendar() {
@@ -728,9 +738,9 @@ window.openApptDetail = (apptId) => {
            <li>Doctor advised medication and follow-up if required.</li>
         </ul>
         <p style="color:#A3C6D9; font-weight:600; margin-bottom:15px; font-size:0.95rem;">Psychiatric Evaluation Report</p>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <button id="view-appt-report-btn" class="loading-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer; opacity:0.5;" disabled>Searching Report...</button>
-          <button style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;" onclick="window.print()">Print This Page</button>
+        <div style="display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; margin-top:10px;">
+          <button id="view-appt-report-btn" class="loading-btn" style="background:#fff; color:#1C448E; padding:9px 18px; border-radius:20px; border:none; font-weight:700; cursor:pointer; opacity:0.5; font-size:13px;" disabled>Searching...</button>
+          <button style="background:transparent; color:#fff; padding:9px 18px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); font-weight:700; cursor:pointer; font-size:13px;" onclick="window.print()"><i class='fas fa-print' style='margin-right:6px;'></i>Print</button>
         </div>
       </div>
       
@@ -747,9 +757,9 @@ window.openApptDetail = (apptId) => {
         </div>
         <p style="margin:0 0 15px 0; font-weight:600;">Paid</p>
         
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <button id="view-receipt-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer;" onclick="window.print()">Print Receipt</button>
-          <button id="download-appt-report-btn" class="loading-btn" style="background:#fff; color:#1C448E; padding:0.8rem; border-radius:8px; border:none; font-weight:700; cursor:pointer; opacity:0.5;" disabled>Download Report</button>
+        <div style="display:flex; flex-direction:row; gap:10px; flex-wrap:wrap; margin-top:10px;">
+          <button id="view-receipt-btn" style="background:#fff; color:#1C448E; padding:9px 18px; border-radius:20px; border:none; font-weight:700; cursor:pointer; font-size:13px;" onclick="window.print()"><i class='fas fa-receipt' style='margin-right:6px;'></i>Print Receipt</button>
+          <button id="download-appt-report-btn" class="loading-btn" style="background:transparent; color:#fff; padding:9px 18px; border-radius:20px; border:2px solid rgba(255,255,255,0.5); font-weight:700; cursor:pointer; font-size:13px; opacity:0.5;" disabled>No Report</button>
         </div>
       </div>
       
