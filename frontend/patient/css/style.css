@@ -380,6 +380,8 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); overflo
 
 /* ─── Utilities ──────────────────────────────────────────────────────────── */
 /* Figma Auth Styles */
+/* ─── Unified TeleMind Navbar (matches main website) ─────────────────────── */
+.tm-nav { display:none; } /* hidden on mobile */
 .auth-desktop-nav { display: none; }
 .auth-image-col { display: none; }
 .figma-card { padding: 32px 24px; }
@@ -403,6 +405,13 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); overflo
 .loading-pulse { text-align:center; color:var(--text-muted); padding:40px; animation:pulseOp 1.5s infinite; }
 .empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
 .empty-state i { font-size:48px; margin-bottom:16px; color:var(--primary-light); }
+
+/* ─── Sidebar Divider & Website Links ─────────────────────────────────────── */
+.nav-divider { width:80%; height:1px; background:rgba(17,42,97,0.12); margin:12px auto; }
+.nav-item-website { opacity:0.8; font-size:14px !important; }
+.nav-item-website:hover { opacity:1; }
+.nav-item-logout { color:#EF4444 !important; }
+.nav-item-logout i { color:#EF4444 !important; }
 .empty-state h3 { font-size:16px; font-weight:700; color:var(--text); margin-bottom:8px; }
 
 /* Figma Dashboard Styles */
@@ -445,12 +454,15 @@ body { font-family:var(--font); background:var(--bg); color:var(--text); overflo
     background: linear-gradient(135deg, #7fc8ef 0%, #d4eaf9 100%);
   }
   
-  .auth-desktop-nav { 
-     display: flex; align-items: center; justify-content: space-between; 
-     padding: 24px 60px; position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+  /* Unified auth navbar (matches main website exactly) */
+  .tm-nav { 
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 22px 60px; position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+    background: transparent;
   }
+  .auth-desktop-nav { display: none !important; }
   .auth-nav-links { display: flex; gap: 40px; }
-  .auth-nav-links a { color: #112A61; font-weight: 800; text-decoration: none; font-size: 15px; }
+  .auth-nav-links a { color: #112A61; font-weight: 700; text-decoration: none; font-size: 15px; }
   .auth-nav-btn button { background: #112A61; color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; cursor: pointer; }
   .auth-nav-arrows { font-size: 24px; color: #112A61; display:flex; gap:16px; cursor:pointer; }
   

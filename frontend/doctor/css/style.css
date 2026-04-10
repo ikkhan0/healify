@@ -337,6 +337,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .loading-pulse{text-align:center;color:var(--text-muted);padding:40px;animation:pulseOp 1.5s infinite}
 .empty-state i{font-size:48px;margin-bottom:16px;color:var(--primary-light)}
 .empty-state h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px}
+
+/* ─── Sidebar Divider & Website Links ─────────────────────────────────────── */
+.tm-nav { display:none; } /* hidden on mobile */
+.nav-divider { width:80%; height:1px; background:rgba(17,42,97,0.12); margin:12px auto; }
+.nav-item-website { opacity:0.8; font-size:14px !important; }
+.nav-item-website:hover { opacity:1; }
+.nav-item-logout { color:#EF4444 !important; }
+.nav-item-logout i { color:#EF4444 !important; }
 @media (min-width: 480px) and (max-width: 1023px) {
   body { display:flex; justify-content:center; background:#c9dff5; }
   body > .screen { max-width:420px; box-shadow:0 0 60px rgba(0,0,0,0.2); }
@@ -357,14 +365,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     background: linear-gradient(135deg, #7fc8ef 0%, #d4eaf9 100%);
   }
   
-  .auth-desktop-nav { 
-     display: flex; align-items: center; justify-content: space-between; 
-     padding: 24px 60px; position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+  /* Unified auth navbar (matches main website exactly) */
+  .tm-nav { 
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 22px 60px; position: absolute; top: 0; left: 0; right: 0; z-index: 100;
+    background: transparent;
   }
+  .auth-desktop-nav { display: none !important; }
   .auth-nav-links { display: flex; gap: 40px; }
-  .auth-nav-links a { color: #112A61; font-weight: 800; text-decoration: none; font-size: 15px; }
+  .auth-nav-links a { color: #112A61; font-weight: 700; text-decoration: none; font-size: 15px; }
   .auth-nav-btn button { background: #112A61; color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; cursor: pointer; }
-  .auth-nav-arrows { font-size: 24px; color: #112A61; display:flex; gap:16px; cursor:pointer; }
   
   .auth-desktop-grid { 
      display: grid; grid-template-columns: 1fr 1fr; min-height: 100dvh; 
