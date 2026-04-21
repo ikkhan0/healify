@@ -28,6 +28,35 @@ let currentQuestion = 0;
 let assessAnswers = [];
 
 // ─── Navigation ──────────────────────────────────────────────────────────────
+// Nav screen → active nav item mapping
+const NAV_SCREEN_MAP = {
+  'screen-home': 0,
+  'screen-doctors': 1,
+  'screen-doctor-detail': 1,
+  'screen-booking': 1,
+  'screen-payment': 1,
+  'screen-appointments': 2,
+  'screen-appt-detail': 2,
+  'screen-reports': 3,
+  'screen-assess-result': 3,
+  'screen-profile': 4
+};
+
+// Logo HTML to inject into all sidebars
+const NAV_LOGO_HTML = `<div class="nav-logo" style="display:flex; align-items:center; gap:14px; width:100%; padding:24px 20px; border-bottom:1px solid rgba(255,255,255,.1);">
+  <img src="/assets/telemind_logo.png" alt="TeleMind" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.style.display='none'">
+  <span class="nav-brand" style="font-weight:800; font-size:1.1rem; color:#fff;">TeleMind</span>
+</div>`;
+
+// Ensure every bottom-nav has a logo div on desktop
+function ensureNavLogos() {
+  document.querySelectorAll('.bottom-nav').forEach(nav => {
+    if (!nav.querySelector('.nav-logo')) {
+      nav.insertAdjacentHTML('afterbegin', NAV_LOGO_HTML);
+    }
+  });
+}
+
 window.navigate = (screenId) => {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(screenId);
@@ -35,6 +64,16 @@ window.navigate = (screenId) => {
     target.classList.add('active');
     target.scrollTop = 0;
   }
+
+  // Sync active nav-item across ALL per-screen navs
+  const activeIdx = NAV_SCREEN_MAP[screenId];
+  document.querySelectorAll('.bottom-nav').forEach(nav => {
+    const items = nav.querySelectorAll('.nav-item');
+    items.forEach((item, i) => {
+      item.classList.toggle('active', i === activeIdx);
+    });
+  });
+
   // Load data for screens
   if (screenId === 'screen-home') loadHomeDoctors();
   if (screenId === 'screen-doctors') loadDoctorsList();
@@ -48,6 +87,9 @@ window.navigate = (screenId) => {
     document.getElementById('reset-step-3').style.display = 'none';
   }
 }
+
+// Run logo injection on DOM ready
+document.addEventListener('DOMContentLoaded', ensureNavLogos);
 
 function showToast(msg, duration = 2800) {
   const t = document.getElementById('toast');
@@ -935,99 +977,67 @@ function showAssessmentResult() {
 }
 
 // ─── Video Call ───────────────────────────────────────────────────────────────
-let localStream = null;
-let peerConnection = null;
-let callTimerInterval = null;
-let callSeconds = 0;
-const socket = io();
-
-const iceServers = {
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' }
-    // Example TURN configuration (Required for working perfectly):
-    // { urls: 'turn:YOUR_TURN_SERVER_URL', username: 'YOUR_USERNAME', credential: 'YOUR_PASSWORD' }
-  ]
-};
+// Video Call Peer logic removed in favor of Zego SDK
 
 
 async function joinVideoCall(roomId, doctorName) {
-  navigate('screen-video-call');
-  document.getElementById('call-doctor-name').textContent = doctorName;
-  try {
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    document.getElementById('local-video').srcObject = localStream;
-    const userId = currentUser?._id || 'anon';
-    const userName = currentUser?.name || 'Patient';
-    socket.emit('join-room', { roomId, userId, userName });
-    callTimerInterval = setInterval(() => {
-      callSeconds++;
-      const m = String(Math.floor(callSeconds/60)).padStart(2,'0');
-      const s = String(callSeconds%60).padStart(2,'0');
-      document.getElementById('call-timer').textContent = `${m}:${s}`;
-    }, 1000);
-    showToast('Video call joined! 🎥');
-  } catch (err) { 
-    console.error('Video Call Access Error:', err);
-    showToast('Failed to access camera/microphone. Please check permissions.');
-    navigate('screen-appointments');
+  if (ZEGO_APP_ID === 0) {
+    alert("Please configure ZEGO_APP_ID and ZEGO_SERVER_SECRET in js/app.js to start video calls.");
     return;
   }
 
-  socket.on('user-joined', async ({ socketId }) => {
-    peerConnection = new RTCPeerConnection(iceServers);
-    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
-    peerConnection.ontrack = e => { document.getElementById('remote-video').srcObject = e.streams[0]; };
-    peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('ice-candidate', { to: socketId, candidate: e.candidate }); };
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-    socket.emit('offer', { to: socketId, offer });
-  });
+  navigate('screen-video-call');
+  const userId = currentUser?._id || Math.floor(Math.random() * 10000) + "";
+  const userName = currentUser?.name || 'Patient';
 
-  socket.on('offer', async ({ from, offer }) => {
-    peerConnection = new RTCPeerConnection(iceServers);
-    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
-    peerConnection.ontrack = e => { document.getElementById('remote-video').srcObject = e.streams[0]; };
-    peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('ice-candidate', { to: from, candidate: e.candidate }); };
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-    socket.emit('answer', { to: from, answer });
-  });
+  try {
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+      ZEGO_APP_ID,
+      ZEGO_SERVER_SECRET,
+      roomId,
+      userId,
+      userName
+    );
 
-  socket.on('answer', async ({ answer }) => { await peerConnection?.setRemoteDescription(new RTCSessionDescription(answer)); });
-  socket.on('ice-candidate', async ({ candidate }) => { await peerConnection?.addIceCandidate(new RTCIceCandidate(candidate)); });
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    window.zp = zp;
+
+    zp.joinRoom({
+      container: document.querySelector("#screen-video-call"), // On patient screen, use the whole screen div
+      scenario: {
+        mode: ZegoUIKitPrebuilt.OneONoneCall,
+      },
+      showPreJoinView: false,
+      onLeaveRoom: () => {
+        endCall();
+      },
+    });
+
+    // Start timer
+    callTimerInterval = setInterval(() => {
+      callSeconds++;
+      const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+      const s = String(callSeconds % 60).padStart(2, '0');
+      const timerEl = document.getElementById('call-timer');
+      if (timerEl) timerEl.textContent = `${m}:${s}`;
+    }, 1000);
+
+    showToast('Secure consultation started 👨‍⚕️');
+
+  } catch (err) {
+    console.error('Zego SDK Error:', err);
+    showToast('Initialization failed. Check console.');
+    navigate('screen-appointments');
+  }
 }
 
-window.toggleMic = (btn) => {
-  if (!localStream) return;
-  const track = localStream.getAudioTracks()[0];
-  if (track) { 
-    track.enabled = !track.enabled; 
-    btn.innerHTML = track.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
-    btn.classList.toggle('muted', !track.enabled);
-    showToast(track.enabled ? 'Microphone On' : 'Microphone Muted');
-  }
-};
-
-window.toggleCam = (btn) => {
-  if (!localStream) return;
-  const track = localStream.getVideoTracks()[0];
-  if (track) { 
-    track.enabled = !track.enabled; 
-    btn.innerHTML = track.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
-    btn.classList.toggle('muted', !track.enabled);
-    showToast(track.enabled ? 'Camera On' : 'Camera Off');
-  }
-};
-
 function endCall() {
-  localStream?.getTracks().forEach(t => t.stop());
-  peerConnection?.close();
-  peerConnection = null;
+  if (window.zp) {
+    window.zp.destroy();
+    window.zp = null;
+  }
   clearInterval(callTimerInterval);
   callSeconds = 0;
-  socket.emit('leave-room', { roomId: socket.roomId });
   navigate('screen-appointments');
   showToast('Call ended');
 }

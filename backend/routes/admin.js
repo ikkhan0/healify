@@ -57,6 +57,19 @@ router.get('/doctors', protect, authorize('admin'), async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// @GET /api/admin/doctors/:id  — single doctor detail (works even if isActive=false)
+router.get('/doctors/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password').lean();
+    if (!user || user.role !== 'service_provider') {
+      return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+    const doctorProfile = await Doctor.findOne({ userId: req.params.id }).lean();
+    res.json({ success: true, doctor: { ...user, doctorProfile: doctorProfile || {} } });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+
 // @GET /api/admin/appointments
 router.get('/appointments', protect, authorize('admin'), async (req, res) => {
   try {

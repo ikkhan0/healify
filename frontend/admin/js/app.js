@@ -343,11 +343,56 @@ async function openViewDoctor(doctorId) {
   container.innerHTML = '<div class="loading-pulse" style="padding:60px; text-align:center;">Loading...</div>';
   
   try {
-    const res = await api.get(`/patients/doctors/${doctorId}`);
+    // Use admin-specific endpoint (works for ALL doctors incl. inactive ones)
+    let res = await api.get(`/admin/doctors/${doctorId}`);
+    // Fallback: use patient-facing endpoint or cached data
+    if (!res.doctor) {
+      res = await api.get(`/patients/doctors/${doctorId}`);
+    }
+    if (!res.doctor) {
+      const found = allDoctors.find(d => d._id === doctorId);
+      if (!found) {
+        container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">Doctor not found in database.</div>';
+        return;
+      }
+      // Build from cached list data
+      const d = found;
+      const dp = d.doctorProfile || {};
+      const initials = (d.name || 'D').split(' ').map(n=>n[0]).join('').toUpperCase();
+      const rating = dp.rating || 4.5;
+      let stars = '';
+      for(let i=1; i<=5; i++) { stars += `<i class="fa${i<=rating?'s':'-regular'} fa-star" style="color:#FFD700;"></i>`; }
+      container.innerHTML = `
+        <div style="text-align:center; margin-bottom:1.5rem;">
+          <div style="width:120px; height:120px; border-radius:50%; overflow:hidden; margin:0 auto 1rem auto; background:#EAF4FC; display:flex; align-items:center; justify-content:center; font-size:3rem; color:#0A2753; border:4px solid #EAF4FC; box-shadow:0 6px 20px rgba(0,0,0,0.08);">
+            ${d.profileImage ? `<img src="${d.profileImage}" style="width:100%;height:100%;object-fit:cover">` : initials}
+          </div>
+          <h3 style="color:#0A2753; font-size:1.6rem; font-weight:800; margin-bottom:0.3rem;">Dr. ${d.name}</h3>
+          <div style="margin-bottom:0.8rem; font-size:1.1rem;">${stars}</div>
+          <div style="display:flex; justify-content:center; gap:20px; color:#1C448E; font-weight:600; font-size:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+             <div><i class="fas fa-stethoscope"></i> ${dp.specialty || 'Specialist'}</div>
+             <div><i class="fas fa-money-bill-wave"></i> Fee: RS ${dp.consultationFee || 0}</div>
+             <div><i class="fas fa-star"></i> Rating: ${dp.rating || '4.0'}</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid #EAF4FC; padding-top:1.5rem; text-align:left;">
+          <h4 style="color:#0A2753; font-size:1.1rem; margin-bottom:0.6rem; font-weight:700;">Experience</h4>
+          <p style="color:#1C448E; line-height:1.6; margin-bottom:1.2rem;">${dp.experience ? dp.experience + ' Years Experience' : 'Extensive experience in healthcare.'}</p>
+          <h4 style="color:#0A2753; font-size:1.1rem; margin-bottom:0.6rem; font-weight:700;">Education</h4>
+          <p style="color:#1C448E; line-height:1.6; margin-bottom:1.2rem;">${dp.education || 'Qualified Professional'}</p>
+          <h4 style="color:#0A2753; font-size:1.1rem; margin-bottom:0.6rem; font-weight:700;">About</h4>
+          <p style="color:#1C448E; line-height:1.6; margin-bottom:1.5rem;">${dp.bio || 'A compassionate professional dedicated to patient wellbeing.'}</p>
+          <div style="color:#6B7280; font-size:0.9rem; padding:1rem; background:#F8FCFF; border-radius:10px;"><i class="fas fa-info-circle"></i> Detailed reviews available when patient endpoint is accessible.</div>
+        </div>`;
+      return;
+    }
     const d = res.doctor;
+    if (!d) {
+      container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">Doctor data unavailable.</div>';
+      return;
+    }
     const dp = d.doctorProfile || {};
-    const initials = d.name.split(' ').map(n=>n[0]).join('').toUpperCase();
-    
+    const initials = (d.name || 'D').split(' ').map(n=>n[0]).join('').toUpperCase();
     const rating = dp.rating || 4.5;
     let stars = '';
     for(let i=1; i<=5; i++) {
@@ -361,7 +406,7 @@ async function openViewDoctor(doctorId) {
         </div>
         <h3 style="color:#0A2753; font-size:1.8rem; font-weight:800; margin-bottom:0.3rem;">Dr. ${d.name}</h3>
         <div style="margin-bottom:0.8rem; font-size:1.2rem;">${stars}</div>
-        <div style="display:flex; justify-content:center; gap:20px; color:#1C448E; font-weight:600; font-size:1.1rem; margin-bottom:1.5rem;">
+        <div style="display:flex; justify-content:center; gap:20px; color:#1C448E; font-weight:600; font-size:1.1rem; margin-bottom:1.5rem; flex-wrap:wrap;">
            <div><i class="fas fa-stethoscope"></i> ${dp.specialty || 'Psychiatrist'}</div>
            <div><i class="fas fa-money-bill-wave"></i> Fee: RS ${dp.consultationFee || 300}</div>
         </div>
@@ -387,8 +432,13 @@ async function openViewDoctor(doctorId) {
           </div>`).join('') : '<div style="color:#1C448E; font-weight:600; padding:1rem;">No reviews yet.</div>'}
         </div>
       </div>`;
-  } catch(e) { container.innerHTML = '<div style="text-align:center; color:red;">Failed to load profile preview</div>'; }
+  } catch(e) { 
+    console.error('openViewDoctor error:', e);
+    container.innerHTML = '<div style="text-align:center; color:red; padding:40px;"><i class="fas fa-exclamation-circle" style="font-size:2rem; margin-bottom:12px; display:block;"></i>Failed to load profile. Please check server connection.</div>'; 
+  }
 }
+
+
 
 function openEditPat(id, name, email, phone, age) {
   document.getElementById('edit-pat-id').value = id;
