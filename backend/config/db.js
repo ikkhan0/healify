@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 
-let isConnected = false;
-
 const connectDB = async () => {
-  if (isConnected) return;
-  
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    isConnected = true;
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Error: ${error.message}`);
-    // Don't exit process on Vercel, just let upcoming requests fail or retry
+  // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+  if (mongoose.connection.readyState >= 1) return;
+
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI environment variable is not set');
   }
+
+  const conn = await mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 45000,
+  });
+  console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
 };
 
 module.exports = connectDB;

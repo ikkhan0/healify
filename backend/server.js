@@ -6,7 +6,6 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const connectDB = require('./config/db');
-connectDB();
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +30,17 @@ app.use('/', express.static(path.join(root, 'frontend/website')));
 
 // Root route
 app.get('/', (req, res) => res.sendFile(path.join(root, 'frontend/website/index.html')));
+
+// Ensure DB is connected before every API request (serverless-safe)
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('❌ MongoDB connection failed:', err.message);
+    res.status(503).json({ success: false, message: `Database unavailable: ${err.message}` });
+  }
+});
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));
