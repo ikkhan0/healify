@@ -11,25 +11,36 @@ const api = {
     return h;
   },
 
+  async _handle(r) {
+    const data = await r.json().catch(() => ({ success: false, message: `HTTP ${r.status}` }));
+    if (!r.ok) {
+      if (r.status === 401) { localStorage.removeItem('telemind_client_token'); localStorage.removeItem('telemind_client_user'); window.navigate && window.navigate('screen-login'); }
+      const err = new Error(data.message || `HTTP ${r.status}`);
+      err.status = r.status; err.data = data;
+      throw err;
+    }
+    return data;
+  },
+
   async get(path) {
     const res = await fetch(BASE_URL + path, { headers: this.headers() });
-    return res.json();
+    return this._handle(res);
   },
 
   async post(path, body) {
     const res = await fetch(BASE_URL + path, { method: 'POST', headers: this.headers(), body: JSON.stringify(body) });
-    return res.json();
+    return this._handle(res);
   },
 
   async put(path, body) {
     const res = await fetch(BASE_URL + path, { method: 'PUT', headers: this.headers(), body: JSON.stringify(body) });
-    return res.json();
+    return this._handle(res);
   },
 
   async postForm(path, formData) {
     const headers = {};
     if (this.token()) headers['Authorization'] = `Bearer ${this.token()}`;
     const res = await fetch(BASE_URL + path, { method: 'PUT', headers, body: formData });
-    return res.json();
+    return this._handle(res);
   }
 };

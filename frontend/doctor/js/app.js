@@ -294,34 +294,37 @@ async function bypassOTP() {
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 async function loadDashboard() {
   updateDashboardHeader();
-  try {
-    const [apptRes, earnRes, patRes] = await Promise.all([
-      api.get('/doctors/appointments'),
-      api.get('/doctors/earnings'),
-      api.get('/doctors/patients')
-    ]);
-    const appts = apptRes.appointments || [];
-    const earn = earnRes.earnings || {};
-    const patients = patRes.patients || [];
+  const [apptResult, earnResult, patResult] = await Promise.allSettled([
+    api.get('/doctors/appointments'),
+    api.get('/doctors/earnings'),
+    api.get('/doctors/patients')
+  ]);
 
-    document.getElementById('doc-total-patients').textContent = patients.length;
-    document.getElementById('doc-total-appts').textContent = appts.length;
-    document.getElementById('doc-pending').textContent = appts.filter(a=>a.status==='pending').length;
-    document.getElementById('doc-earnings').textContent = `RS ${earn.totalEarnings || 0}`;
-    document.getElementById('today-earn-label').textContent = `RS ${earn.totalEarnings || 0}`;
+  const appts = apptResult.status === 'fulfilled' ? (apptResult.value.appointments || []) : [];
+  const earn  = earnResult.status  === 'fulfilled' ? (earnResult.value.earnings   || {}) : {};
+  const patients = patResult.status === 'fulfilled' ? (patResult.value.patients   || []) : [];
 
-    const todayAppts = appts.filter(a => {
-      const d = new Date(a.date);
-      const now = new Date();
-      return d.toDateString() === now.toDateString();
-    });
-    const container = document.getElementById('dash-appointments');
-    if (!todayAppts.length) {
-      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:14px">No appointments today 🎉</div>';
-      return;
-    }
-    container.innerHTML = todayAppts.map(a => renderApptCard(a)).join('');
-  } catch(e) { console.error(e); }
+  if (apptResult.status === 'rejected') console.error('Dashboard appointments error:', apptResult.reason);
+  if (earnResult.status  === 'rejected') console.error('Dashboard earnings error:',     earnResult.reason);
+  if (patResult.status   === 'rejected') console.error('Dashboard patients error:',     patResult.reason);
+
+  document.getElementById('doc-total-patients').textContent = patients.length;
+  document.getElementById('doc-total-appts').textContent = appts.length;
+  document.getElementById('doc-pending').textContent = appts.filter(a=>a.status==='pending').length;
+  document.getElementById('doc-earnings').textContent = `RS ${earn.totalEarnings || 0}`;
+  document.getElementById('today-earn-label').textContent = `RS ${earn.totalEarnings || 0}`;
+
+  const todayAppts = appts.filter(a => {
+    const d = new Date(a.date);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  });
+  const container = document.getElementById('dash-appointments');
+  if (!todayAppts.length) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:14px">No appointments today 🎉</div>';
+    return;
+  }
+  container.innerHTML = todayAppts.map(a => renderApptCard(a)).join('');
 }
 
 // ─── Appointments ─────────────────────────────────────────────────────────────
@@ -332,7 +335,13 @@ async function loadAppointments() {
     const res = await api.get('/doctors/appointments');
     allAppointments = res.appointments || [];
     renderAppointments(allAppointments);
-  } catch { container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi-slash"></i><h3>Server offline</h3></div>'; }
+  } catch(err) {
+    console.error('loadAppointments error:', err);
+    const msg = err.status === 401 ? 'Session expired – please log in again'
+              : err.status === 403 ? 'Access denied – wrong account type'
+              : err.message || 'Server offline';
+    container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h3>${msg}</h3></div>`;
+  }
 }
 
 function filterAppts(status, btn) {
