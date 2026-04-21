@@ -7,25 +7,30 @@ let peerConnection = null;
 let callSeconds = 0;
 let callTimerInterval = null;
 let socket = null;
-// ZegoCloud Configuration
-// REGISTER at https://console.zegocloud.com to get your AppID and ServerSecret
-const ZEGO_APP_ID = 0; // Replace with your AppID (Number)
-const ZEGO_SERVER_SECRET = ""; // Replace with your ServerSecret (String)
+// Note: To work perfectly across all networks, you SHOULD replace these with real TURN server credentials 
+// from a provider like Metered.ca, Twilio, or Xirsys.
+const iceServers = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    // Example TURN configuration:
+    // { urls: 'turn:YOUR_TURN_SERVER_URL', username: 'YOUR_USERNAME', credential: 'YOUR_PASSWORD' }
+  ]
+};
 
 window.navigate = (screenId) => {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(screenId);
   if (el) { el.classList.add('active'); el.scrollTop = 0; }
   
-  // Navigation visibility — use class toggle, not inline style
-  // so the desktop sidebar (which reuses .bottom-nav) stays visible
+  // Navigation visibility
   const nav = document.getElementById('main-nav');
   const authScreens = ['screen-splash', 'screen-login', 'screen-signup', 'screen-reset-password', 'screen-otp'];
   if (nav) {
     if (authScreens.includes(screenId)) {
-      nav.classList.add('nav-hidden');
+      nav.style.display = 'none';
     } else {
-      nav.classList.remove('nav-hidden');
+      nav.style.display = 'flex';
     }
   }
 
@@ -542,63 +547,89 @@ window.loadPatientReports = async (patientId, patientName) => {
 
 // ─── Video Call ───────────────────────────────────────────────────────────────
 window.joinVideoCall = async (roomId, patientName) => {
-  if (ZEGO_APP_ID === 0) {
-    alert("Please configure ZEGO_APP_ID and ZEGO_SERVER_SECRET in js/app.js to start video calls.");
-    return;
-  }
-
   window.navigate('screen-video-call');
-  const userId = currentDoctor?._id || Math.floor(Math.random() * 10000) + "";
-  const userName = currentDoctor?.name ? `Dr. ${currentDoctor.name}` : 'Doctor';
-
+  const patientBadge = document.getElementById('call-patient-name');
+  const doctorBadge = document.getElementById('call-doctor-name');
+  if (patientBadge) patientBadge.textContent = patientName;
+  if (doctorBadge) doctorBadge.textContent = (currentDoctor?.name ? `Dr. ${currentDoctor.name}` : 'Doctor');
   try {
-    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-      ZEGO_APP_ID,
-      ZEGO_SERVER_SECRET,
-      roomId,
-      userId,
-      userName
-    );
-
-    const zp = ZegoUIKitPrebuilt.create(kitToken);
-    window.zp = zp; // Store for cleanup
-
-    zp.joinRoom({
-      container: document.querySelector(".video-container"),
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
-      showPreJoinView: false,
-      onLeaveRoom: () => {
-        endCall();
-      }
-    });
-
-    // Start timer
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.getElementById('local-video').srcObject = localStream;
+    
+    if (!socket) {
+      socket = io();
+      setupSocketListeners();
+    }
+    
+    socket.emit('join-room', { roomId, userId: currentDoctor?._id, userName: `Dr. ${currentDoctor?.name || 'Doctor'}` });
     callTimerInterval = setInterval(() => {
       callSeconds++;
-      const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
-      const s = String(callSeconds % 60).padStart(2, '0');
-      const timerEl = document.getElementById('call-timer');
-      if (timerEl) timerEl.textContent = `${m}:${s}`;
+      const m = String(Math.floor(callSeconds/60)).padStart(2,'0');
+      const s = String(callSeconds%60).padStart(2,'0');
+      document.getElementById('call-timer').textContent = `${m}:${s}`;
     }, 1000);
-
-    showToast('Secure medical call started 🎥');
-
-  } catch (err) {
-    console.error('Zego SDK Error:', err);
-    showToast('Initialization failed. Check console.');
-    navigate('screen-appointments');
+    showToast('Video call joined! 🎥');
+  } catch (err) { 
+    console.error('Video Call Access Error:', err);
+    showToast('Failed to access camera/microphone. Please check permissions.');
+    window.navigate('screen-appointments');
+    return;
   }
 }
 
-function endCall() {
-  if (window.zp) {
-    window.zp.destroy();
-    window.zp = null;
+function setupSocketListeners() {
+  if (!socket) return;
+  
+  socket.on('user-joined', async ({ socketId }) => {
+    peerConnection = new RTCPeerConnection(iceServers);
+    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
+    peerConnection.ontrack = e => { document.getElementById('remote-video').srcObject = e.streams[0]; };
+    peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('ice-candidate', {to:socketId, candidate:e.candidate}); };
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    socket.emit('offer', {to:socketId, offer});
+  });
+  
+  socket.on('offer', async ({from,offer}) => {
+    peerConnection = new RTCPeerConnection(iceServers);
+    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
+    peerConnection.ontrack = e => { document.getElementById('remote-video').srcObject = e.streams[0]; };
+    peerConnection.onicecandidate = e => { if(e.candidate) socket.emit('ice-candidate', {to:from, candidate:e.candidate}); };
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    socket.emit('answer', {to:from, answer});
+  });
+  
+  socket.on('answer', async ({answer}) => { await peerConnection?.setRemoteDescription(new RTCSessionDescription(answer)); });
+  socket.on('ice-candidate', async ({candidate}) => { await peerConnection?.addIceCandidate(new RTCIceCandidate(candidate)); });
+}
+
+window.toggleMic = (btn) => {
+  const t = localStream?.getAudioTracks()[0];
+  if (t) { 
+    t.enabled = !t.enabled; 
+    btn.innerHTML = t.enabled ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+    btn.classList.toggle('muted', !t.enabled);
+    showToast(t.enabled ? 'Microphone On' : 'Microphone Muted');
   }
+};
+window.toggleCam = (btn) => {
+  const t = localStream?.getVideoTracks()[0];
+  if (t) { 
+    t.enabled = !t.enabled; 
+    btn.innerHTML = t.enabled ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+    btn.classList.toggle('muted', !t.enabled);
+    showToast(t.enabled ? 'Camera On' : 'Camera Off');
+  }
+};
+function endCall() {
+  localStream?.getTracks().forEach(t => t.stop());
+  peerConnection?.close();
+  peerConnection = null;
   clearInterval(callTimerInterval);
   callSeconds = 0;
+  socket.emit('leave-room', { roomId: socket.roomId });
   navigate('screen-appointments');
   showToast('Call ended');
 }
