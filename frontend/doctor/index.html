@@ -342,21 +342,8 @@
          <h3>Upcoming Appointments</h3>
          <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;"><i class="fas fa-chevron-left" style="font-size:16px;"></i><i class="fas fa-chevron-right" style="font-size:16px;"></i></div>
       </div>
-      <!-- In Figma, this is a list of 4 blue bars. We will render them statically for UI matching, but also keep the dynamic list rendering container if JS injects here -->
       <div id="dash-appointments" class="figma-appt-list">
-         <!-- static mockups matching Figma exactly -->
-         <div class="figma-appt-item">
-            <div class="doc-icon"><img src="https://ui-avatars.com/api/?name=MR" alt="d"/></div>
-            <div class="info"><strong>Mr Abdul Rehman</strong><span>28 Years old</span></div>
-            <div class="time"><i class="far fa-clock"></i> 9:00 am-10:00 pm<br><i class="far fa-calendar"></i> Friday, 20 Feb 2026</div>
-            <button class="btn-upcoming">Upcoming Appointment</button>
-         </div>
-         <div class="figma-appt-item">
-            <div class="doc-icon"><img src="https://ui-avatars.com/api/?name=MR" alt="d"/></div>
-            <div class="info"><strong>Mr Abdul Rehman</strong><span>28 Years old</span></div>
-            <div class="time"><i class="far fa-clock"></i> 9:00 am-10:00 pm<br><i class="far fa-calendar"></i> Friday, 20 Feb 2026</div>
-            <button class="btn-upcoming">Upcoming Appointment</button>
-         </div>
+        <div style="text-align:center;color:var(--text-muted,#888);padding:20px;font-size:14px">Loading...</div>
       </div>
     </div>
 
@@ -477,55 +464,7 @@
     <h2 style="color:#112A61;font-size:24px;font-weight:800;margin-bottom:20px;">Upcoming Appointments</h2>
     
     <div id="appt-list" class="figma-upcoming-list">
-      <!-- Mocks based on Figma screen -->
-      <div class="upcoming-list-item">
-         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
-         <div class="pat-info">
-            <strong>Mr Raza</strong>
-            <span>28 years old</span>
-         </div>
-         <div class="session-label">Upcoming session</div>
-         <div class="action-btns">
-            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
-            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
-         </div>
-      </div>
-      <div class="upcoming-list-item">
-         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
-         <div class="pat-info">
-            <strong>Mr Raza</strong>
-            <span>28 years old</span>
-         </div>
-         <div class="session-label">Upcoming session</div>
-         <div class="action-btns">
-            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
-            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
-         </div>
-      </div>
-      <div class="upcoming-list-item">
-         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
-         <div class="pat-info">
-            <strong>Mr Raza</strong>
-            <span>28 years old</span>
-         </div>
-         <div class="session-label">Upcoming session</div>
-         <div class="action-btns">
-            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
-            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
-         </div>
-      </div>
-      <div class="upcoming-list-item">
-         <div class="pat-avatar"><img src="https://ui-avatars.com/api/?name=MR" alt="Patient"/></div>
-         <div class="pat-info">
-            <strong>Mr Raza</strong>
-            <span>28 years old</span>
-         </div>
-         <div class="session-label">Upcoming session</div>
-         <div class="action-btns">
-            <button class="btn-figma-small" style="background:#112A61;color:#fff;border-radius:6px;padding:8px 16px;border:none;font-weight:700;font-size:13px;cursor:pointer;" onclick="openPatientModal()">View Profile</button>
-            <button class="btn-chat-icon" style="background:#1c78c0;color:#fff;border-radius:50%;width:36px;height:36px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="far fa-comment-dots"></i></button>
-         </div>
-      </div>
+      <div class="loading-pulse">Loading...</div>
     </div>
   </div>
 

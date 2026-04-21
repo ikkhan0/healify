@@ -113,7 +113,10 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     const res = await api.post('/auth/login', { email, password });
     if (res.success) {
       // Login succeeded, now check role
-      if (res.user.role !== 'service_provider') { 
+      if (res.user.role !== 'service_provider') {
+        // Clear any stale doctor token so it doesn't leak into the UI
+        localStorage.removeItem('telemind_doctor_token');
+        localStorage.removeItem('telemind_doctor_user');
         err.textContent = 'Access denied: Please use the Services Provider Sign In.'; 
         btn.textContent='Sign In'; btn.disabled=false; 
         return; 
@@ -130,7 +133,7 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     }
   } catch (ex) { 
     console.error('Doctor Login Error:', ex);
-    err.textContent = 'Connection error. Is the server running?'; 
+    err.textContent = ex.message || 'Connection error. Is the server running?'; 
   }
   btn.textContent = 'Sign In'; btn.disabled = false;
 });
@@ -173,7 +176,7 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
     } else { err.textContent = res.message || 'Registration failed'; }
   } catch (ex) { 
     console.error('Doctor Signup Error:', ex);
-    err.textContent = 'Connection error. Check backend server.'; 
+    err.textContent = ex.message || 'Connection error. Check backend server.'; 
   }
   btn.textContent = 'Sign Up'; btn.disabled = false;
 });
