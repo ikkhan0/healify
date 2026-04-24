@@ -9,36 +9,45 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="landing-body">
-  <header class="top-nav">
+<body class="landing-body" style="background:#F3FAFE">
+  <header class="top-nav" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); padding:1.5rem 4rem;">
     <div class="logo">
       <div class="logo-circle-small"></div>
-      <span class="logo-text">TeleMind</span>
+      <span class="logo-text" style="color:#fff">TeleMind</span>
     </div>
     <div class="hamburger" onclick="toggleNav()">
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars" style="color:#fff"></i>
     </div>
     <nav class="nav-links">
-      <a href="/" class="active">Home</a>
-      <a href="/doctors.html">Find a Doctor</a>
-      <a href="/how-it-works.html">How it works</a>
-      <a href="/resources.html">Resources</a>
-      <a href="/about-us.html">About us</a>
-      <a href="/contact-us.html">Contact Us</a>
+      <a href="/" class="active" style="color:#fff; border-bottom:2px solid #fff;">Home</a>
+      <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
+      <a href="/how-it-works.html" style="color:#fff">How it works</a>
+      <a href="/resources.html" style="color:#fff">Resources</a>
+      <a href="/about-us.html" style="color:#fff">About us</a>
+      <a href="/contact-us.html" style="color:#fff">Contact Us</a>
     </nav>
-    <div class="nav-icons">
-      <a href="/role-selection.html" style="text-decoration:none; color:#0A2753; background:#fff; padding:8px 25px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
+    <div class="nav-icons" style="color:#fff">
+      <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
     </div>
   </header>
   
-  <div class="banner-section">
-    <img src="/assets/telemind-banner.jpg" alt="TeleMind Mental Health Support Banner" class="hero-banner" onerror="this.src='https://via.placeholder.com/1200x600?text=TeleMind+Banner+(Please+Upload+Your+Image+Here)'">
+  <div class="banner-section" style="min-height: 300px;">
+    <img src="/assets/home.jpeg" alt="TeleMind Mental Health Support Banner" class="hero-banner" onerror="this.src='https://via.placeholder.com/1200x600?text=TeleMind+Banner'">
     <div class="banner-cta">
       <button class="btn-get-started" onclick="window.location.href='/role-selection.html'">Get Started Today</button>
     </div>
   </div>
 
-  <section class="section-container" id="benefits">
+  <section class="section-container" id="about-telemind">
+    <div class="section-header">
+      <h2>About TeleMind</h2>
+      <p style="max-width: 800px; margin: 0 auto; color: #1C448E; line-height: 1.8; font-size: 1.1rem;">
+        TeleMind is a specialized digital platform providing Mental Health and Psychosocial Support (MHPSS) in an effective, confidential, and holistic manner. It is developed and run by the <strong>National Institute of Psychology (NIP)</strong>, Centre of Excellence, Quaid-i-Azam University, a premier government academic and research institution, with the support of <strong>Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ)</strong> to facilitate sustainable MHPSS services across Pakistan.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-container bg-light" id="benefits">
     <div class="section-header">
       <h2>Who Can Get Benefit?</h2>
       <p>We provide a safe, stigmatized-free space for professional guidance.</p>
@@ -141,6 +150,18 @@
       <div class="provider-badge"><i class="fas fa-briefcase"></i> Career Counsellors</div>
     </div>
   </section>
+  <section class="section-container" id="credibility">
+    <div class="section-header">
+      <h2>Credibility and Sustainability</h2>
+      <p>Building a trustworthy foundation for mental healthcare.</p>
+    </div>
+    <ul class="credibility-list" style="max-width: 800px; margin: 0 auto; background: #fff; padding: 2.5rem 3rem; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+      <li>It is made and run by a public sector institution where counselling rates are affordable.</li>
+      <li>In collaboration with other mental healthcare providing institutions and consultants, it has a network for referral.</li>
+      <li>Reliable and valid assessment and screening of mental health issues is accessible.</li>
+    </ul>
+  </section>
+
   <script src="/shared/js/settings-sync.js"></script>
   <script>
     function toggleNav() {
