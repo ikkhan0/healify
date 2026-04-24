@@ -646,7 +646,7 @@
   </div>
   <div class="booking-footer">
     <div class="fee-display">Fee: <strong id="booking-fee">RS 0</strong></div>
-    <button class="btn-primary" onclick="confirmBooking()">Proceed to Payment</button>
+    <button class="btn-primary" onclick="confirmBooking()">Review Fee Details</button>
   </div>
 </div>
 
@@ -654,17 +654,18 @@
 <div id="screen-payment" class="screen app-screen">
   <div class="page-header">
     <button class="back-btn" onclick="navigate('screen-booking')"><i class="fas fa-arrow-left"></i></button>
-    <h2>Payment</h2>
+    <h2>Consultation Fee</h2>
     <div></div>
   </div>
   <div class="payment-summary">
-    <h3>Payment Summary</h3>
+    <h3>Fee Summary</h3>
     <div class="summary-row"><span>Consultation Fee</span><strong id="pay-fee">RS 0</strong></div>
     <div class="summary-row total"><span>Total</span><strong id="pay-total">RS 0</strong></div>
   </div>
 
   <div class="booking-section" style="background:#f9fbfd; border-radius:12px; margin:0 20px 20px; padding:20px;">
-    <h3 style="margin-top:0;">Bank Account Details</h3>
+    <h3 style="margin-top:0;">Bank Transfer Details</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Use bank transfer if you want to pay now, or request a fee waiver below.</p>
     <div style="font-size:14px; line-height:1.6; color:#0A4076;">
       <p><strong>Bank name:</strong> Askari bank limited</p>
       <p><strong>Branch:</strong> Usman Plaza Bara Kaho</p>
@@ -721,7 +722,7 @@
     </div>
   </div>
 
-  <button class="btn-primary full" style="margin:24px 20px; width:calc(100% - 40px)" onclick="processPayment()">Confirm Booking & Request Consultation</button>
+  <button class="btn-primary full" style="margin:24px 20px; width:calc(100% - 40px)" onclick="submitBookingRequest(this)">Confirm Booking & Request Consultation</button>
 </div>
 
 <!-- APPOINTMENTS -->

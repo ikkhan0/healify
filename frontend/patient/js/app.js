@@ -567,22 +567,13 @@ window.toggleWaiverFields = (checked) => {
 };
 
 // ─── Payment ──────────────────────────────────────────────────────────────────
-window.selectPayment = (el) => {
-  document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  const cardForm = document.getElementById('credit-card-form');
-  cardForm.style.display = el.textContent.includes('Credit') ? 'block' : 'none';
-};
-
-async function processPayment() {
+async function submitBookingRequest(btn) {
   if (!currentUser) { navigate('screen-login'); return; }
-  const selected = document.querySelector('.pay-opt.selected');
-  if (!selected) { showToast('Please select a payment method'); return; }
   
   // Show loading state
-  const btn = event.target;
   const originalText = btn.innerHTML;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  btn.disabled = true;
   
   try {
     const dp = selectedDoctor?.doctorProfile || {};
@@ -625,6 +616,7 @@ async function processPayment() {
     });
     
     btn.innerHTML = originalText;
+    btn.disabled = false;
     
     if (res.success) {
       // Instead of navigating immediately, show the Image 3 Success Modal
@@ -635,9 +627,12 @@ async function processPayment() {
     }
   } catch(e) { 
     btn.innerHTML = originalText;
+    btn.disabled = false;
     showToast('Network error'); 
   }
 }
+
+window.submitBookingRequest = submitBookingRequest;
 
 window.closeSuccessModal = () => {
   document.getElementById('booking-success-modal').style.display = 'none';

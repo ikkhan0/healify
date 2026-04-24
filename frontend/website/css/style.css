@@ -312,3 +312,159 @@ footer {
   gap: 1.5rem;
   text-align: center;
 }
+
+/* ─── TeleMind New Sections ─── */
+.banner-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #F3FAFE;
+}
+.hero-banner {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.banner-cta {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.section-container {
+  padding: 5rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-container.bg-light {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  margin: 2rem auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.section-header h2 {
+  font-size: 2.8rem;
+  color: #0A2753;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.section-header p {
+  font-size: 1.2rem;
+  color: #1C448E;
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+.feature-card {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.feature-card .icon-wrap {
+  width: 60px;
+  height: 60px;
+  background: #EAF4FC;
+  color: #0984e3;
+  margin: 0 auto 1.5rem;
+}
+.feature-card h3 {
+  color: #0A2753;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.feature-card p {
+  color: #5DADE2;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.list-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.list-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.list-item i {
+  font-size: 1.8rem;
+  color: #0984e3;
+  margin-top: 5px;
+}
+.list-item h4 {
+  font-size: 1.3rem;
+  color: #0A2753;
+  margin-bottom: 0.5rem;
+}
+.list-item p {
+  color: #1C448E;
+  line-height: 1.5;
+}
+
+.providers-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.provider-badge {
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+}
+
+.credibility-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1.5rem;
+}
+.credibility-list li {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 1rem;
+  color: #1C448E;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+.credibility-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #0984e3;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .section-container { padding: 3rem 1.5rem; }
+  .list-layout { grid-template-columns: 1fr; }
+  .section-header h2 { font-size: 2.2rem; }
+}
