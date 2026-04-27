@@ -74,9 +74,8 @@
     </div>
   </div>
 
-  <div style="position:fixed;bottom:25px;left:25px;z-index:9999;">
-    <button onclick="window.i18n?.switchLanguage(window.i18n?.getCurrentLang()==='en'?'ur':'en')" style="background:linear-gradient(135deg,#0984e3,#0A2753);color:#fff;border:none;padding:10px 18px;border-radius:25px;font-size:14px;cursor:pointer;box-shadow:0 4px 15px rgba(9,132,227,0.3);font-weight:700;">اردو / EN</button>
-  </div>
+  <!-- Floating Google Translate Widget -->
+  <div id="google_translate_element" style="position:fixed;bottom:25px;left:25px;z-index:9999;background:rgba(255,255,255,0.8);border-radius:10px;padding:5px;box-shadow:0 4px 15px rgba(0,0,0,0.1);"></div>
 
   <script src="/shared/js/settings-sync.js"></script>
   <script src="/shared/js/i18n.js"></script>
@@ -85,6 +84,26 @@
       document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
     }
   </script>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+    
+    // RTL Mutator
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        const html = document.documentElement;
+        if (html.classList.contains('translated-rtl') || html.getAttribute('lang') === 'ur') {
+          html.setAttribute('dir', 'rtl');
+        } else {
+          html.setAttribute('dir', 'ltr');
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
 

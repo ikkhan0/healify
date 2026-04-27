@@ -27,8 +27,7 @@
       <a href="/about-us.html" style="color:#fff">About us</a>
       <a href="/contact-us.html" style="color:#fff">Contact Us</a>
     </nav>
-    <div class="nav-icons" style="color:#fff; display:flex; align-items:center; gap:15px;">
-      <div id="google_translate_element" style="margin-right: 15px;"></div>
+    <div class="nav-icons" style="color:#fff">
       <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
     </div>
   </header>
@@ -251,6 +250,10 @@
     }
     loadSuccessStories();
   </script>
+
+  <!-- Floating Google Translate Widget -->
+  <div id="google_translate_element" style="position:fixed;bottom:25px;left:25px;z-index:9999;background:rgba(255,255,255,0.8);border-radius:10px;padding:5px;box-shadow:0 4px 15px rgba(0,0,0,0.1);"></div>
+
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
