@@ -7,6 +7,7 @@ const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
 const upload = require('../middleware/upload');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @GET /api/patients/profile
 router.get('/profile', protect, authorize('client'), async (req, res) => {
@@ -80,8 +81,28 @@ router.post('/appointments', protect, authorize('client'), async (req, res) => {
       fee: docProfile ? docProfile.consultationFee : 0, 
       roomId,
       intakeData,
-      waiverData
+      waiverData,
+      feeWaiverStatus: waiverData?.requestWaiver ? 'pending' : 'none'
     });
+
+    // Notify doctor about new appointment
+    await createNotification({
+      userId: doctorId,
+      type: 'appointment',
+      title: 'New Appointment Booking',
+      message: `${req.user.name} has booked an appointment for ${new Date(date).toLocaleDateString()} at ${timeSlot}.`,
+      metadata: { appointmentId: appointment._id, fromUserId: req.user._id }
+    });
+
+    // Notify patient about booking confirmation
+    await createNotification({
+      userId: req.user._id,
+      type: 'appointment',
+      title: 'Appointment Booked',
+      message: `Your appointment has been booked for ${new Date(date).toLocaleDateString()} at ${timeSlot}. You will receive a notification for your assessment.`,
+      metadata: { appointmentId: appointment._id }
+    });
+
     res.status(201).json({ success: true, appointment });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
@@ -99,7 +120,7 @@ router.get('/appointments', protect, authorize('client'), async (req, res) => {
 // @GET /api/patients/reports
 router.get('/reports', protect, authorize('client'), async (req, res) => {
   try {
-    const reports = await Report.find({ patientId: req.user._id })
+    const reports = await Report.find({ patientId: req.user._id, isVisibleToPatient: true })
       .populate('doctorId', 'name profileImage')
       .sort({ createdAt: -1 });
     res.json({ success: true, reports });

@@ -32,6 +32,10 @@ const doctorSchema = new mongoose.Schema({
   }],
   isAvailableForVideo: { type: Boolean, default: true },
   patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  unavailableSlots: [{
+    date: { type: Date, required: true },
+    slots: [String]  // e.g. ["10:00 AM", "11:00 AM"]
+  }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);

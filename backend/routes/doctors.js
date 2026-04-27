@@ -6,6 +6,7 @@ const Doctor = require('../models/Doctor');
 const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
 const upload = require('../middleware/upload');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @GET /api/doctors/profile
 router.get('/profile', protect, authorize('service_provider'), async (req, res) => {
@@ -118,6 +119,158 @@ router.get('/earnings', protect, authorize('service_provider'), async (req, res)
     const totalAppts = await Appointment.countDocuments({ doctorId: req.user._id });
     const completed = await Appointment.countDocuments({ doctorId: req.user._id, status: 'completed' });
     res.json({ success: true, earnings: { totalEarnings: profile?.totalEarnings || 0, clinicShare: profile?.clinicShare || 0, totalAppointments: totalAppts, completed } });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/doctors/unavailable-slots — manage unavailable slots
+router.put('/unavailable-slots', protect, authorize('service_provider'), async (req, res) => {
+  try {
+    const { date, slots, action } = req.body; // action: 'add' or 'remove'
+    const doctor = await Doctor.findOne({ userId: req.user._id });
+    if (!doctor) return res.status(404).json({ success: false, message: 'Doctor profile not found' });
+
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const existing = doctor.unavailableSlots.find(s => {
+      const d = new Date(s.date);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime() === targetDate.getTime();
+    });
+
+    if (action === 'add') {
+      if (existing) {
+        existing.slots = [...new Set([...existing.slots, ...slots])];
+      } else {
+        doctor.unavailableSlots.push({ date: targetDate, slots });
+      }
+    } else if (action === 'remove') {
+      if (existing) {
+        existing.slots = existing.slots.filter(s => !slots.includes(s));
+        if (existing.slots.length === 0) {
+          doctor.unavailableSlots = doctor.unavailableSlots.filter(s => {
+            const d = new Date(s.date);
+            d.setHours(0, 0, 0, 0);
+            return d.getTime() !== targetDate.getTime();
+          });
+        }
+      }
+    }
+
+    await doctor.save();
+    res.json({ success: true, message: 'Availability updated', unavailableSlots: doctor.unavailableSlots });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/doctors/unavailable-slots — get own unavailable slots
+router.get('/unavailable-slots', protect, authorize('service_provider'), async (req, res) => {
+  try {
+    const doctor = await Doctor.findOne({ userId: req.user._id });
+    res.json({ success: true, unavailableSlots: doctor?.unavailableSlots || [] });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @GET /api/doctors/:id/available-slots — patient checks available slots for a date
+router.get('/:id/available-slots', async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) return res.status(400).json({ success: false, message: 'Date parameter required' });
+
+    const doctor = await Doctor.findOne({ userId: req.params.id });
+    if (!doctor) return res.status(404).json({ success: false, message: 'Doctor not found' });
+
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+    const dayName = targetDate.toLocaleDateString('en-US', { weekday: 'long' });
+
+    // Get all slots for that day from availability schedule
+    const daySchedule = doctor.availability.find(a => a.day === dayName);
+    const allSlots = daySchedule ? daySchedule.slots : [];
+
+    // Get doctor-marked unavailable slots for that date
+    const unavail = doctor.unavailableSlots.find(s => {
+      const d = new Date(s.date);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime() === targetDate.getTime();
+    });
+    const unavailableSlots = unavail ? unavail.slots : [];
+
+    // Get already-booked slots for that date
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const bookedAppts = await Appointment.find({
+      doctorId: req.params.id,
+      date: { $gte: targetDate, $lt: nextDay },
+      status: { $in: ['pending', 'confirmed'] }
+    });
+    const bookedSlots = bookedAppts.map(a => a.timeSlot);
+
+    // Filter available slots
+    const availableSlots = allSlots.filter(slot => !unavailableSlots.includes(slot) && !bookedSlots.includes(slot));
+
+    res.json({
+      success: true,
+      allSlots,
+      unavailableSlots,
+      bookedSlots,
+      availableSlots
+    });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @POST /api/doctors/session-files — upload text/audio/pdf after session
+router.post('/session-files', protect, authorize('service_provider'), upload.single('file'), async (req, res) => {
+  try {
+    const { patientId, appointmentId, title, description, fileType, isVisibleToPatient } = req.body;
+    if (!patientId) return res.status(400).json({ success: false, message: 'patientId is required' });
+
+    const report = await Report.create({
+      patientId,
+      doctorId: req.user._id,
+      appointmentId,
+      title: title || 'Session Document',
+      description: description || '',
+      type: 'general',
+      fileType: fileType || 'general',
+      fileUrl: req.file ? `/uploads/${req.file.filename}` : '',
+      isVisibleToPatient: isVisibleToPatient === 'true' || isVisibleToPatient === true
+    });
+
+    // Notify patient if visible
+    if (report.isVisibleToPatient) {
+      await createNotification({
+        userId: patientId,
+        type: 'report',
+        title: 'New Document Shared',
+        message: `Your counsellor has shared a new document: "${report.title}".`,
+        metadata: { appointmentId, fromUserId: req.user._id }
+      });
+    }
+
+    res.status(201).json({ success: true, report });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/doctors/reports/:id/visibility — toggle report visibility to patient
+router.put('/reports/:id/visibility', protect, authorize('service_provider'), async (req, res) => {
+  try {
+    const report = await Report.findOne({ _id: req.params.id, doctorId: req.user._id });
+    if (!report) return res.status(404).json({ success: false, message: 'Report not found' });
+
+    report.isVisibleToPatient = req.body.isVisibleToPatient;
+    await report.save();
+
+    if (req.body.isVisibleToPatient) {
+      await createNotification({
+        userId: report.patientId,
+        type: 'report',
+        title: 'Report Now Available',
+        message: `Your counsellor has made the report "${report.title}" available for you to view.`,
+        metadata: { fromUserId: req.user._id }
+      });
+    }
+
+    res.json({ success: true, message: `Report ${req.body.isVisibleToPatient ? 'visible' : 'hidden'} to patient` });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 

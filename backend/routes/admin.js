@@ -6,6 +6,8 @@ const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const Report = require('../models/Report');
+const Feedback = require('../models/Feedback');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @GET /api/admin/stats
 router.get('/stats', protect, authorize('admin'), async (req, res) => {
@@ -204,3 +206,62 @@ router.post('/admins', protect, authorize('admin'), async (req, res) => {
 });
 
 module.exports = router;
+
+// --- WAIVER MANAGEMENT ---
+
+// @GET /api/admin/waiver-requests — list all pending fee waiver requests
+router.get('/waiver-requests', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = { 'waiverData.requestWaiver': true };
+    if (status) filter['waiverData.status'] = status;
+    else filter['waiverData.status'] = 'pending';
+
+    const requests = await Appointment.find(filter)
+      .populate('patientId', 'name email phone profileImage')
+      .populate('doctorId', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, requests });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});
+
+// @PUT /api/admin/waiver-requests/:id — approve/reject waiver
+router.put('/waiver-requests/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { decision, concessionPercentage, adminNotes } = req.body;
+    if (!['approved', 'rejected'].includes(decision)) {
+      return res.status(400).json({ success: false, message: 'Decision must be approved or rejected' });
+    }
+
+    const appt = await Appointment.findById(req.params.id);
+    if (!appt) return res.status(404).json({ success: false, message: 'Appointment not found' });
+
+    appt.waiverData.status = decision;
+    appt.feeWaiverStatus = decision;
+    appt.adminNotes = adminNotes || '';
+
+    if (decision === 'approved') {
+      appt.concessionPercentage = concessionPercentage || 100;
+      const discountedFee = appt.fee * (1 - (appt.concessionPercentage / 100));
+      appt.fee = Math.round(discountedFee);
+    }
+
+    await appt.save();
+
+    // Notify patient
+    const statusText = decision === 'approved'
+      ? `Your fee waiver request has been approved${concessionPercentage ? ` with ${concessionPercentage}% concession` : ''}.`
+      : 'Your fee waiver request has been declined. Please proceed with payment.';
+
+    await createNotification({
+      userId: appt.patientId,
+      type: 'waiver',
+      title: `Fee Waiver ${decision === 'approved' ? 'Approved' : 'Declined'}`,
+      message: statusText,
+      metadata: { appointmentId: appt._id }
+    });
+
+    res.json({ success: true, message: `Waiver ${decision}`, appointment: appt });
+  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+});

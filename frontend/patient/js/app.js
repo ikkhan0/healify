@@ -125,6 +125,10 @@ document.getElementById('form-signup').addEventListener('submit', async (e) => {
       email: document.getElementById('signup-email').value,
       password: document.getElementById('signup-password').value,
       phone: document.getElementById('signup-phone').value,
+      age: document.getElementById('signup-age').value || undefined,
+      gender: document.getElementById('signup-gender').value || undefined,
+      city: document.getElementById('signup-city').value || undefined,
+      bloodGroup: document.getElementById('signup-blood').value || undefined,
       role: 'client'
     });
     if (res.success) {
@@ -486,6 +490,25 @@ function openBooking() {
     if (nameEl  && !nameEl.value)  nameEl.value  = currentUser.name  || '';
     if (phoneEl && !phoneEl.value) phoneEl.value = currentUser.phone || '';
     if (emailEl && !emailEl.value) emailEl.value = currentUser.email || '';
+    
+    // Fetch detailed profile to pre-fill demographics
+    api.get('/patients/profile').then(res => {
+      if (res.success && res.profile) {
+        const p = res.profile;
+        if (p.age && document.getElementById('intake-age')) document.getElementById('intake-age').value = p.age;
+        if (p.gender && document.querySelector(`input[name="intake-gender"][value="${p.gender.charAt(0).toUpperCase() + p.gender.slice(1)}"]`)) {
+          document.querySelector(`input[name="intake-gender"][value="${p.gender.charAt(0).toUpperCase() + p.gender.slice(1)}"]`).checked = true;
+        }
+        if (p.education && document.getElementById('intake-education')) document.getElementById('intake-education').value = p.education;
+        if (p.address && document.getElementById('intake-address')) document.getElementById('intake-address').value = p.address;
+        if (p.guardianName && document.getElementById('intake-guardian-name')) document.getElementById('intake-guardian-name').value = p.guardianName;
+        if (p.guardianContact && document.getElementById('intake-guardian-contact')) document.getElementById('intake-guardian-contact').value = p.guardianContact;
+        if (p.counsellorPreference && document.getElementById('intake-counsellor-pref')) document.getElementById('intake-counsellor-pref').value = p.counsellorPreference;
+        if (p.migrationStatus && document.querySelector(`input[name="intake-migration"][value="${p.migrationStatus}"]`)) {
+          document.querySelector(`input[name="intake-migration"][value="${p.migrationStatus}"]`).checked = true;
+        }
+      }
+    }).catch(e => console.error('Failed to pre-fill profile data', e));
   }
 }
 
@@ -516,21 +539,74 @@ function renderCalendar() {
   }
 
   window.calNav = (dir) => { viewMonth += dir; if (viewMonth > 11) { viewMonth = 0; viewYear++; } if (viewMonth < 0) { viewMonth = 11; viewYear--; } draw(); };
-  window.selectDate = (y, m, d) => { selectedDate = new Date(y, m, d); draw(); };
+  window.selectDate = (y, m, d) => { selectedDate = new Date(y, m, d); draw(); renderTimeSlots(); };
   draw();
 }
 
-function renderTimeSlots() {
-  const slots = ['09:00 AM','09:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','02:00 PM','02:30 PM','03:00 PM','03:30 PM','04:00 PM','04:30 PM'];
+async function renderTimeSlots() {
+  const container = document.getElementById('time-slots');
   selectedSlot = null;
-  document.getElementById('time-slots').innerHTML = slots.map(s =>
-    `<div class="time-slot" onclick="selectSlot(this,'${s}')">${s}</div>`
-  ).join('');
+
+  // If no doctor or no date selected, show default message
+  if (!selectedDoctor || !selectedDate) {
+    container.innerHTML = '<div style="text-align:center;color:#888;padding:20px;font-size:14px;">Please select a doctor and date to see available slots</div>';
+    return;
+  }
+
+  container.innerHTML = '<div style="text-align:center;padding:20px;color:#888;"><i class="fas fa-spinner fa-spin"></i> Loading slots...</div>';
+
+  try {
+    const dateStr = selectedDate.toISOString().split('T')[0];
+    const res = await fetch(`/api/doctors/${selectedDoctor._id}/available-slots?date=${dateStr}`);
+    const data = await res.json();
+
+    if (!data.success || !data.allSlots || data.allSlots.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:#888;padding:20px;font-size:14px;">No slots available on this day. The doctor may not be available on this date.</div>';
+      return;
+    }
+
+    const { allSlots, unavailableSlots, bookedSlots, availableSlots } = data;
+
+    container.innerHTML = allSlots.map(slot => {
+      const isBooked = bookedSlots.includes(slot);
+      const isUnavailable = unavailableSlots.includes(slot);
+      const isAvailable = availableSlots.includes(slot);
+
+      if (isBooked) {
+        return `<div class="time-slot booked" style="background:#ffe0e0;color:#c0392b;border-color:#e74c3c;cursor:not-allowed;opacity:0.7;" title="Already booked">
+          <i class="fas fa-times-circle" style="margin-right:4px;font-size:11px;"></i>${slot}
+        </div>`;
+      }
+      if (isUnavailable) {
+        return `<div class="time-slot unavailable" style="background:#f0f0f0;color:#999;border-color:#ddd;cursor:not-allowed;opacity:0.6;text-decoration:line-through;" title="Doctor unavailable">
+          ${slot}
+        </div>`;
+      }
+      return `<div class="time-slot available" onclick="selectSlot(this,'${slot}')" style="cursor:pointer;" title="Available">
+        ${slot}
+      </div>`;
+    }).join('');
+
+    // Show summary
+    const summaryHtml = `<div style="display:flex;gap:15px;margin-top:10px;font-size:12px;color:#888;flex-wrap:wrap;">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00b894;margin-right:4px;"></span>Available (${availableSlots.length})</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e74c3c;margin-right:4px;"></span>Booked (${bookedSlots.length})</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ccc;margin-right:4px;"></span>Unavailable (${unavailableSlots.length})</span>
+    </div>`;
+    container.insertAdjacentHTML('beforeend', summaryHtml);
+
+  } catch(e) {
+    console.error('Error loading slots:', e);
+    container.innerHTML = '<div style="text-align:center;color:#e74c3c;padding:20px;">Error loading slots. Please try again.</div>';
+  }
 }
 
 window.selectSlot = (el, slot) => {
   document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
+  el.style.background = '#0984e3';
+  el.style.color = '#fff';
+  el.style.borderColor = '#0984e3';
   selectedSlot = slot;
 };
 
@@ -1137,3 +1213,118 @@ window.uploadHealthRecord = async () => {
   } catch (err) { showToast('Error uploading record'); }
   finally { btn.disabled = false; btn.textContent = 'Upload Record'; }
 };
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+let notificationsVisible = false;
+
+window.toggleNotifications = async () => {
+  const dropdown = document.getElementById('notifications-dropdown');
+  if (!dropdown) return;
+  notificationsVisible = !notificationsVisible;
+  dropdown.style.display = notificationsVisible ? 'block' : 'none';
+  if (notificationsVisible) {
+    await fetchNotifications();
+  }
+};
+
+window.fetchNotifications = async () => {
+  const list = document.getElementById('notifications-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading-pulse">Loading...</div>';
+  
+  try {
+    const res = await api.get('/notifications');
+    if (res.success) {
+      updateNotificationBadge(res.unreadCount);
+      renderNotifications(res.notifications || []);
+    } else {
+      list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center;">Failed to load notifications</div>';
+    }
+  } catch (err) {
+    list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center;">Network error</div>';
+  }
+};
+
+window.pollNotifications = async () => {
+  if (!currentUser) return;
+  try {
+    const res = await api.get('/notifications?unreadOnly=true');
+    if (res.success) {
+      updateNotificationBadge(res.unreadCount);
+    }
+  } catch (err) {
+    // silently fail polling
+  }
+};
+
+function updateNotificationBadge(count) {
+  const badgeD = document.getElementById('desktop-notif-badge');
+  const badgeM = document.getElementById('mobile-notif-badge');
+  if (badgeD) {
+    badgeD.textContent = count;
+    badgeD.style.display = count > 0 ? 'block' : 'none';
+  }
+  if (badgeM) {
+    badgeM.textContent = count;
+    badgeM.style.display = count > 0 ? 'block' : 'none';
+  }
+}
+
+function renderNotifications(notifs) {
+  const list = document.getElementById('notifications-list');
+  if (!notifs.length) {
+    list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center; padding:20px 0;">No notifications</div>';
+    return;
+  }
+  
+  list.innerHTML = notifs.map(n => {
+    const isUnread = !n.isRead;
+    return `
+      <div style="background:${isUnread ? '#EAF4FC' : '#fff'}; border:1px solid #EAF4FC; padding:12px; border-radius:10px; font-size:13px; color:#112A61; cursor:pointer;" onclick="markNotificationRead('${n._id}', this)">
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+          <strong>${n.title}</strong>
+          ${isUnread ? '<span style="width:8px; height:8px; background:#1c78c0; border-radius:50%; display:inline-block;"></span>' : ''}
+        </div>
+        <div style="color:#666; line-height:1.4;">${n.message}</div>
+        <div style="color:#999; font-size:11px; margin-top:5px; text-align:right;">${new Date(n.createdAt).toLocaleDateString()}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.markNotificationRead = async (id, el) => {
+  try {
+    const res = await api.put(`/notifications/${id}/read`, {});
+    if (res.success) {
+      el.style.background = '#fff';
+      const dot = el.querySelector('span');
+      if (dot) dot.remove();
+      // Optimistically update count
+      const badgeD = document.getElementById('desktop-notif-badge');
+      if (badgeD && badgeD.style.display === 'block') {
+        let count = parseInt(badgeD.textContent) - 1;
+        updateNotificationBadge(count);
+      }
+    }
+  } catch (err) {
+    console.error('Mark read failed', err);
+  }
+};
+
+window.markAllNotificationsRead = async () => {
+  try {
+    const res = await api.put('/notifications/read-all', {});
+    if (res.success) {
+      updateNotificationBadge(0);
+      fetchNotifications();
+    }
+  } catch (err) {
+    showToast('Failed to mark all as read');
+  }
+};
+
+// Start polling if user logged in
+setTimeout(() => {
+  if (currentUser) pollNotifications();
+  setInterval(pollNotifications, 60000); // Check every minute
+}, 3000);

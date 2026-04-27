@@ -37,6 +37,10 @@ const appointmentSchema = new mongoose.Schema({
     residenceType: String,
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }
   },
+  feeWaiverStatus: { type: String, enum: ['none', 'pending', 'approved', 'rejected'], default: 'none' },
+  concessionPercentage: { type: Number, default: 0, min: 0, max: 100 },
+  adminNotes: { type: String, default: '' },
+  consentAccepted: { type: Boolean, default: false },
   receiptUrl: { type: String, default: '' } // For bank payment screenshot
 }, { timestamps: true });
 

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Services - TeleMind</title>
+  <meta name="description" content="TeleMind offers professional mental health services including counselling, psychological assessments, psychoeducation, and self-help strategies.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .services-hero {
+      background: linear-gradient(135deg, #0A2753 0%, #1c78c0 60%, #74b9ff 100%);
+      padding: 80px 4rem 60px;
+      color: #fff;
+      text-align: center;
+    }
+    .services-hero h1 { font-size: 2.8rem; margin-bottom: 15px; }
+    .services-hero p { font-size: 1.15rem; opacity: 0.9; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: -40px auto 60px;
+      padding: 0 4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .service-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-top: 4px solid transparent;
+    }
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    }
+    .service-card:nth-child(1) { border-top-color: #0984e3; }
+    .service-card:nth-child(2) { border-top-color: #00b894; }
+    .service-card:nth-child(3) { border-top-color: #6c5ce7; }
+    .service-card:nth-child(4) { border-top-color: #e17055; }
+    .service-card:nth-child(5) { border-top-color: #fdcb6e; }
+    .service-card:nth-child(6) { border-top-color: #00cec9; }
+
+    .service-icon {
+      width: 70px; height: 70px;
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #fff;
+      margin-bottom: 20px;
+    }
+    .service-card:nth-child(1) .service-icon { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+    .service-card:nth-child(2) .service-icon { background: linear-gradient(135deg, #00b894, #55efc4); }
+    .service-card:nth-child(3) .service-icon { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .service-card:nth-child(4) .service-icon { background: linear-gradient(135deg, #e17055, #fab1a0); }
+    .service-card:nth-child(5) .service-icon { background: linear-gradient(135deg, #fdcb6e, #ffeaa7); }
+    .service-card:nth-child(6) .service-icon { background: linear-gradient(135deg, #00cec9, #81ecec); }
+
+    .service-card h3 { color: #0A2753; font-size: 1.3rem; margin-bottom: 12px; }
+    .service-card p { color: #555; line-height: 1.7; font-size: 0.95rem; }
+    .service-card ul { list-style: none; padding: 0; margin-top: 15px; }
+    .service-card ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f4f8;
+      color: #444;
+      font-size: 0.9rem;
+    }
+    .service-card ul li i { color: #0984e3; margin-right: 8px; width: 16px; }
+
+    .cta-section {
+      background: linear-gradient(135deg, #EAF4FC 0%, #D4E9F7 100%);
+      padding: 60px 4rem;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .cta-section h2 { color: #0A2753; font-size: 2rem; margin-bottom: 15px; }
+    .cta-section p { color: #1C448E; font-size: 1.05rem; margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .btn-cta-large {
+      display: inline-block; padding: 15px 40px;
+      background: linear-gradient(135deg, #0984e3, #0A2753);
+      color: #fff; border: none; border-radius: 30px;
+      font-weight: 800; font-size: 1.1rem;
+      text-decoration: none; cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-cta-large:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(9, 132, 227, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .services-hero { padding: 60px 1.5rem 40px; }
+      .services-hero h1 { font-size: 2rem; }
+      .services-grid { padding: 0 1.5rem; grid-template-columns: 1fr; }
+      .cta-section { padding: 40px 1.5rem; }
+    }
+  </style>
+</head>
+<body class="landing-body" style="background:#F3FAFE">
+  <header class="top-nav" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); padding:1.5rem 4rem;">
+    <div class="logo">
+      <div class="logo-circle-small"></div>
+      <span class="logo-text" style="color:#fff">TeleMind</span>
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <i class="fas fa-bars" style="color:#fff"></i>
+    </div>
+    <nav class="nav-links">
+      <a href="/" style="color:#fff">Home</a>
+      <a href="/doctors.html" style="color:#fff">Find a Doctor</a>
+      <a href="/how-it-works.html" style="color:#fff">How it works</a>
+      <a href="/services.html" class="active" style="color:#fff; border-bottom:2px solid #fff;">Services</a>
+      <a href="/resources.html" style="color:#fff">Resources</a>
+      <a href="/about-us.html" style="color:#fff">About us</a>
+      <a href="/contact-us.html" style="color:#fff">Contact Us</a>
+    </nav>
+    <div class="nav-icons" style="color:#fff">
+      <a href="/role-selection.html" style="text-decoration:none; color:#1C448E; background:#fff; padding:10px 20px; border-radius:30px; font-weight:700; font-size:1rem;">Login / Signup</a>
+    </div>
+  </header>
+
+  <div class="services-hero">
+    <h1>Our Services</h1>
+    <p>TeleMind provides a comprehensive range of mental health and psychosocial support (MHPSS) services delivered by qualified professionals from the National Institute of Psychology.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-comments"></i></div>
+      <h3>Professional Counselling</h3>
+      <p>One-on-one sessions with licensed clinical psychologists and counsellors via secure video conferencing.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Individual therapy sessions</li>
+        <li><i class="fas fa-check"></i> Cognitive behavioral therapy (CBT)</li>
+        <li><i class="fas fa-check"></i> Trauma-focused counselling</li>
+        <li><i class="fas fa-check"></i> Crisis intervention support</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-clipboard-check"></i></div>
+      <h3>Psychological Assessments</h3>
+      <p>Comprehensive mental health screening and assessments using validated clinical tools.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Generic self-assessment (PHQ-9)</li>
+        <li><i class="fas fa-check"></i> Doctor-recommended specific assessments</li>
+        <li><i class="fas fa-check"></i> Progress tracking over time</li>
+        <li><i class="fas fa-check"></i> Confidential results with counsellor</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-brain"></i></div>
+      <h3>Psychoeducation</h3>
+      <p>Learn about common mental health conditions, their causes, and evidence-based coping strategies.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Depression & anxiety awareness</li>
+        <li><i class="fas fa-check"></i> Trauma & PTSD education</li>
+        <li><i class="fas fa-check"></i> Substance use information</li>
+        <li><i class="fas fa-check"></i> Suicide prevention resources</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-hand-holding-heart"></i></div>
+      <h3>Self-Help Strategies</h3>
+      <p>Guided techniques you can practice independently to manage stress, anxiety, and emotional well-being.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Deep breathing exercises</li>
+        <li><i class="fas fa-check"></i> Progressive muscle relaxation</li>
+        <li><i class="fas fa-check"></i> Mindfulness & guided imagery</li>
+        <li><i class="fas fa-check"></i> Grounding techniques (5-4-3-2-1)</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-volume-up"></i></div>
+      <h3>Speech & Remedial Therapy</h3>
+      <p>Specialized therapy services for communication disorders and learning difficulties.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Speech & language assessment</li>
+        <li><i class="fas fa-check"></i> Articulation therapy</li>
+        <li><i class="fas fa-check"></i> Learning disability support</li>
+        <li><i class="fas fa-check"></i> Remedial education planning</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon"><i class="fas fa-briefcase"></i></div>
+      <h3>Career Counselling</h3>
+      <p>Professional guidance for career planning, academic choices, and vocational development.</p>
+      <ul>
+        <li><i class="fas fa-check"></i> Career aptitude assessment</li>
+        <li><i class="fas fa-check"></i> Academic planning sessions</li>
+        <li><i class="fas fa-check"></i> Workplace stress management</li>
+        <li><i class="fas fa-check"></i> Professional development guidance</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>Ready to Start Your Journey?</h2>
+    <p>Take the first step toward better mental health. Our certified professionals are here to support you.</p>
+    <a href="/role-selection.html" class="btn-cta-large">Get Started Today</a>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 TeleMind. All rights reserved.</p>
+  </footer>
+
+  <div style="position:fixed;bottom:25px;left:25px;z-index:9999;">
+    <button onclick="window.i18n?.switchLanguage(window.i18n?.getCurrentLang()==='en'?'ur':'en')" style="background:linear-gradient(135deg,#0984e3,#0A2753);color:#fff;border:none;padding:10px 18px;border-radius:25px;font-size:14px;cursor:pointer;box-shadow:0 4px 15px rgba(9,132,227,0.3);font-weight:700;">اردو / EN</button>
+  </div>
+
+  <script src="/shared/js/settings-sync.js"></script>
+  <script src="/shared/js/i18n.js"></script>
+  <script>
+    function toggleNav() {
+      document.querySelector('.top-nav').classList.toggle('mobile-nav-active');
+    }
+  </script>
+</body>
+</html>

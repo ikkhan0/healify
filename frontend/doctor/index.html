@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -6,9 +6,10 @@
 <title>TeleMind - Doctor Portal</title>
 <base href="/doctor/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link rel="stylesheet" href="css/style.css" />
+<style>[dir="rtl"] body { font-family: 'Noto Nastaliq Urdu', 'Plus Jakarta Sans', sans-serif !important; }</style>
 </head>
 <body>
 
@@ -306,15 +307,34 @@
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search TeleMind" />
     </div>
-    <div class="nav-icons" style="display:flex; gap:15px; font-size:24px; color:#112A61; cursor:pointer;">
-      <i class="fas fa-chevron-left"></i>
-      <i class="fas fa-chevron-right"></i>
+    <div class="dash-actions" style="display:flex; align-items:center; gap:20px;">
+      <div class="notif-bell" style="position:relative; cursor:pointer;" onclick="toggleNotifications()">
+        <i class="far fa-bell" style="font-size:20px; color:#112A61;"></i>
+        <span class="notif-badge" id="desktop-notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#e74c3c; color:white; font-size:10px; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-weight:bold;">0</span>
+      </div>
     </div>
   </div>
 
   <div class="app-header mobile-only">
     <div><p>Good Morning,</p><strong id="doc-name">Doctor</strong></div>
-    <div class="app-avatar" onclick="navigate('screen-profile')"><img id="doc-avatar" src="https://ui-avatars.com/api/?name=Dr&background=00509D&color=fff" alt="Avatar" /></div>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <div class="notif-bell" style="position:relative; cursor:pointer;" onclick="toggleNotifications()">
+        <i class="far fa-bell" style="font-size:20px; color:#112A61;"></i>
+        <span class="notif-badge" id="mobile-notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#e74c3c; color:white; font-size:10px; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-weight:bold;">0</span>
+      </div>
+      <div class="app-avatar" onclick="navigate('screen-profile')"><img id="doc-avatar" src="https://ui-avatars.com/api/?name=Dr&background=00509D&color=fff" alt="Avatar" /></div>
+    </div>
+  </div>
+
+  <!-- Notification Dropdown -->
+  <div id="notifications-dropdown" class="figma-card" style="display:none; position:absolute; right:20px; top:80px; width:320px; z-index:1000; padding:15px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h3 style="margin:0; font-size:16px; color:#112A61;">Notifications</h3>
+      <button onclick="markAllNotificationsRead()" style="background:none; border:none; color:#1c78c0; cursor:pointer; font-size:12px;">Mark all read</button>
+    </div>
+    <div id="notifications-list" style="max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+      <div class="loading-pulse">Loading...</div>
+    </div>
   </div>
 
   <div class="dash-content-wrap">
@@ -470,9 +490,35 @@
 
   <div style="height:80px"></div>
 </div>
+
+<!-- SLOTS MANAGEMENT -->
+<div id="screen-slots" class="screen app-screen">
+  <div class="app-header" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Slot Management</h2>
+  </div>
+  <div class="dash-content-wrap">
+    <div style="background:#fff; border-radius:15px; padding:20px; box-shadow:0 5px 20px rgba(0,0,0,0.05);">
+      <h3 style="color:#112A61; margin-bottom:15px; font-size:18px;">Select Unavailable Dates & Slots</h3>
+      <p style="color:#666; font-size:14px; margin-bottom:20px;">Mark the slots you are unavailable for. Patients will not be able to book these slots.</p>
+      
+      <!-- Calendar Widget -->
+      <div class="cal-widget" style="width:100%; max-width:100%; box-shadow:none; padding:0; border:1px solid #EAF4FC; margin-bottom:20px;">
+        <div id="slots-calendar" class="cal-inner">
+          <!-- Calendar filled by JS -->
+        </div>
+      </div>
+      
+      <div id="slots-time-container" style="display:none;">
+        <h4 style="color:#112A61; font-size:16px; margin-bottom:15px;" id="slots-selected-date">Slots for Selected Date</h4>
+        <div id="slots-time-list" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <!-- Time slots filled by JS -->
+        </div>
+        <button class="btn-primary full" onclick="saveUnavailableSlots()">Save Availability</button>
+      </div>
+    </div>
+  </div>
   <div style="height:80px"></div>
 </div>
-
 <!-- ALL REPORTS -->
 <div id="screen-all-reports" class="screen app-screen">
   <div class="app-header" style="display:flex; justify-content:space-between; align-items:center;">
@@ -632,7 +678,8 @@
     <span class="nav-brand" style="font-weight:800;font-size:14px;color:#112A61;text-align:center;display:block;">TeleMind</span>
   </div>
   <a class="nav-item" id="nav-home" onclick="navigate('screen-dashboard')"><i class="fas fa-home"></i><span>Home</span></a>
-  <a class="nav-item" id="nav-appointments" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i><span>Appointment</span></a>
+  <a class="nav-item" id="nav-appointments" onclick="navigate('screen-appointments')"><i class="fas fa-calendar-check"></i><span>Appts</span></a>
+  <a class="nav-item" id="nav-slots" onclick="navigate('screen-slots')"><i class="fas fa-clock"></i><span>Slots</span></a>
   <a class="nav-item" id="nav-reports" onclick="navigate('screen-all-reports')"><i class="far fa-file-alt"></i><span>Reports</span></a>
   <a class="nav-item" id="nav-profile" onclick="navigate('screen-profile')"><i class="far fa-user-circle"></i><span>Profile</span></a>
   <a class="nav-item desktop-only" onclick="showToast('Support: support@tele-mind.com')"><i class="far fa-question-circle"></i><span>Support</span></a>
@@ -716,12 +763,33 @@
    </div>
 </div>
 
+<!-- Floating Language Toggle / Google Translate -->
+<div id="google_translate_element" style="position:fixed;bottom:80px;left:15px;z-index:9998;background:rgba(255,255,255,0.8);border-radius:10px;padding:5px;"></div>
+
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="/js/settings-sync.js"></script>
+<script src="/shared/js/i18n.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+  }
+  
+  // RTL Mutator
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      const html = document.documentElement;
+      if (html.classList.contains('translated-rtl') || html.getAttribute('lang') === 'ur') {
+        html.setAttribute('dir', 'rtl');
+      } else {
+        html.setAttribute('dir', 'ltr');
+      }
+    });
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-
-
-

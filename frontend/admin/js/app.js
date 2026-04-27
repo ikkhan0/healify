@@ -82,6 +82,7 @@ function showSection(name, linkEl) {
   if (name === 'patients') loadPatients();
   if (name === 'doctors') loadDoctors();
   if (name === 'appointments') loadAppointments();
+  if (name === 'waivers') loadWaivers();
   if (name === 'reports') loadReports();
   if (name === 'settings') loadSettings();
 }
@@ -563,4 +564,69 @@ async function submitChangeRole(e) {
       showToast(res.message || 'Error updating role');
     }
   } catch (e) { showToast('Error updating role'); }
+}
+
+// ─── Fee Waivers ────────────────────────────────────────────────────────────
+async function loadWaivers() {
+  const tbody = document.getElementById('waivers-tbody');
+  tbody.innerHTML = '<tr><td colspan="8" class="loading-row">Loading waivers...</td></tr>';
+  try {
+    const res = await api.get('/admin/waiver-requests');
+    const waivers = res.requests || [];
+    renderWaivers(waivers);
+  } catch (e) {
+    tbody.innerHTML = '<tr><td colspan="8" class="loading-row" style="color:red">Failed to load waiver requests</td></tr>';
+  }
+}
+
+function renderWaivers(waivers) {
+  const tbody = document.getElementById('waivers-tbody');
+  if (!waivers.length) { tbody.innerHTML = '<tr><td colspan="8" class="loading-row">No pending waiver requests</td></tr>'; return; }
+  tbody.innerHTML = waivers.map((w, i) => {
+    const p = w.patientId || {};
+    const d = w.doctorId || {};
+    const date = new Date(w.date).toLocaleDateString('en', {month:'short',day:'numeric',year:'numeric'});
+    const wd = w.waiverData || {};
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${p.name || '—'}</td>
+      <td>${d.name ? 'Dr. '+d.name : '—'}</td>
+      <td>${date} <small>${w.timeSlot}</small></td>
+      <td>RS ${w.fee || 0}</td>
+      <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${wd.reason || 'No reason provided'}">${wd.reason || '—'}</div></td>
+      <td><span class="badge badge-${wd.status || 'pending'}">${wd.status || 'pending'}</span></td>
+      <td>
+        ${wd.status === 'pending' ? `
+          <button class="action-btn" style="background:#2ecc71; color:#fff" title="Approve" onclick="processWaiver('${w._id}', 'approved')"><i class="fas fa-check"></i></button>
+          <button class="action-btn" style="background:#e74c3c; color:#fff" title="Reject" onclick="processWaiver('${w._id}', 'rejected')"><i class="fas fa-times"></i></button>
+        ` : '—'}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function processWaiver(id, decision) {
+  let concession = 100;
+  if (decision === 'approved') {
+    const pct = prompt('Enter concession percentage (0-100)', '100');
+    if (pct === null) return; // cancelled
+    concession = parseInt(pct, 10) || 100;
+  } else {
+    if (!confirm('Are you sure you want to reject this request?')) return;
+  }
+
+  try {
+    const res = await api.put(`/admin/waiver-requests/${id}`, {
+      decision,
+      concessionPercentage: concession
+    });
+    if (res.success) {
+      showToast(`Waiver request ${decision} ✅`);
+      loadWaivers();
+    } else {
+      showToast(res.message || 'Error processing waiver');
+    }
+  } catch (e) {
+    showToast('Network error');
+  }
 }

@@ -49,15 +49,26 @@ app.use('/api/doctors', require('./routes/doctors'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/reports', require('./routes/reports'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/assessments', require('./routes/assessments'));
+app.use('/api/feedback', require('./routes/feedback'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ success: true, message: 'TeleMind API is running 🏥' }));
 
-// ─── Socket.io – Video Call Signaling ──────────────────────────────────────
+// ─── Socket.io – Video Call Signaling + Notifications ──────────────────────
 const rooms = {};
 
 io.on('connection', (socket) => {
   console.log(`🔌 Socket connected: ${socket.id}`);
+
+  // Join user-specific room for notifications
+  socket.on('join-user', ({ userId }) => {
+    if (userId) {
+      socket.join(`user_${userId}`);
+      console.log(`👤 User ${userId} joined notification room`);
+    }
+  });
 
   socket.on('join-room', ({ roomId, userId, userName }) => {
     socket.join(roomId);
@@ -86,6 +97,9 @@ io.on('connection', (socket) => {
   });
 });
 
+// Make io accessible to routes for real-time notifications
+app.set('io', io);
+
 // For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
@@ -94,3 +108,4 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Export for Vercel
 module.exports = app;
+

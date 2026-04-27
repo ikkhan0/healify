@@ -7,6 +7,7 @@
 <base href="/admin/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -53,6 +54,7 @@
       <a class="nav-link" onclick="showSection('patients',this)"><i class="fas fa-users"></i><span>Patients</span></a>
       <a class="nav-link" onclick="showSection('doctors',this)"><i class="fas fa-user-md"></i><span>Doctors</span></a>
       <a class="nav-link" onclick="showSection('appointments',this)"><i class="fas fa-calendar-alt"></i><span>Appointments</span></a>
+      <a class="nav-link" onclick="showSection('waivers',this)"><i class="fas fa-hand-holding-usd"></i><span>Fee Waivers</span></a>
       <a class="nav-link" onclick="showSection('reports',this)"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
       <a class="nav-link" onclick="showSection('settings',this)"><i class="fas fa-cog"></i><span>Settings</span></a>
     </nav>
@@ -181,6 +183,19 @@
         <table class="data-table">
           <thead><tr><th>#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Type</th><th>Fee</th><th>Status</th><th>Action</th></tr></thead>
           <tbody id="appts-tbody"><tr><td colspan="9" class="loading-row">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── FEE WAIVERS SECTION ───────────────────────────────────────────── -->
+    <section id="section-waivers" class="section">
+      <div class="section-header">
+        <div><h2>Fee Waiver Requests</h2><p>Review and manage patient requests for fee concessions</p></div>
+      </div>
+      <div class="card table-card">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Fee</th><th>Request Details</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="waivers-tbody"><tr><td colspan="8" class="loading-row">Loading...</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -425,8 +440,30 @@
   </div>
 </div>
 
+<div id="google_translate_element" style="position:fixed;bottom:25px;left:25px;z-index:9999;background:rgba(255,255,255,0.8);border-radius:10px;padding:5px;"></div>
+
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script src="/shared/js/settings-sync.js"></script>
+<script src="/shared/js/i18n.js"></script>
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+  }
+  
+  // RTL Mutator
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      const html = document.documentElement;
+      if (html.classList.contains('translated-rtl') || html.getAttribute('lang') === 'ur') {
+        html.setAttribute('dir', 'rtl');
+      } else {
+        html.setAttribute('dir', 'ltr');
+      }
+    });
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

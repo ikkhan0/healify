@@ -17,7 +17,9 @@ const generateToken = (id) => {
 // @POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role, phone, specialty, country } = req.body;
+    const { name, email, password, role, phone, specialty, country,
+            age, gender, bloodGroup, education, address, city, province,
+            guardianName, guardianContact, migrationStatus, dateOfBirth } = req.body;
     if (!name || !email || !password || !role) return res.status(400).json({ success: false, message: 'All fields required' });
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ success: false, message: 'Email already registered' });
@@ -27,7 +29,20 @@ router.post('/register', async (req, res) => {
     if (role === 'service_provider') {
       await Doctor.create({ userId: user._id, specialty: specialty || 'General Services', country: country || '' });
     } else if (role === 'client') {
-      await Patient.create({ userId: user._id });
+      await Patient.create({
+        userId: user._id,
+        age: age || undefined,
+        dateOfBirth: dateOfBirth || undefined,
+        gender: gender || undefined,
+        bloodGroup: bloodGroup || '',
+        education: education || '',
+        address: address || '',
+        city: city || '',
+        province: province || '',
+        guardianName: guardianName || '',
+        guardianContact: guardianContact || '',
+        migrationStatus: migrationStatus || ''
+      });
     }
 
     res.status(201).json({ success: true, message: 'Registered! Please verify your email.', userId: user._id });

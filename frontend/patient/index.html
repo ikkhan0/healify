@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -6,9 +6,12 @@
 <title>TeleMind - Patient Portal</title>
 <base href="/patient/">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link rel="stylesheet" href="css/style.css" />
+<style>
+  [dir="rtl"] body { font-family: 'Noto Nastaliq Urdu', 'Plus Jakarta Sans', sans-serif !important; }
+</style>
 </head>
 <body>
 
@@ -202,13 +205,40 @@
                <label>Email Address</label>
                <input type="email" id="signup-email" required />
             </div>
-            <div class="figma-input-group">
-               <label>Password (min 6 chars)</label>
-               <input type="password" id="signup-password" required minlength="6" />
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="figma-input-group">
+                 <label>Password (min 6 chars)</label>
+                 <input type="password" id="signup-password" required minlength="6" />
+              </div>
+              <div class="figma-input-group">
+                 <label>Phone Number</label>
+                 <input type="tel" id="signup-phone" />
+              </div>
             </div>
-            <div class="figma-input-group">
-               <label>Phone Number</label>
-               <input type="tel" id="signup-phone" />
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="figma-input-group">
+                 <label>Age</label>
+                 <input type="number" id="signup-age" placeholder="Optional" />
+              </div>
+              <div class="figma-input-group">
+                 <label>Gender</label>
+                 <select id="signup-gender" style="width:100%; padding:15px; border-radius:12px; border:1px solid #c7ecee; font-family:inherit; outline:none; background:#F9FCFF;">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                 </select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="figma-input-group">
+                 <label>City</label>
+                 <input type="text" id="signup-city" placeholder="Optional" />
+              </div>
+              <div class="figma-input-group">
+                 <label>Blood Group</label>
+                 <input type="text" id="signup-blood" placeholder="e.g. O+" />
+              </div>
             </div>
             <p id="signup-err" class="err-msg"></p>
             <button type="submit" class="btn-figma">Sign Up</button>
@@ -425,9 +455,11 @@
       <i class="fas fa-search"></i>
       <input type="text" id="search-input" placeholder="Search TeleMind..." oninput="searchDoctors(this.value)" />
     </div>
-    <div class="auth-nav-arrows">
-      <i class="fas fa-chevron-left"></i>
-      <i class="fas fa-chevron-right"></i>
+    <div class="dash-actions" style="display:flex; align-items:center; gap:20px;">
+      <div class="notif-bell" style="position:relative; cursor:pointer;" onclick="toggleNotifications()">
+        <i class="far fa-bell" style="font-size:20px; color:#112A61;"></i>
+        <span class="notif-badge" id="desktop-notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#e74c3c; color:white; font-size:10px; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-weight:bold;">0</span>
+      </div>
     </div>
   </div>
 
@@ -436,8 +468,25 @@
       <p>Hi, <strong id="user-name-display">Friend</strong> &#128075;</p>
       <span>How are you feeling today?</span>
     </div>
-    <div class="app-avatar" onclick="navigate('screen-profile')">
-      <img id="home-avatar" src="assets/avatar.svg" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=00509D&color=fff'" />
+    <div style="display:flex; align-items:center; gap:15px;">
+      <div class="notif-bell" style="position:relative; cursor:pointer;" onclick="toggleNotifications()">
+        <i class="far fa-bell" style="font-size:20px; color:#112A61;"></i>
+        <span class="notif-badge" id="mobile-notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#e74c3c; color:white; font-size:10px; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-weight:bold;">0</span>
+      </div>
+      <div class="app-avatar" onclick="navigate('screen-profile')">
+        <img id="home-avatar" src="assets/avatar.svg" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=00509D&color=fff'" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Dropdown -->
+  <div id="notifications-dropdown" class="figma-card" style="display:none; position:absolute; right:20px; top:80px; width:320px; z-index:1000; padding:15px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h3 style="margin:0; font-size:16px; color:#112A61;">Notifications</h3>
+      <button onclick="markAllNotificationsRead()" style="background:none; border:none; color:#1c78c0; cursor:pointer; font-size:12px;">Mark all read</button>
+    </div>
+    <div id="notifications-list" style="max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+      <div class="loading-pulse">Loading...</div>
     </div>
   </div>
 
@@ -973,12 +1022,65 @@
   </div>
 </div>
 
+<!-- Floating Language Toggle -->
+<div id="lang-toggle-float" style="position:fixed;bottom:80px;left:15px;z-index:9998;">
+  <button onclick="window.i18n?.switchLanguage(window.i18n?.getCurrentLang()==='en'?'ur':'en')" style="background:linear-gradient(135deg,#0984e3,#0A2753);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;box-shadow:0 4px 15px rgba(9,132,227,0.3);font-weight:700;">
+    اردو / EN
+  </button>
+</div>
+
+<!-- Floating Emergency Button -->
+<div id="google_translate_element" style="position:fixed;bottom:80px;left:15px;z-index:9998;background:rgba(255,255,255,0.8);border-radius:10px;padding:5px;"></div>
+
+<div id="emergency-float" style="position:fixed;bottom:80px;right:15px;z-index:9998;">
+  <button onclick="document.getElementById('emergency-modal-patient').style.display='flex'" style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;width:48px;height:48px;border-radius:50%;font-size:20px;cursor:pointer;box-shadow:0 4px 15px rgba(231,76,60,0.3);animation:pulse-emer 2s infinite;">
+    <i class="fas fa-phone-alt"></i>
+  </button>
+</div>
+
+<!-- Emergency Modal -->
+<div id="emergency-modal-patient" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;padding:30px;max-width:380px;width:90%;text-align:center;">
+    <div style="width:50px;height:50px;border-radius:50%;background:#ffe0e0;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#e74c3c;"><i class="fas fa-exclamation-triangle"></i></div>
+    <h3 style="color:#c0392b;margin-bottom:8px;">Emergency Help</h3>
+    <p style="color:#555;font-size:0.9rem;margin-bottom:15px;">If you or someone you know is in immediate danger, contact emergency services.</p>
+    <div style="text-align:left;margin-bottom:15px;">
+      <div style="padding:10px;background:#f8f9fa;border-radius:8px;margin-bottom:8px;"><strong>Umang Helpline</strong><br><a href="tel:0311-7786264" style="color:#0984e3;">0311-7786264</a></div>
+      <div style="padding:10px;background:#f8f9fa;border-radius:8px;margin-bottom:8px;"><strong>Rozan Counselling</strong><br><a href="tel:0800-22-444" style="color:#0984e3;">0800-22-444</a></div>
+      <div style="padding:10px;background:#f8f9fa;border-radius:8px;"><strong>Emergency</strong><br><a href="tel:1122" style="color:#0984e3;">1122</a></div>
+    </div>
+    <button onclick="document.getElementById('emergency-modal-patient').style.display='none'" style="padding:10px 25px;background:#e74c3c;color:#fff;border:none;border-radius:20px;cursor:pointer;font-weight:700;">Close</button>
+  </div>
+</div>
+
+<style>
+  @keyframes pulse-emer { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+</style>
+
 <script src="/js/settings-sync.js"></script>
+<script src="/shared/js/i18n.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+  }
+  
+  // RTL Mutator
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      const html = document.documentElement;
+      if (html.classList.contains('translated-rtl') || html.getAttribute('lang') === 'ur') {
+        html.setAttribute('dir', 'rtl');
+      } else {
+        html.setAttribute('dir', 'ltr');
+      }
+    });
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-
-
-
 

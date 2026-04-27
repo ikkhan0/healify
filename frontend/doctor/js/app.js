@@ -56,6 +56,10 @@ window.navigate = (screenId) => {
     document.getElementById('nav-reports')?.classList.add('active');
     loadAllReports();
   }
+  if (screenId === 'screen-slots') {
+    document.getElementById('nav-slots')?.classList.add('active');
+    if (window.loadSlotsManager) window.loadSlotsManager();
+  }
   if (screenId === 'screen-reset-password') {
     document.getElementById('reset-step-1').style.display = 'block';
     document.getElementById('reset-step-2').style.display = 'none';
@@ -519,6 +523,7 @@ window.renderPatients = (patients) => {
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
         <button class="btn-figma-small" style="background:#112A61; height:36px; padding:0 15px;" onclick="window.loadPatientReports('${p._id}', '${p.name}')">View Reports</button>
+        <button class="btn-figma-small" style="background:#8e44ad; height:36px; padding:0 15px;" onclick="window.recommendAssessment('${p._id}', '${p.name}')"><i class="fas fa-clipboard-list"></i> Assess</button>
         <button class="btn-figma-small" style="background:#1c78c0; height:36px; padding:0 15px;" onclick="window.generateManualReport('${p._id}', '${p.name}')"><i class="fas fa-plus"></i> Report</button>
       </div>
     </div>`;
@@ -556,6 +561,25 @@ window.loadPatientReports = async (patientId, patientName) => {
       document.getElementById('patient-reports-list').innerHTML = '<p style="color:red">Error loading reports.</p>';
    }
 }
+
+window.recommendAssessment = async (patientId, patientName) => {
+  if (!confirm(`Are you sure you want to recommend a mental health assessment to ${patientName}?`)) return;
+  try {
+    const res = await api.post('/assessments', {
+      patientId,
+      title: 'Mental Health Self-Assessment (PHQ-9)'
+    });
+    if (res.success) {
+      showToast('Assessment recommended ✅');
+    } else {
+      showToast(res.message || 'Failed to recommend assessment');
+    }
+  } catch (err) {
+    console.error('Recommend Assessment Error:', err);
+    showToast('Network error');
+  }
+};
+
 
 // ─── Video Call ───────────────────────────────────────────────────────────────
 window.joinVideoCall = async (roomId, patientName) => {
@@ -790,3 +814,249 @@ window.loadAllReports = async () => {
     }
   } catch(e) { container.innerHTML = '<div class="empty-state">Error loading reports</div>'; }
 };
+
+// ─── Slot Management ──────────────────────────────────────────────────────────
+let slotSelectedDate = null;
+let doctorUnavailableSlots = [];
+let allDoctorSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'];
+let currentViewYear = new Date().getFullYear();
+let currentViewMonth = new Date().getMonth();
+
+window.loadSlotsManager = async () => {
+  try {
+    const res = await api.get('/doctors/unavailable-slots');
+    if (res.success) {
+      doctorUnavailableSlots = res.unavailableSlots || [];
+    }
+    slotSelectedDate = null;
+    document.getElementById('slots-time-container').style.display = 'none';
+    renderSlotsCalendar();
+  } catch(e) {
+    console.error('Failed to load unavailable slots', e);
+    showToast('Failed to load slots');
+  }
+};
+
+window.renderSlotsCalendar = () => {
+  const cal = document.getElementById('slots-calendar');
+  if (!cal) return;
+  const now = new Date();
+  const firstDay = new Date(currentViewYear, currentViewMonth, 1).getDay();
+  const daysInMonth = new Date(currentViewYear, currentViewMonth + 1, 0).getDate();
+  const monthName = new Date(currentViewYear, currentViewMonth).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  
+  let html = `<div class="cal-header"><button class="cal-nav-btn" onclick="slotsCalNav(-1)">‹</button><h4>${monthName}</h4><button class="cal-nav-btn" onclick="slotsCalNav(1)">›</button></div>
+    <div class="cal-days-header"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+    <div class="cal-grid">`;
+  
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day other-month"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(currentViewYear, currentViewMonth, d);
+    const isToday = date.toDateString() === now.toDateString();
+    const isPast = date < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const isSel = slotSelectedDate && date.toDateString() === slotSelectedDate.toDateString();
+    
+    // Check if this date has any unavailable slots
+    const hasUnavail = doctorUnavailableSlots.some(s => {
+      const ud = new Date(s.date);
+      return ud.getFullYear() === date.getFullYear() && ud.getMonth() === date.getMonth() && ud.getDate() === date.getDate();
+    });
+    
+    html += `<div class="cal-day${isToday?' today':''}${isPast?' disabled':''}${isSel?' selected':''}" onclick="${isPast ? '' : `selectSlotDate(${currentViewYear},${currentViewMonth},${d})`}">
+      ${d}
+      ${hasUnavail ? '<span style="display:block;width:6px;height:6px;border-radius:50%;background:#e74c3c;margin:2px auto 0;"></span>' : ''}
+    </div>`;
+  }
+  html += '</div>';
+  cal.innerHTML = html;
+};
+
+window.slotsCalNav = (dir) => { 
+  currentViewMonth += dir; 
+  if (currentViewMonth > 11) { currentViewMonth = 0; currentViewYear++; } 
+  if (currentViewMonth < 0) { currentViewMonth = 11; currentViewYear--; } 
+  renderSlotsCalendar(); 
+};
+
+window.selectSlotDate = (y, m, d) => { 
+  slotSelectedDate = new Date(y, m, d); 
+  renderSlotsCalendar(); 
+  
+  const container = document.getElementById('slots-time-container');
+  const dateStr = slotSelectedDate.toLocaleDateString('en', { weekday: 'long', month: 'short', day: 'numeric' });
+  document.getElementById('slots-selected-date').textContent = `Slots for ${dateStr}`;
+  container.style.display = 'block';
+  
+  // Find currently unavailable slots for this date
+  const unavail = doctorUnavailableSlots.find(s => {
+    const ud = new Date(s.date);
+    return ud.getFullYear() === y && ud.getMonth() === m && ud.getDate() === d;
+  });
+  
+  const selectedSlots = unavail ? unavail.slots : [];
+  
+  const list = document.getElementById('slots-time-list');
+  list.innerHTML = allDoctorSlots.map(slot => {
+    const isSel = selectedSlots.includes(slot);
+    return `<div class="time-slot ${isSel ? 'selected' : ''}" onclick="toggleSlotSelection(this)" data-slot="${slot}" style="cursor:pointer; border:1px solid ${isSel ? '#e74c3c' : '#EAF4FC'}; background:${isSel ? '#ffe0e0' : '#fff'}; color:${isSel ? '#c0392b' : '#112A61'};">
+      ${slot}
+    </div>`;
+  }).join('');
+};
+
+window.toggleSlotSelection = (el) => {
+  const isSel = el.classList.contains('selected');
+  if (isSel) {
+    el.classList.remove('selected');
+    el.style.border = '1px solid #EAF4FC';
+    el.style.background = '#fff';
+    el.style.color = '#112A61';
+  } else {
+    el.classList.add('selected');
+    el.style.border = '1px solid #e74c3c';
+    el.style.background = '#ffe0e0';
+    el.style.color = '#c0392b';
+  }
+};
+
+window.saveUnavailableSlots = async () => {
+  if (!slotSelectedDate) return;
+  
+  const selectedEls = document.querySelectorAll('#slots-time-list .time-slot.selected');
+  const selectedSlots = Array.from(selectedEls).map(el => el.getAttribute('data-slot'));
+  
+  const dateStr = slotSelectedDate.toISOString().split('T')[0];
+  
+  try {
+    const res = await api.put('/doctors/unavailable-slots', {
+      date: dateStr,
+      slots: selectedSlots
+    });
+    
+    if (res.success) {
+      showToast('Availability updated ✅');
+      doctorUnavailableSlots = res.unavailableSlots;
+      renderSlotsCalendar();
+    } else {
+      showToast(res.message || 'Failed to save slots');
+    }
+  } catch(e) {
+    console.error('Save slots error:', e);
+    showToast('Network error');
+  }
+};
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+let notificationsVisible = false;
+
+window.toggleNotifications = async () => {
+  const dropdown = document.getElementById('notifications-dropdown');
+  if (!dropdown) return;
+  notificationsVisible = !notificationsVisible;
+  dropdown.style.display = notificationsVisible ? 'block' : 'none';
+  if (notificationsVisible) {
+    await fetchNotifications();
+  }
+};
+
+window.fetchNotifications = async () => {
+  const list = document.getElementById('notifications-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading-pulse">Loading...</div>';
+  
+  try {
+    const res = await api.get('/notifications');
+    if (res.success) {
+      updateNotificationBadge(res.unreadCount);
+      renderNotifications(res.notifications || []);
+    } else {
+      list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center;">Failed to load notifications</div>';
+    }
+  } catch (err) {
+    list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center;">Network error</div>';
+  }
+};
+
+window.pollNotifications = async () => {
+  if (!currentDoctor) return;
+  try {
+    const res = await api.get('/notifications?unreadOnly=true');
+    if (res.success) {
+      updateNotificationBadge(res.unreadCount);
+    }
+  } catch (err) {
+    // silently fail polling
+  }
+};
+
+function updateNotificationBadge(count) {
+  const badgeD = document.getElementById('desktop-notif-badge');
+  const badgeM = document.getElementById('mobile-notif-badge');
+  if (badgeD) {
+    badgeD.textContent = count;
+    badgeD.style.display = count > 0 ? 'block' : 'none';
+  }
+  if (badgeM) {
+    badgeM.textContent = count;
+    badgeM.style.display = count > 0 ? 'block' : 'none';
+  }
+}
+
+function renderNotifications(notifs) {
+  const list = document.getElementById('notifications-list');
+  if (!notifs.length) {
+    list.innerHTML = '<div style="color:#666; font-size:13px; text-align:center; padding:20px 0;">No notifications</div>';
+    return;
+  }
+  
+  list.innerHTML = notifs.map(n => {
+    const isUnread = !n.isRead;
+    return `
+      <div style="background:${isUnread ? '#EAF4FC' : '#fff'}; border:1px solid #EAF4FC; padding:12px; border-radius:10px; font-size:13px; color:#112A61; cursor:pointer;" onclick="markNotificationRead('${n._id}', this)">
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+          <strong>${n.title}</strong>
+          ${isUnread ? '<span style="width:8px; height:8px; background:#1c78c0; border-radius:50%; display:inline-block;"></span>' : ''}
+        </div>
+        <div style="color:#666; line-height:1.4;">${n.message}</div>
+        <div style="color:#999; font-size:11px; margin-top:5px; text-align:right;">${new Date(n.createdAt).toLocaleDateString()}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.markNotificationRead = async (id, el) => {
+  try {
+    const res = await api.put(`/notifications/${id}/read`, {});
+    if (res.success) {
+      el.style.background = '#fff';
+      const dot = el.querySelector('span');
+      if (dot) dot.remove();
+      // Optimistically update count
+      const badgeD = document.getElementById('desktop-notif-badge');
+      if (badgeD && badgeD.style.display === 'block') {
+        let count = parseInt(badgeD.textContent) - 1;
+        updateNotificationBadge(count);
+      }
+    }
+  } catch (err) {
+    console.error('Mark read failed', err);
+  }
+};
+
+window.markAllNotificationsRead = async () => {
+  try {
+    const res = await api.put('/notifications/read-all', {});
+    if (res.success) {
+      updateNotificationBadge(0);
+      fetchNotifications();
+    }
+  } catch (err) {
+    showToast('Failed to mark all as read');
+  }
+};
+
+// Start polling if user logged in
+setTimeout(() => {
+  if (currentDoctor) pollNotifications();
+  setInterval(pollNotifications, 60000); // Check every minute
+}, 3000);
